@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
+
+    <EditText
+            android:id="@+id/target_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/target_address_hint"/>
+
+    <EditText
+            android:id="@+id/amount_to_send"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/amount_to_send_hint"
+            android:inputType="numberDecimal"/>
+
+    <TextView
+            android:id="@+id/maximum_spendable_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/use_maximum_spendable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/use_maximum_spendable"/>
+
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_coins_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/send_coins"/>
+
+</LinearLayout>

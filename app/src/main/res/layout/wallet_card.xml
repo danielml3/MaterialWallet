@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="10dp">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/wallet_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18pt"
+                android:layout_gravity="center"/>
+
+        <TextView
+                android:id="@+id/wallet_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12pt"
+                android:textStyle="bold"
+                android:layout_gravity="center"/>
+
+        <TextView
+                android:id="@+id/last_block_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/send_coins_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:text="@string/send_coins"/>
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/receive_coins_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:text="@string/receive_coins"/>
+        </LinearLayout>
+
+        <ProgressBar
+                android:id="@+id/sync_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
