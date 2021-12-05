@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">OpenWallet</string>
+
+    <string name="import_wallet_title">Import wallet</string>
+    <string name="import_wallet_message">Import an existing wallet using the recovery phrase</string>
+
+    <string name="send_coins">Send</string>
+    <string name="receive_coins">Receive</string>
+
+    <string name="not_enough_coins">Not enough coins</string>
+
+    <string name="invalid_mnemonic">Invalid recovery phrase</string>
+    <string name="invalid_mnemonic_hint">Check that the words only have one space in between and that you did not write
+        more words than needed
+    </string>
+    <string name="invalid_send_details">Invalid recipient details</string>
+
+    <string name="target_address_hint">Target address</string>
+    <string name="amount_to_send_hint">Amount to send</string>
+
+    <string name="copy_address">Copy address</string>
+    <string name="maximum_spendable_text">Maximum spendable amount is %1$s (total balance - network fee)</string>
+    <string name="use_maximum_spendable">Use maximum spendable</string>
+</resources>
