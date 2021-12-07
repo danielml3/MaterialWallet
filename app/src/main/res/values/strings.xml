@@ -2,7 +2,6 @@
     <string name="app_name">OpenWallet</string>
 
     <string name="import_wallet_title">Import wallet</string>
-    <string name="import_wallet_message">Import an existing wallet using the recovery phrase</string>
 
     <string name="send_coins">Send</string>
     <string name="receive_coins">Receive</string>
@@ -21,4 +20,7 @@
     <string name="copy_address">Copy address</string>
     <string name="maximum_spendable_text">Maximum spendable amount is %1$s (total balance - network fee)</string>
     <string name="use_maximum_spendable">Use maximum spendable</string>
+
+    <string name="mnemonic_hint">Recovery phrase</string>
+    <string name="syncing_blockchain">Syncing with the blockchain</string>
 </resources>

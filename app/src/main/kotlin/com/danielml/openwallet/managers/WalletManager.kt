@@ -13,6 +13,7 @@ import io.horizontalsystems.hdwalletkit.Mnemonic
 class WalletManager {
     private var runningWallets: ArrayList<String> = ArrayList()
     private var runningWalletsObjects: ArrayList<BitcoinWallet> = ArrayList()
+    private var runningWalletsCards: ArrayList<WalletCard> = ArrayList()
 
     private var lastWalletId: Int = 1
 
@@ -35,12 +36,13 @@ class WalletManager {
 
         try {
             val wallet = BitcoinWallet(context, mnemonic, "Wallet $lastWalletId")
-            WalletCard(context, wallet, container)
+            val walletCard = WalletCard(context, wallet, container)
             wallet.getWalletKit().start()
 
             MnemonicManager.storeMnemonic(context, mnemonic)
             runningWallets.add(mnemonic.toString())
             runningWalletsObjects.add(wallet)
+            runningWalletsCards.add(walletCard)
             lastWalletId++
 
             return wallet
@@ -67,14 +69,13 @@ class WalletManager {
     }
 
     /*
-     * Stops all bitcoin kits
+     * Reattaches all wallets to a newly created container
      *
-     * This function shall be called when a fragment is destroyed on a
-     * configuration change, in order to reinitialize the wallets later
+     * This should be called after the main fragment is recreated
      */
-    fun stopAllWallets() {
-        for (wallet: BitcoinWallet in runningWalletsObjects) {
-            wallet.getWalletKit().stop()
+    fun reattachAllWallets(container: LinearLayout) {
+        for (walletCard: WalletCard in runningWalletsCards) {
+            walletCard.reattachToContainer(container)
         }
     }
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="wallet_card_text_color">@color/white</color>
+    <color name="main_footer_background">@color/dark_gray</color>
+</resources>

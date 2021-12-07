@@ -1,5 +1,9 @@
 package com.danielml.openwallet
 
+import android.app.Activity
+import android.content.Context
+import com.danielml.openwallet.layouts.DraggableLinearLayout
+import com.danielml.openwallet.managers.WalletManager
 import io.horizontalsystems.bitcoincore.BitcoinCore
 import io.horizontalsystems.bitcoinkit.BitcoinKit
 import java.security.MessageDigest
@@ -20,6 +24,8 @@ class Global {
         const val PEER_SIZE: Int = 5
         const val FEE_RATE: Int = 5
 
+        val walletManager: WalletManager = WalletManager()
+
         /*
          * @returns the sha256 of the given string
          */
@@ -36,6 +42,13 @@ class Global {
             val formatter = SimpleDateFormat.getDateTimeInstance()
             val date = java.util.Date(timestamp * 1000)
             return formatter.format(date)
+        }
+
+        /*
+         * @returns the bottom draggable container
+         */
+        fun getDraggableWalletContainer(context: Context): DraggableLinearLayout {
+            return ((context as Activity).findViewById(R.id.wallet_draggable_layout) as DraggableLinearLayout)
         }
     }
 }

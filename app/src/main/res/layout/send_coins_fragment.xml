@@ -3,22 +3,38 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:padding="10dp"
         tools:context=".MainActivity">
 
-    <EditText
-            android:id="@+id/target_address"
+    <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/target_address_hint"/>
+            android:hint="@string/target_address_hint"
+            android:layout_marginBottom="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-    <EditText
-            android:id="@+id/amount_to_send"
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/target_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/amount_to_send_hint"
-            android:inputType="numberDecimal"/>
+            android:layout_marginBottom="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/amount_to_send"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
             android:id="@+id/maximum_spendable_text"
@@ -27,14 +43,12 @@
 
     <com.google.android.material.button.MaterialButton
             android:id="@+id/use_maximum_spendable"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/MainMaterialButton"
             android:text="@string/use_maximum_spendable"/>
 
     <com.google.android.material.button.MaterialButton
             android:id="@+id/send_coins_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/MainMaterialButton"
             android:text="@string/send_coins"/>
 
 </LinearLayout>

@@ -18,11 +18,11 @@ import io.horizontalsystems.bitcoincore.models.TransactionDataSortType
 import java.util.concurrent.atomic.AtomicReference
 
 class SendCoinsFragment(private var wallet: BitcoinWallet?) : Fragment() {
+    constructor() : this(null)
+
     companion object {
         var lastWallet: BitcoinWallet? = null
     }
-
-    constructor() : this(null)
 
     init {
         /*
@@ -102,7 +102,7 @@ class SendCoinsFragment(private var wallet: BitcoinWallet?) : Fragment() {
             try {
                 wallet!!.getWalletKit()
                     .send(targetAddress, amount.toLong(), true, Global.FEE_RATE, TransactionDataSortType.Shuffle)
-                activity!!.supportFragmentManager.popBackStackImmediate() // Return to the previous fragment
+                Global.getDraggableWalletContainer(context!!).expandAnimated()
             } catch (e: Exception) {
                 when (e) {
                     // Let the user know if the balance is not enough

@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="blue_200">#386FA4</color>
-    <color name="blue_300">#59A5D8</color>
-    <color name="blue_400">#84D2F6</color>
-    <color name="blue_500">#91E5F6</color>
+    <color name="main_accent">#63A4FF</color>
 
+    <color name="gray">#808080</color>
+    <color name="light_gray">#EEEEEE</color>
+    <color name="dark_gray">#333333</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="wallet_card_text_color">@color/black</color>
+    <color name="main_button_text_color">@color/black</color>
+    <color name="main_button_color">@color/white</color>
+    <color name="main_footer_background">@color/light_gray</color>
 </resources>

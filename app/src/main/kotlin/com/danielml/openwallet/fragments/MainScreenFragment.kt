@@ -1,23 +1,23 @@
 package com.danielml.openwallet.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.LinearLayout
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentContainerView
+import com.danielml.openwallet.Global
+import com.danielml.openwallet.Global.Companion.TAG
 import com.danielml.openwallet.R
 import com.danielml.openwallet.managers.MnemonicManager
-import com.danielml.openwallet.managers.WalletManager
-import com.danielml.openwallet.utils.DialogBuilder
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.button.MaterialButton
 
 class MainScreenFragment : Fragment() {
     private var inflatedLayout: View? = null
     private var firstInitialization = false
-    private var walletManager: WalletManager? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         /*
@@ -35,54 +35,40 @@ class MainScreenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        if (walletManager == null) {
-            walletManager = WalletManager()
-        }
-
-        val importWalletButton = view.findViewById<FloatingActionButton>(R.id.import_wallet_button)
-        importWalletButton.setOnClickListener {
-            getImportWalletDialog().show()
-        }
-
         val container = view.findViewById<LinearLayout>(R.id.wallet_container)
+
+        view.findViewById<MaterialButton>(R.id.import_wallet_button).apply {
+            setOnClickListener {
+                val importWalletFragment = ImportWalletFragment(container)
+                (context as FragmentActivity).supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                    .replace(R.id.secondary_fragment_container, importWalletFragment)
+                    .commit()
+
+                Global.getDraggableWalletContainer(context).shrinkAnimated()
+            }
+        }
+
+        Global.walletManager.reattachAllWallets(container)
+
+        val handleHeight = Global.getDraggableWalletContainer(context!!).getHandleHeight()
+        val secondaryFragment = view.findViewById<FragmentContainerView>(R.id.secondary_fragment_container)
+        secondaryFragment?.setPadding(0, 0, 0, handleHeight)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val container = view!!.findViewById<LinearLayout>(R.id.wallet_container)
+
         if (firstInitialization) {
             val mnemonicList = MnemonicManager.getMnemonicList(context!!)
             for (mnemonic: String in mnemonicList) {
                 if (mnemonic.isNotEmpty()) {
-                    walletManager!!.createWallet(context!!, mnemonic, container)
+                    Global.walletManager.createWallet(context!!, mnemonic, container)
                 }
             }
 
             firstInitialization = false
         }
-    }
-
-    /*
-     * @returns an AlertDialog that allows to restore a wallet using a
-     * recovery phrase (mnemonic)
-     */
-    private fun getImportWalletDialog(): AlertDialog {
-        val importForm = layoutInflater.inflate(R.layout.import_wallet_form, null)
-        val container = view!!.findViewById<LinearLayout>(R.id.wallet_container)
-
-        return DialogBuilder.buildDialog(
-            context!!,
-            { _, _ ->
-                run {
-                    val mnemonicTextBox = importForm.findViewById<EditText>(R.id.mnemonic_text_box)
-                    val mnemonic = mnemonicTextBox.text.toString()
-                    walletManager!!.createWallet(context!!, mnemonic, container)
-                }
-            }, { _, _ -> }, importForm, false, R.string.import_wallet_title, R.string.import_wallet_message
-        )
-    }
-
-    /*
-     * Stop all wallets if main fragment gets destroyed
-     */
-    override fun onDestroy() {
-        super.onDestroy()
-        walletManager!!.stopAllWallets()
     }
 }
