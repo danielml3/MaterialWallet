@@ -7,13 +7,13 @@ import android.os.Looper
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.danielml.openwallet.BitcoinWallet
 import com.danielml.openwallet.Global
 import com.danielml.openwallet.R
 import com.danielml.openwallet.fragments.ReceiveCoinsFragment
 import com.danielml.openwallet.fragments.SendCoinsFragment
+import com.danielml.openwallet.fragments.SpecificWalletFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import io.horizontalsystems.bitcoincore.BitcoinCore
@@ -66,6 +66,17 @@ class WalletCard(var context: Context, private val wallet: BitcoinWallet, contai
             (context as FragmentActivity).supportFragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
                 .replace(R.id.secondary_fragment_container, receiveCoinsFragment)
+                .commit()
+
+            activeWalletText.text = wallet.getWalletName()
+            Global.getDraggableWalletContainer(context).shrinkAnimated()
+        }
+
+        cardView!!.setOnClickListener {
+            val transactionsFragment = SpecificWalletFragment(wallet)
+            (context as FragmentActivity).supportFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                .replace(R.id.secondary_fragment_container, transactionsFragment)
                 .commit()
 
             activeWalletText.text = wallet.getWalletName()

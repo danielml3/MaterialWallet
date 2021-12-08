@@ -12,4 +12,7 @@
     <color name="main_button_text_color">@color/black</color>
     <color name="main_button_color">@color/white</color>
     <color name="main_footer_background">@color/light_gray</color>
+
+    <color name="incoming_transaction_color">#31ad65</color>
+    <color name="outgoing_transaction_color">#f71b1b</color>
 </resources>

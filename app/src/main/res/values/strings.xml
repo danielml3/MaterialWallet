@@ -32,4 +32,6 @@
     <string name="network_type">Network type</string>
     <string name="main_net">MainNet</string>
     <string name="test_net">TestNet</string>
+
+    <string name="transactions">Transactions</string>
 </resources>
