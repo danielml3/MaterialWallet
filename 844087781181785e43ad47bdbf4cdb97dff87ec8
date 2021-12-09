@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "239210b4_168abea8",
+        "filename": "app/src/main/kotlin/com/danielml/openwallet/Global.kt",
+        "patchSetId": 8
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2021-12-09T16:08:49Z",
+      "side": 0,
+      "message": "Change this on a separate patch",
+      "range": {
+        "startLine": 17,
+        "startChar": 74,
+        "endLine": 17,
+        "endChar": 81
+      },
+      "revId": "844087781181785e43ad47bdbf4cdb97dff87ec8",
+      "serverId": "0b972bbf-bc08-4bba-b7a6-f315c276b6cd"
+    }
+  ]
+}
