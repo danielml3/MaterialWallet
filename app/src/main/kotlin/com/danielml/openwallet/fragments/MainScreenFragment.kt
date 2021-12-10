@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentContainerView
 import com.danielml.openwallet.Global
 import com.danielml.openwallet.R
-import com.danielml.openwallet.managers.MnemonicManager
+import com.danielml.openwallet.managers.WalletDatabaseManager
 import com.google.android.material.button.MaterialButton
 
 class MainScreenFragment : Fragment() {
@@ -71,8 +71,10 @@ class MainScreenFragment : Fragment() {
         val container = view!!.findViewById<LinearLayout>(R.id.wallet_container)
 
         if (firstInitialization) {
-            val mnemonicList = MnemonicManager.getMnemonicList(context!!)
-            for (mnemonic: String in mnemonicList) {
+            val mnemonicList = WalletDatabaseManager.getWalletInformationList(context!!)
+            for (i: Int in 0 until mnemonicList.length()) {
+                val mnemonicJSONObject = mnemonicList.getJSONObject(i)
+                val mnemonic = mnemonicJSONObject.getString(WalletDatabaseManager.mnemonicKey)
                 if (mnemonic.isNotEmpty()) {
                     Global.walletManager.createWallet(context!!, mnemonic, container)
                 }

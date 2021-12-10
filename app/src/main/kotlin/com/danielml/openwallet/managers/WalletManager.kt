@@ -39,7 +39,7 @@ class WalletManager {
             val walletCard = WalletCard(context, wallet, container)
             wallet.getWalletKit().start()
 
-            MnemonicManager.storeMnemonic(context, mnemonic)
+            WalletDatabaseManager.storeWalletInformation(context, mnemonic)
             runningWallets.add(mnemonic.toString())
             runningWalletsObjects.add(wallet)
             runningWalletsCards.add(walletCard)
