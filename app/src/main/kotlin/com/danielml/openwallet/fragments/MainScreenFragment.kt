@@ -1,7 +1,6 @@
 package com.danielml.openwallet.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentContainerView
 import com.danielml.openwallet.Global
-import com.danielml.openwallet.Global.Companion.TAG
 import com.danielml.openwallet.R
 import com.danielml.openwallet.managers.MnemonicManager
 import com.google.android.material.button.MaterialButton
@@ -43,6 +41,18 @@ class MainScreenFragment : Fragment() {
                 (context as FragmentActivity).supportFragmentManager.beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
                     .replace(R.id.secondary_fragment_container, importWalletFragment)
+                    .commit()
+
+                Global.getDraggableWalletContainer(context).shrinkAnimated()
+            }
+        }
+
+        view.findViewById<MaterialButton>(R.id.create_wallet_button).apply {
+            setOnClickListener {
+                val createWalletFragment = CreateWalletFragment(container)
+                (context as FragmentActivity).supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                    .replace(R.id.secondary_fragment_container, createWalletFragment)
                     .commit()
 
                 Global.getDraggableWalletContainer(context).shrinkAnimated()

@@ -23,4 +23,6 @@
 
     <string name="mnemonic_hint">Recovery phrase</string>
     <string name="syncing_blockchain">Syncing with the blockchain</string>
+
+    <string name="create_wallet">Create wallet</string>
 </resources>

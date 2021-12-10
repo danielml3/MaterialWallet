@@ -80,6 +80,15 @@
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
+                        android:id="@+id/create_wallet_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/create_wallet"
+                        android:layout_margin="10dp"
+                        android:padding="20dp"
+                        style="@style/MainMaterialButton"/>
+
+                <com.google.android.material.button.MaterialButton
                         android:id="@+id/import_wallet_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
