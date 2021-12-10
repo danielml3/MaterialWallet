@@ -11,6 +11,7 @@ class WalletDatabaseManager {
         private val databaseFilename = "wallet-database.json"
 
         val mnemonicKey = "mnemonic"
+        val walletNameKey = "wallet_name"
 
         /*
          * @returns a JSON array containing the wallets' information
@@ -26,7 +27,7 @@ class WalletDatabaseManager {
         /*
          * Saves the given wallet information to the local database
          */
-        fun storeWalletInformation(context: Context, mnemonic: List<String>) {
+        fun storeWalletInformation(context: Context, mnemonic: List<String>, walletName: String) {
             val clearedWalletList = JSONArray()
             var walletInformationList = getWalletInformationList(context)
             val mnemonicString = mnemonic.joinToString(" ")
@@ -47,6 +48,7 @@ class WalletDatabaseManager {
 
             val walletJSONObject = JSONObject()
             walletJSONObject.put(mnemonicKey, mnemonicString)
+            walletJSONObject.put(walletNameKey, walletName)
 
             walletInformationList.put(walletJSONObject)
             getDatabase(context).writeText(walletInformationList.toString())

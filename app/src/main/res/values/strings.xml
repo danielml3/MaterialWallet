@@ -25,4 +25,5 @@
     <string name="syncing_blockchain">Syncing with the blockchain</string>
 
     <string name="create_wallet">Create wallet</string>
+    <string name="wallet_name">Wallet name</string>
 </resources>

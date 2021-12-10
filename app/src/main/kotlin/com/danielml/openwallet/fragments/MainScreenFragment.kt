@@ -12,6 +12,7 @@ import com.danielml.openwallet.Global
 import com.danielml.openwallet.R
 import com.danielml.openwallet.managers.WalletDatabaseManager
 import com.google.android.material.button.MaterialButton
+import org.json.JSONException
 
 class MainScreenFragment : Fragment() {
     private var inflatedLayout: View? = null
@@ -75,8 +76,13 @@ class MainScreenFragment : Fragment() {
             for (i: Int in 0 until mnemonicList.length()) {
                 val mnemonicJSONObject = mnemonicList.getJSONObject(i)
                 val mnemonic = mnemonicJSONObject.getString(WalletDatabaseManager.mnemonicKey)
+                val walletName = try {
+                    mnemonicJSONObject.getString(WalletDatabaseManager.walletNameKey)
+                } catch (e: JSONException) {
+                    ""
+                }
                 if (mnemonic.isNotEmpty()) {
-                    Global.walletManager.createWallet(context!!, mnemonic, container)
+                    Global.walletManager.createWallet(context!!, mnemonic, walletName, container)
                 }
             }
 

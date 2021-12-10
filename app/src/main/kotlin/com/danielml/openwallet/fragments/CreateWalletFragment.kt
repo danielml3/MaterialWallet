@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import com.danielml.openwallet.Global
 import com.danielml.openwallet.R
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
 import io.horizontalsystems.hdwalletkit.Mnemonic
 
 class CreateWalletFragment(var container: LinearLayout?) : Fragment() {
@@ -30,10 +31,14 @@ class CreateWalletFragment(var container: LinearLayout?) : Fragment() {
         (context as Activity).findViewById<TextView>(R.id.active_wallet_name)?.text = ""
 
         val createWalletButton = view.findViewById<MaterialButton>(R.id.perform_create_wallet_button)
+        val walletNameTextBox = view.findViewById<TextInputEditText>(R.id.wallet_name_text_box)
         val mnemonic = Mnemonic()
         createWalletButton.setOnClickListener {
-            if (Global.walletManager.createWallet(context!!, mnemonic.generate(), container!!) != null) {
-                Global.getDraggableWalletContainer(context!!).expandAnimated()
+            val walletName = walletNameTextBox.text.toString()
+            if (walletName.isNotEmpty()) {
+                if (Global.walletManager.createWallet(context!!, mnemonic.generate(), walletName, container!!) != null) {
+                    Global.getDraggableWalletContainer(context!!).expandAnimated()
+                }
             }
         }
     }

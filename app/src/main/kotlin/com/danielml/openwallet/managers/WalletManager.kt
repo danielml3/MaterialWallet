@@ -15,10 +15,8 @@ class WalletManager {
     private var runningWalletsObjects: ArrayList<BitcoinWallet> = ArrayList()
     private var runningWalletsCards: ArrayList<WalletCard> = ArrayList()
 
-    private var lastWalletId: Int = 1
-
-    fun createWallet(context: Context, mnemonic: String, container: LinearLayout): BitcoinWallet? {
-        return createWallet(context, mnemonic.split(" "), container)
+    fun createWallet(context: Context, mnemonic: String, walletName: String, container: LinearLayout): BitcoinWallet? {
+        return createWallet(context, mnemonic.split(" "), walletName, container)
     }
 
     /*
@@ -28,22 +26,21 @@ class WalletManager {
      * @returns the BitcoinWallet object if the operation was successful
      * @returns null if the operation failed
      */
-    fun createWallet(context: Context, mnemonic: List<String>, container: LinearLayout): BitcoinWallet? {
+    fun createWallet(context: Context, mnemonic: List<String>, walletName: String, container: LinearLayout): BitcoinWallet? {
         if (runningWallets.contains(mnemonic.toString())) {
             Log.e(Global.TAG, "Tried to initialize an existing wallet")
             return null
         }
 
         try {
-            val wallet = BitcoinWallet(context, mnemonic, "Wallet $lastWalletId")
+            val wallet = BitcoinWallet(context, mnemonic, walletName)
             val walletCard = WalletCard(context, wallet, container)
             wallet.getWalletKit().start()
 
-            WalletDatabaseManager.storeWalletInformation(context, mnemonic)
+            WalletDatabaseManager.storeWalletInformation(context, mnemonic, walletName)
             runningWallets.add(mnemonic.toString())
             runningWalletsObjects.add(wallet)
             runningWalletsCards.add(walletCard)
-            lastWalletId++
 
             return wallet
         } catch (e: Exception) {
