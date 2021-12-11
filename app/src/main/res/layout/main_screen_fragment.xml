@@ -96,6 +96,21 @@
                         android:layout_margin="10dp"
                         android:padding="20dp"
                         style="@style/MainMaterialButton"/>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/divider_height"
+                        android:layout_margin="15dp"
+                        android:background="@color/gray"/>
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/settings_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings"
+                        android:layout_margin="10dp"
+                        android:padding="20dp"
+                        style="@style/MainMaterialButton"/>
             </LinearLayout>
         </ScrollView>
     </com.danielml.openwallet.layouts.DraggableLinearLayout>

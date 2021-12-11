@@ -26,4 +26,6 @@
 
     <string name="create_wallet">Create wallet</string>
     <string name="wallet_name">Wallet name</string>
+
+    <string name="settings">Settings</string>
 </resources>

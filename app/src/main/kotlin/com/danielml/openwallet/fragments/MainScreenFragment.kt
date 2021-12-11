@@ -60,6 +60,18 @@ class MainScreenFragment : Fragment() {
             }
         }
 
+        view.findViewById<MaterialButton>(R.id.settings_button).apply {
+            setOnClickListener {
+                val settingsFragment = SettingsFragment()
+                (context as FragmentActivity).supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                    .replace(R.id.secondary_fragment_container, settingsFragment)
+                    .commit()
+
+                Global.getDraggableWalletContainer(context).shrinkAnimated()
+            }
+        }
+
         Global.walletManager.reattachAllWallets(container)
 
         val handleHeight = Global.getDraggableWalletContainer(context!!).getHandleHeight()
