@@ -8,4 +8,27 @@
         android:padding="10dp"
         tools:context=".MainActivity">
 
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="@string/network_type"/>
+
+    <RadioGroup
+            android:id="@+id/network_type_radio_group"
+            android:checkedButton="@+id/main_net_radio_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <RadioButton
+                android:id="@+id/main_net_radio_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/main_net"/>
+        <RadioButton
+                android:id="@+id/test_net_radio_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/test_net"/>
+    </RadioGroup>
+
 </LinearLayout>

@@ -1,6 +1,8 @@
 package com.danielml.openwallet
 
 import android.content.Context
+import android.util.Log
+import com.danielml.openwallet.Global.Companion.TAG
 import io.horizontalsystems.bitcoincore.core.Bip
 import io.horizontalsystems.bitcoinkit.BitcoinKit
 
@@ -16,7 +18,7 @@ class BitcoinWallet(context: Context, mnemonic: List<String>, private val name: 
                 mnemonic,
                 String(),
                 walletId,
-                Global.NETWORK_TYPE,
+                Global.getNetworkType(context),
                 Global.PEER_SIZE,
                 Global.SYNC_MODE,
                 Global.MIN_CONFIRMATIONS,

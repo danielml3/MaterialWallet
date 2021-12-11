@@ -28,4 +28,8 @@
     <string name="wallet_name">Wallet name</string>
 
     <string name="settings">Settings</string>
+
+    <string name="network_type">Network type</string>
+    <string name="main_net">MainNet</string>
+    <string name="test_net">TestNet</string>
 </resources>
