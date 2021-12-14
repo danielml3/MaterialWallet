@@ -9,7 +9,7 @@ class SettingsManager {
         const val NETWORK_TYPE_SETTING = "network_type"
         const val MAIN_NET_SETTING_VALUE = "1"
         const val TEST_NET_SETTING_VALUE = "2"
-        
+
         /*
          * Stores the given setting information
          */

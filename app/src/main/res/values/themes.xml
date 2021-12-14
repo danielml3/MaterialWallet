@@ -14,7 +14,7 @@
 
     <style name="MainMaterialButton" parent="Widget.MaterialComponents.Button">
         <item name="android:background">@drawable/main_button_background</item>
-        <item name="backgroundTint">@color/main_button_color</item>
+        <item name="backgroundTint">@color/main_button_color_states</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

@@ -52,6 +52,9 @@ class SendCoinsFragment(private var wallet: BitcoinWallet?) : Fragment() {
         val maximumSpendableButton = view.findViewById<MaterialButton>(R.id.use_maximum_spendable)
         val maximumSpendable: AtomicReference<Long> = AtomicReference(0)
         amountText.isEnabled = false
+        sendCoinsButton.isEnabled = false
+
+        var targetAddress = ""
 
         /*
          * This listener will enable the amount input when a valid address
@@ -69,9 +72,27 @@ class SendCoinsFragment(private var wallet: BitcoinWallet?) : Fragment() {
                     String.format(context!!.getString(R.string.maximum_spendable_text), maximumSpendable.get())
 
                 amountText.isEnabled = true
+                targetAddress = address
             } catch (e: Exception) {
                 amountText.isEnabled = false
                 amountText.setText("")
+                sendCoinsButton.isEnabled = false
+                targetAddress = ""
+            }
+        }
+
+        amountText.addTextChangedListener {
+            try {
+                val amount = amountText.text.toString().toLong()
+                wallet!!.getWalletKit()
+                    .fee(amount, targetAddress, true, Global.FEE_RATE)
+                sendCoinsButton.isEnabled = true
+            } catch (e: Exception) {
+                when (e) {
+                    is SendValueErrors -> {
+                        sendCoinsButton.isEnabled = false
+                    }
+                }
             }
         }
 
@@ -82,7 +103,6 @@ class SendCoinsFragment(private var wallet: BitcoinWallet?) : Fragment() {
         }
 
         sendCoinsButton.setOnClickListener {
-            val targetAddress = targetAddressText.text.toString()
             val amount = amountText.text.toString()
 
             // Validate the given details

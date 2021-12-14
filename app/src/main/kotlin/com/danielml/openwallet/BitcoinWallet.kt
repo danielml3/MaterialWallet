@@ -1,8 +1,6 @@
 package com.danielml.openwallet
 
 import android.content.Context
-import android.util.Log
-import com.danielml.openwallet.Global.Companion.TAG
 import io.horizontalsystems.bitcoincore.core.Bip
 import io.horizontalsystems.bitcoinkit.BitcoinKit
 

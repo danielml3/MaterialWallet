@@ -7,12 +7,14 @@ import android.os.Looper
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.danielml.openwallet.BitcoinWallet
 import com.danielml.openwallet.Global
 import com.danielml.openwallet.R
 import com.danielml.openwallet.fragments.ReceiveCoinsFragment
 import com.danielml.openwallet.fragments.SendCoinsFragment
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import io.horizontalsystems.bitcoincore.BitcoinCore
 import io.horizontalsystems.bitcoincore.models.BalanceInfo
@@ -25,6 +27,8 @@ class WalletCard(var context: Context, private val wallet: BitcoinWallet, contai
     private var handler = Handler(Looper.getMainLooper())
     private var activeWalletText: TextView = (context as Activity).findViewById(R.id.active_wallet_name)
 
+    private val sendCoinsButton: MaterialButton
+
     init {
         cardView =
             (context as Activity).layoutInflater.inflate(R.layout.wallet_card, container, false) as MaterialCardView
@@ -35,10 +39,13 @@ class WalletCard(var context: Context, private val wallet: BitcoinWallet, contai
         syncBalance()
         wallet.setListener(this)
 
+        sendCoinsButton = cardView!!.findViewById(R.id.send_coins_button)
+        sendCoinsButton.isEnabled = false
+
         /*
          * Triggered when the "Send" button on a wallet is clicked
          */
-        cardView!!.findViewById<Button>(R.id.send_coins_button).setOnClickListener {
+        sendCoinsButton.setOnClickListener {
             val sendCoinsFragment = SendCoinsFragment(wallet)
             (context as FragmentActivity).supportFragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
@@ -128,12 +135,11 @@ class WalletCard(var context: Context, private val wallet: BitcoinWallet, contai
         super.onKitStateUpdate(state)
         when (state) {
             is BitcoinCore.KitState.Synced -> {
-                syncBalance()
+                onSynchronized()
+            }
 
-                val blockInfo = wallet.getWalletKit().lastBlockInfo
-                if (blockInfo != null) {
-                    onLastBlockInfoUpdate(blockInfo)
-                }
+            else -> {
+                onDesynchronized()
             }
         }
     }
@@ -145,6 +151,31 @@ class WalletCard(var context: Context, private val wallet: BitcoinWallet, contai
         super.onLastBlockInfoUpdate(blockInfo)
         handler.post {
             getLastBlockDateView().text = Global.timestampToDate(blockInfo.timestamp)
+        }
+    }
+
+    /*
+     * Called when the wallet gets synced with the peers
+     */
+    private fun onSynchronized() {
+        syncBalance()
+
+        val blockInfo = wallet.getWalletKit().lastBlockInfo
+        if (blockInfo != null) {
+            onLastBlockInfoUpdate(blockInfo)
+        }
+
+        handler.post {
+            sendCoinsButton.isEnabled = true
+        }
+    }
+
+    /*
+     * Called when the wallet is not synced with the peers
+     */
+    private fun onDesynchronized() {
+        handler.post {
+            sendCoinsButton.isEnabled = false
         }
     }
 }
