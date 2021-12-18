@@ -35,6 +35,8 @@ class DraggableLinearLayout(context: Context, attributeSet: AttributeSet?, defSt
     private val handleWidth = 400
     private val handleHeight = 15
 
+    private val setStaticTranslationRunnable: Runnable
+
     init {
         handleView = CardView(context)
         val layoutParams = LayoutParams(handleWidth, handleHeight)
@@ -49,6 +51,10 @@ class DraggableLinearLayout(context: Context, attributeSet: AttributeSet?, defSt
 
         realHandle = handleView.parent as View
         realHandle.setOnTouchListener(this)
+
+        setStaticTranslationRunnable = Runnable {
+            lastStaticTranslation = translationY
+        }
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -83,6 +89,8 @@ class DraggableLinearLayout(context: Context, attributeSet: AttributeSet?, defSt
 
             MotionEvent.ACTION_MOVE -> {
                 setTranslationInstant(translationY + event.y)
+                handler.removeCallbacks(setStaticTranslationRunnable)
+                handler.postDelayed(setStaticTranslationRunnable, 100)
             }
 
             MotionEvent.ACTION_UP -> {
