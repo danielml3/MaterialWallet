@@ -9,7 +9,10 @@ import com.danielml.openwallet.managers.SettingsManager.Companion.NETWORK_TYPE_S
 import com.danielml.openwallet.managers.SettingsManager.Companion.TEST_NET_SETTING_VALUE
 import com.danielml.openwallet.managers.WalletManager
 import io.horizontalsystems.bitcoincore.BitcoinCore
+import io.horizontalsystems.bitcoincore.network.Network
 import io.horizontalsystems.bitcoinkit.BitcoinKit
+import io.horizontalsystems.bitcoinkit.MainNet
+import io.horizontalsystems.bitcoinkit.TestNet
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 
@@ -26,6 +29,8 @@ class Global {
         const val MIN_CONFIRMATIONS: Int = 1
         const val PEER_SIZE: Int = 5
         const val FEE_RATE: Int = 5
+
+        const val BIP84_FIRST_ADDRESS_PATH = "0/1/0/0"
 
         val walletManager: WalletManager = WalletManager()
 
@@ -66,6 +71,16 @@ class Global {
             }
 
             return networkType
+        }
+
+        fun getNetworkFromType(networkType: BitcoinKit.NetworkType) : Network {
+            if (networkType == BitcoinKit.NetworkType.MainNet) {
+                return MainNet()
+            } else if (networkType == BitcoinKit.NetworkType.TestNet) {
+                return TestNet()
+            }
+
+            return MainNet()
         }
     }
 }

@@ -17,8 +17,11 @@ import com.danielml.openwallet.fragments.SpecificWalletFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import io.horizontalsystems.bitcoincore.BitcoinCore
+import io.horizontalsystems.bitcoincore.core.Bip
 import io.horizontalsystems.bitcoincore.models.BalanceInfo
 import io.horizontalsystems.bitcoincore.models.BlockInfo
+import io.horizontalsystems.bitcoincore.utils.AddressConverterChain
+import io.horizontalsystems.bitcoincore.utils.SegwitAddressConverter
 import io.horizontalsystems.bitcoinkit.BitcoinKit
 
 class WalletCard(var context: Context, private val wallet: BitcoinWallet, container: LinearLayout) :
@@ -60,7 +63,13 @@ class WalletCard(var context: Context, private val wallet: BitcoinWallet, contai
          * Triggered when the "Receive" button on a wallet is clicked
          */
         cardView!!.findViewById<Button>(R.id.receive_coins_button).setOnClickListener {
-            val address = wallet.getWalletKit().receiveAddress()
+            val addressConverter = AddressConverterChain()
+            val network = Global.getNetworkFromType(Global.getNetworkType(context))
+            addressConverter.prependConverter(SegwitAddressConverter(network.addressSegwitHrp))
+            val address = addressConverter.convert(
+                wallet.getWalletKit().getPublicKeyByPath(Global.BIP84_FIRST_ADDRESS_PATH),
+                Bip.BIP84.scriptType
+            ).string
             val receiveCoinsFragment = ReceiveCoinsFragment(address)
 
             (context as FragmentActivity).supportFragmentManager.beginTransaction()
