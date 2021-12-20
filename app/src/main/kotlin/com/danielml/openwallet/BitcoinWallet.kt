@@ -4,7 +4,7 @@ import android.content.Context
 import io.horizontalsystems.bitcoincore.core.Bip
 import io.horizontalsystems.bitcoinkit.BitcoinKit
 
-class BitcoinWallet(context: Context, mnemonic: List<String>, private val name: String) {
+class BitcoinWallet(context: Context, private val mnemonic: List<String>, private val name: String) {
     private val bitcoinKit: BitcoinKit
 
     init {
@@ -44,5 +44,12 @@ class BitcoinWallet(context: Context, mnemonic: List<String>, private val name: 
      */
     fun getWalletKit(): BitcoinKit {
         return bitcoinKit
+    }
+
+    /*
+     * @returns the wallet's mnemonic
+     */
+    fun getMnemonic(): String {
+        return mnemonic.joinToString(" ")
     }
 }
