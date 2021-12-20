@@ -22,7 +22,7 @@ class Global {
         const val SHARED_PREFS_MNEMONICS_LIST: String = "mnemonics-list"
 
         // Define various values used when initializing a wallet
-        val SYNC_MODE: BitcoinCore.SyncMode = BitcoinCore.SyncMode.Api()
+        val SYNC_MODE: BitcoinCore.SyncMode = BitcoinCore.SyncMode.Full()
         const val MIN_CONFIRMATIONS: Int = 1
         const val PEER_SIZE: Int = 5
         const val FEE_RATE: Int = 5
