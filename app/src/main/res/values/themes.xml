@@ -22,4 +22,9 @@
         <item name="android:textColor">@color/main_button_text_color</item>
         <item name="android:padding">10dp</item>
     </style>
+
+    <style name="RemoveWalletButton" parent="MainMaterialButton">
+        <item name="backgroundTint">#FF542E</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
 </resources>

@@ -24,11 +24,11 @@ import io.horizontalsystems.bitcoincore.utils.AddressConverterChain
 import io.horizontalsystems.bitcoincore.utils.SegwitAddressConverter
 import io.horizontalsystems.bitcoinkit.BitcoinKit
 
-class WalletCard(var context: Context, private val wallet: BitcoinWallet, container: LinearLayout) :
+class WalletCard(var context: Context?, private val wallet: BitcoinWallet, container: LinearLayout) :
     BitcoinKit.Listener {
     private var cardView: MaterialCardView?
     private var handler = Handler(Looper.getMainLooper())
-    private var activeWalletText: TextView = (context as Activity).findViewById(R.id.active_wallet_name)
+    private var activeWalletText: TextView? = (context as Activity).findViewById(R.id.active_wallet_name)
 
     private val sendCoinsButton: MaterialButton
 
@@ -55,8 +55,8 @@ class WalletCard(var context: Context, private val wallet: BitcoinWallet, contai
                 .replace(R.id.secondary_fragment_container, sendCoinsFragment)
                 .commit()
 
-            activeWalletText.text = wallet.getWalletName()
-            Global.getDraggableWalletContainer(context).shrinkAnimated()
+            activeWalletText!!.text = wallet.getWalletName()
+            Global.getDraggableWalletContainer(context!!).shrinkAnimated()
         }
 
         /*
@@ -64,7 +64,7 @@ class WalletCard(var context: Context, private val wallet: BitcoinWallet, contai
          */
         cardView!!.findViewById<Button>(R.id.receive_coins_button).setOnClickListener {
             val addressConverter = AddressConverterChain()
-            val network = Global.getNetworkFromType(Global.getNetworkType(context))
+            val network = Global.getNetworkFromType(Global.getNetworkType(context!!))
             addressConverter.prependConverter(SegwitAddressConverter(network.addressSegwitHrp))
             val address = addressConverter.convert(
                 wallet.getWalletKit().getPublicKeyByPath(Global.BIP84_FIRST_ADDRESS_PATH),
@@ -77,8 +77,8 @@ class WalletCard(var context: Context, private val wallet: BitcoinWallet, contai
                 .replace(R.id.secondary_fragment_container, receiveCoinsFragment)
                 .commit()
 
-            activeWalletText.text = wallet.getWalletName()
-            Global.getDraggableWalletContainer(context).shrinkAnimated()
+            activeWalletText!!.text = wallet.getWalletName()
+            Global.getDraggableWalletContainer(context!!).shrinkAnimated()
         }
 
         cardView!!.setOnClickListener {
@@ -88,8 +88,8 @@ class WalletCard(var context: Context, private val wallet: BitcoinWallet, contai
                 .replace(R.id.secondary_fragment_container, transactionsFragment)
                 .commit()
 
-            activeWalletText.text = wallet.getWalletName()
-            Global.getDraggableWalletContainer(context).shrinkAnimated()
+            activeWalletText!!.text = wallet.getWalletName()
+            Global.getDraggableWalletContainer(context!!).shrinkAnimated()
         }
     }
 
@@ -172,6 +172,20 @@ class WalletCard(var context: Context, private val wallet: BitcoinWallet, contai
         handler.post {
             getLastBlockDateView().text = Global.timestampToDate(blockInfo.timestamp)
         }
+    }
+
+    /*
+     * Detaches the card from the container and invalidates the object
+     *
+     * This should be called when destroying a wallet
+     */
+    fun destroy() {
+        (cardView?.parent as LinearLayout?)?.removeView(cardView)
+        activeWalletText?.text = ""
+
+        cardView = null
+        activeWalletText = null
+        context = null
     }
 
     /*

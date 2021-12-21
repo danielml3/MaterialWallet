@@ -84,4 +84,19 @@
 
     </LinearLayout>
 
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_margin="15dp"
+            android:background="@color/gray"/>
+
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/remove_wallet_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/remove_wallet"
+            android:layout_margin="10dp"
+            android:padding="20dp"
+            style="@style/RemoveWalletButton"/>
+
 </LinearLayout>

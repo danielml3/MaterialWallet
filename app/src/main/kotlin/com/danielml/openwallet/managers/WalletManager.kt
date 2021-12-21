@@ -6,6 +6,7 @@ import android.widget.LinearLayout
 import com.danielml.openwallet.BitcoinWallet
 import com.danielml.openwallet.Global
 import com.danielml.openwallet.R
+import com.danielml.openwallet.fragments.SpecificWalletFragment
 import com.danielml.openwallet.layouts.WalletCard
 import com.danielml.openwallet.utils.DialogBuilder
 import io.horizontalsystems.hdwalletkit.Mnemonic
@@ -73,6 +74,17 @@ class WalletManager {
     fun reattachAllWallets(container: LinearLayout) {
         for (walletCard: WalletCard in runningWalletsCards) {
             walletCard.reattachToContainer(container)
+        }
+    }
+
+    fun removeWallet(context: Context, wallet: BitcoinWallet) {
+        for ((i, savedWallet: BitcoinWallet) in runningWalletsObjects.withIndex()) {
+            if (wallet == savedWallet) {
+                val walletCard = runningWalletsCards[i]
+                wallet.getWalletKit().stop()
+                walletCard.destroy()
+                WalletDatabaseManager.deleteWallet(context, SpecificWalletFragment.lastWallet!!.getMnemonic())
+            }
         }
     }
 }
