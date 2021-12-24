@@ -16,8 +16,6 @@ import org.bitcoinj.wallet.DeterministicSeed
 class WalletManager {
     private var handler = Handler(Looper.getMainLooper())
 
-    private var lastWalletNumber = 1
-
     /*
      * Sets up a wallet with the given details and generates a card for the wallet
      * which gets attached automatically to the container
@@ -53,11 +51,10 @@ class WalletManager {
                     WalletDatabaseManager.storeWalletInformation(context, mnemonicString, walletId)
 
                     handler.post {
-                        val walletFragment = WalletFragment()
-
                         (context as FragmentActivity).supportFragmentManager
                             .beginTransaction()
-                            .add(R.id.wallet_fragment_container, walletFragment)
+                            .add(R.id.main_fragment_container, WalletFragment())
+                            .addToBackStack(Global.WALLET_BACKSTACK)
                             .commit()
                     }
                 }
@@ -77,8 +74,6 @@ class WalletManager {
 
             walletKit.setAutoStop(false)
             walletKit.startAsync()
-
-            lastWalletNumber++
 
             Global.globalWalletKit = walletKit
             return walletKit
