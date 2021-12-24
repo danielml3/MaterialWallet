@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="blue_200">#386FA4</color>
-    <color name="blue_300">#59A5D8</color>
-    <color name="blue_400">#84D2F6</color>
-    <color name="blue_500">#91E5F6</color>
+    <color name="primaryColor">#00a5a5</color>
+    <color name="primaryLightColor">#58d7d6</color>
+    <color name="primaryDarkColor">#007576</color>
+
+    <color name="containerBackground">#E5F2F4</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

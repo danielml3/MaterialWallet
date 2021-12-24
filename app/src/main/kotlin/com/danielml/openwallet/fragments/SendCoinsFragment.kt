@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.danielml.openwallet.Global
 import com.danielml.openwallet.R
 import com.danielml.openwallet.utils.DialogBuilder
@@ -40,6 +41,8 @@ class SendCoinsFragment(private var wallet: WalletAppKit?) : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Global.allowBackPress = true
+        Global.lastWalletBackStack = Global.SEND_COINS_BACKSTACK
         return inflater.inflate(R.layout.send_coins_fragment, container, false)
     }
 
@@ -55,6 +58,8 @@ class SendCoinsFragment(private var wallet: WalletAppKit?) : Fragment() {
         val maximumSpendableButton = view.findViewById<MaterialButton>(R.id.use_maximum_spendable)
         val maximumSpendable: AtomicReference<Long> = AtomicReference(0)
         amountText.isEnabled = false
+        maximumSpendableButton.isEnabled = false
+        sendCoinsButton.isEnabled = false
 
         /*
          * This listener will enable the amount input when a valid address
@@ -77,9 +82,14 @@ class SendCoinsFragment(private var wallet: WalletAppKit?) : Fragment() {
                     String.format(context!!.getString(R.string.maximum_spendable_text), maximumSpendable.get())
 
                 amountText.isEnabled = true
+                sendCoinsButton.isEnabled = true
+                maximumSpendableButton.isEnabled = true
             } catch (e: Exception) {
                 amountText.isEnabled = false
+                sendCoinsButton.isEnabled = false
+                maximumSpendableButton.isEnabled = false
                 amountText.setText("")
+                e.printStackTrace()
             }
         }
 
@@ -120,6 +130,7 @@ class SendCoinsFragment(private var wallet: WalletAppKit?) : Fragment() {
                 request.setFeePerVkb(Coin.ofSat((Global.SAT_PER_KB_DEF)))
 
                 wallet!!.wallet().sendCoins(request)
+                (context as FragmentActivity).supportFragmentManager.popBackStackImmediate()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

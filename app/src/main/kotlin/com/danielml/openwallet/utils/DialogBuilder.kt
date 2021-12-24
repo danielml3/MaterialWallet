@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.DialogInterface
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+
 
 object DialogBuilder {
     /*
@@ -18,7 +20,7 @@ object DialogBuilder {
         title: String?,
         message: String?
     ): AlertDialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = MaterialAlertDialogBuilder(context)
 
         if (title != null) {
             builder.setTitle(title)
