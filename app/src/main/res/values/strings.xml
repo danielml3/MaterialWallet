@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">OpenWallet</string>
 
+    <string name="wallet">Wallet</string>
+    <string name="settings">Settings</string>
+
     <string name="import_wallet_title">Import wallet</string>
     <string name="import_wallet_message">Import an existing wallet using the recovery phrase</string>
 
@@ -21,4 +24,7 @@
     <string name="copy_address">Copy address</string>
     <string name="maximum_spendable_text">Maximum spendable amount is %1$s (total balance - network fee)</string>
     <string name="use_maximum_spendable">Use maximum spendable</string>
+
+    <string name="last_block_date">Last block date: %1$s</string>
+    <string name="pending_balance">Pending balance: %1$s</string>
 </resources>

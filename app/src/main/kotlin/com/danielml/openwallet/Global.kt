@@ -1,9 +1,12 @@
 package com.danielml.openwallet
 
+import com.danielml.openwallet.managers.WalletManager
 import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.kits.WalletAppKit
+import org.bitcoinj.params.MainNetParams
 import org.bitcoinj.params.TestNet3Params
 import java.security.MessageDigest
+import java.text.SimpleDateFormat
 
 class Global {
     companion object {
@@ -14,6 +17,13 @@ class Global {
         const val SAT_PER_KB_DEF: Long = 4000
 
         var globalWalletKit: WalletAppKit? = null
+        var allowBackPress = false
+        var lastWalletBackStack = ""
+
+        const val WALLET_BACKSTACK = "wallet"
+        const val SEND_COINS_BACKSTACK = "send_coins"
+        const val RECEIVE_COINS_BACKSTACK = "receive_coins"
+        const val SETTINGS_BACKSTACK = "settings"
 
         /*
          * @returns the sha256 of the given string
