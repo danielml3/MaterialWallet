@@ -27,4 +27,6 @@
 
     <string name="last_block_date">Last block date: %1$s</string>
     <string name="pending_balance">Pending balance: %1$s</string>
+
+    <string name="transaction_fee">Fee: %1$s</string>
 </resources>
