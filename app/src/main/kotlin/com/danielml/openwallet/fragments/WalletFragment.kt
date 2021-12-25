@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
@@ -16,10 +18,12 @@ import com.danielml.openwallet.Global
 import com.danielml.openwallet.R
 import com.danielml.openwallet.utils.ClipboardUtils
 import com.danielml.openwallet.utils.DialogBuilder
+import com.danielml.openwallet.utils.WalletUtils
 import com.google.android.material.button.MaterialButton
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Peer
 import org.bitcoinj.core.Transaction
+import org.bitcoinj.core.TransactionInput
 import org.bitcoinj.core.listeners.BlocksDownloadedEventListener
 import org.bitcoinj.wallet.Wallet
 import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener
@@ -37,6 +41,8 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
 
     private var blocksDownloadedListener: BlocksDownloadedEventListener? = null
 
+    private val transactionIdList: ArrayList<String> = ArrayList()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.wallet_fragment, container, false)
     }
@@ -45,6 +51,7 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         super.onViewCreated(view, savedInstanceState)
         Global.allowBackPress = false
         Global.lastWalletBackStack = Global.WALLET_BACKSTACK
+        transactionIdList.clear()
 
         walletKit.wallet().addCoinsSentEventListener(this)
         walletKit.wallet().addCoinsReceivedEventListener(this)
@@ -143,6 +150,8 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
                 setMargins(20, 20, 20, 20)
             }
         }
+
+        setupTransactionsList()
     }
 
     override fun onDestroyView() {
@@ -185,16 +194,29 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
                 getWalletBalanceView()?.text = availableBalance.toString()
                 getWalletPendingBalanceView()?.text =
                     String.format(context!!.getString(R.string.pending_balance), (estimatedBalance - availableBalance))
+
+
+                setupTransactionsList()
             }
         }
     }
 
     override fun onCoinsSent(wallet: Wallet?, tx: Transaction?, prevBalance: Coin?, newBalance: Coin?) {
         syncBalance()
+
+        if (tx != null) {
+            val container = view!!.findViewById<LinearLayout>(R.id.transaction_container)
+            createTransactionCard(tx, container)
+        }
     }
 
     override fun onCoinsReceived(wallet: Wallet?, tx: Transaction?, prevBalance: Coin?, newBalance: Coin?) {
         syncBalance()
+
+        if (tx != null) {
+            val container = view!!.findViewById<LinearLayout>(R.id.transaction_container)
+            createTransactionCard(tx, container)
+        }
     }
 
     private fun setLastBlockDate(date: Date) {
@@ -203,5 +225,65 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
             val formattedText = String.format(context!!.getText(R.string.last_block_date).toString(), formattedDate)
             getLastBlockDateView()?.text = formattedText
         }
+    }
+
+    /*
+     * Sorts the transactions and creates a card for each one
+     */
+    private fun setupTransactionsList() {
+        val container = view!!.findViewById<LinearLayout>(R.id.transaction_container)
+
+        for (transaction: Transaction in walletKit.wallet().getTransactions(false)
+            .sortedWith { transaction1, transaction2 ->
+                if ((transaction1?.updateTime?.time ?: 0) > (transaction2?.updateTime?.time ?: 0)) {
+                    1
+                } else {
+                    -1
+                }
+            }) {
+
+            if (!transaction.isPending && !transactionIdList.contains(transaction.txId.toString())) {
+                createTransactionCard(transaction, container)
+                transactionIdList.add(transaction.txId.toString())
+            }
+        }
+    }
+
+    /*
+     * Creates a transaction card from the given transaction and attaches it to the
+     * given container
+     */
+    private fun createTransactionCard(transaction: Transaction, container: LinearLayout) {
+        val cardView = layoutInflater.inflate(R.layout.transaction_card, container, false)
+        val dateTextView = cardView.findViewById<TextView>(R.id.transaction_date)
+        val valueTextView = cardView.findViewById<TextView>(R.id.transaction_value)
+        val feeTextView = cardView.findViewById<TextView>(R.id.transaction_fee)
+        val transactionIcon = cardView.findViewById<ImageView>(R.id.transaction_icon)
+
+        val formattedDate = DateFormat.format("dd/MM/yyyy - HH:mm:ss", transaction.updateTime).toString()
+        var isIncoming = true
+
+        for (input: TransactionInput in transaction.inputs) {
+            val address = input.connectedOutput?.scriptPubKey?.getToAddress(Global.NETWORK_PARAMS)
+            if (address != null && walletKit.wallet().isAddressMine(address)) {
+                isIncoming = false
+            }
+        }
+
+        if (isIncoming) {
+            transactionIcon.setImageResource(R.drawable.south_west_arrow)
+        } else {
+            transactionIcon.setImageResource(R.drawable.north_east_arrow)
+        }
+
+        if (transaction.fee != null) {
+            feeTextView.text = String.format(context!!.getString(R.string.transaction_fee), transaction.fee.toSat())
+        } else {
+            feeTextView.visibility = View.GONE
+        }
+
+        valueTextView.text = WalletUtils.calculateTransactionValue(walletKit, transaction, isIncoming).toString()
+        dateTextView.text = formattedDate
+        container.addView(cardView, 0)
     }
 }
