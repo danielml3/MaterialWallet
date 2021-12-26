@@ -16,6 +16,10 @@ import org.bitcoinj.wallet.DeterministicSeed
 class WalletManager {
     private var handler = Handler(Looper.getMainLooper())
 
+    // Sync the blockchain from 2015-12-21, which is the first date of
+    // BIP 141
+    private val walletCreationDate: Long = 1450656000
+
     /*
      * Sets up a wallet with the given details and generates a card for the wallet
      * which gets attached automatically to the container
@@ -68,7 +72,7 @@ class WalletManager {
             }
 
             if (mnemonic?.isNotEmpty() == true) {
-                val seed = DeterministicSeed(mnemonic, null, "", 0L)
+                val seed = DeterministicSeed(mnemonic, null, "", walletCreationDate)
                 walletKit.restoreWalletFromSeed(seed)
             }
 
