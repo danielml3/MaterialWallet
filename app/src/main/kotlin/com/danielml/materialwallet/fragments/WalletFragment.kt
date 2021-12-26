@@ -1,5 +1,6 @@
 package com.danielml.materialwallet.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
+import com.danielml.materialwallet.utils.CurrencyUtils
 import com.danielml.materialwallet.utils.ClipboardUtils
 import com.danielml.materialwallet.utils.DialogBuilder
 import com.danielml.materialwallet.utils.WalletUtils
@@ -186,15 +188,16 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
     /*
      * Updates the balance view with the latest balance
      */
+    @SuppressLint("SetTextI18n")
     private fun syncBalance() {
         handler.post {
             if (context != null) {
                 val availableBalance = walletKit.wallet().getBalance(Wallet.BalanceType.AVAILABLE)
                 val estimatedBalance = walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED)
-                getWalletBalanceView()?.text = availableBalance.toString()
-                getWalletPendingBalanceView()?.text =
-                    String.format(context!!.getString(R.string.pending_balance), (estimatedBalance - availableBalance))
 
+                getWalletBalanceView()?.text = CurrencyUtils.toString(availableBalance)
+                getWalletPendingBalanceView()?.text =
+                    String.format(context!!.getString(R.string.pending_balance), CurrencyUtils.toString((estimatedBalance - availableBalance)))
 
                 setupTransactionsList()
             }
@@ -277,12 +280,12 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         }
 
         if (transaction.fee != null) {
-            feeTextView.text = String.format(context!!.getString(R.string.transaction_fee), transaction.fee.toSat())
+            feeTextView.text = String.format(context!!.getString(R.string.transaction_fee), CurrencyUtils.toString(transaction.fee))
         } else {
             feeTextView.visibility = View.GONE
         }
 
-        valueTextView.text = WalletUtils.calculateTransactionValue(walletKit, transaction, isIncoming).toString()
+        valueTextView.text = CurrencyUtils.toString(WalletUtils.calculateTransactionValue(walletKit, transaction, isIncoming))
         dateTextView.text = formattedDate
         container.addView(cardView, 0)
     }

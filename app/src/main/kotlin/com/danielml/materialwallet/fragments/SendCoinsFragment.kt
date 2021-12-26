@@ -11,11 +11,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
+import com.danielml.materialwallet.utils.CurrencyUtils
 import com.danielml.materialwallet.utils.DialogBuilder
 import com.google.android.material.button.MaterialButton
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
 import org.bitcoinj.wallet.SendRequest
+import java.math.BigDecimal
+import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 
 
@@ -38,7 +41,7 @@ class SendCoinsFragment : Fragment() {
         val targetAddressText = view.findViewById<EditText>(R.id.target_address)
         val amountText = view.findViewById<EditText>(R.id.amount_to_send)
         val maximumSpendableButton = view.findViewById<MaterialButton>(R.id.use_maximum_spendable)
-        val maximumSpendable: AtomicReference<Long> = AtomicReference(0)
+        val maximumSpendable: AtomicReference<BigDecimal> = AtomicReference(BigDecimal(0))
         amountText.isEnabled = false
         maximumSpendableButton.isEnabled = false
         sendCoinsButton.isEnabled = false
@@ -55,14 +58,14 @@ class SendCoinsFragment : Fragment() {
             try {
                 val addressText = targetAddressText.text.toString()
                 val address = Address.fromString(Global.NETWORK_PARAMS, addressText)
-                val request = SendRequest.to(address, Coin.ofSat(balance.toSat() - 1))
+                val request = SendRequest.to(address, Coin.ofBtc(balance.toBtc() - Coin.ofSat(1).toBtc()))
                 request.setFeePerVkb(Coin.ofSat((Global.SAT_PER_KB_DEF)))
                 request.recipientsPayFees = true
                 walletKit.wallet().completeTx(request)
 
-                maximumSpendable.set(balance.toSat() - request.tx.fee.toSat())
+                maximumSpendable.set(balance.toBtc() - request.tx.fee.toBtc())
                 maximumSpendableText.text =
-                    String.format(context!!.getString(R.string.maximum_spendable_text), maximumSpendable.get())
+                    String.format(context!!.getString(R.string.maximum_spendable_text), CurrencyUtils.toString(maximumSpendable.get()))
 
                 amountText.isEnabled = true
                 sendCoinsButton.isEnabled = true
@@ -78,16 +81,16 @@ class SendCoinsFragment : Fragment() {
 
         maximumSpendableButton.setOnClickListener {
             if (amountText.isEnabled) {
-                amountText.setText(maximumSpendable.get().toString())
+                amountText.setText(CurrencyUtils.toNumericString(maximumSpendable.get()))
             }
         }
 
         sendCoinsButton.setOnClickListener {
             val targetAddress = targetAddressText.text.toString()
-            val amount = amountText.text.toString()
+            val amountString = amountText.text.toString()
 
             // Validate the given details
-            if (targetAddress.isEmpty() || amount.isEmpty()) {
+            if (targetAddress.isEmpty() || amountString.isEmpty()) {
                 DialogBuilder.buildDialog(
                     context!!,
                     { _, _ -> },
@@ -100,6 +103,9 @@ class SendCoinsFragment : Fragment() {
                 return@setOnClickListener
             }
 
+            val amountDecimal = BigDecimal(amountString)
+            val amount = Coin.ofBtc(amountDecimal)
+
             try {
                 /*
                  * Create the final transaction and broadcast it to the network
@@ -109,7 +115,7 @@ class SendCoinsFragment : Fragment() {
                  */
                 val addressText = targetAddressText.text.toString()
                 val address = Address.fromString(Global.NETWORK_PARAMS, addressText)
-                val request = SendRequest.to(address, Coin.ofSat(amount.toLong()))
+                val request = SendRequest.to(address, amount)
                 request.setFeePerVkb(Coin.ofSat((Global.SAT_PER_KB_DEF)))
 
                 walletKit.wallet().completeTx(request)
