@@ -1,5 +1,6 @@
 package com.danielml.openwallet
 
+import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
@@ -11,7 +12,7 @@ import com.danielml.openwallet.managers.WalletManager
 import com.danielml.openwallet.utils.DialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.navigation.NavigationBarView
-
+import org.bitcoinj.params.TestNet3Params
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -27,6 +28,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         setImportWalletVisibility(importWalletVisibility)
+
+        val isDebuggable = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0)
+        if (isDebuggable) {
+            Global.NETWORK_PARAMS = TestNet3Params.get()
+        }
 
         val navigationBarView = findViewById<NavigationBarView>(R.id.bottom_navigation)
         navigationBarView.setOnItemSelectedListener { item ->

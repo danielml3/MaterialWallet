@@ -2,6 +2,7 @@ package com.danielml.openwallet
 
 import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.kits.WalletAppKit
+import org.bitcoinj.params.MainNetParams
 import org.bitcoinj.params.TestNet3Params
 import java.security.MessageDigest
 
@@ -10,7 +11,7 @@ class Global {
         const val TAG: String = "OpenWallet"
 
         // Define various values used when initializing a wallet
-        val NETWORK_PARAMS: NetworkParameters = TestNet3Params.get()
+        var NETWORK_PARAMS: NetworkParameters = MainNetParams.get()
         const val SAT_PER_KB_DEF: Long = 4000
 
         var globalWalletKit: WalletAppKit? = null
