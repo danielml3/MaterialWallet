@@ -6,6 +6,7 @@
 
     <string name="import_wallet_title">Import wallet</string>
     <string name="import_wallet_message">Import an existing wallet using the recovery phrase</string>
+    <string name="mnemonic_hint">12-word key</string>
 
     <string name="send_coins">Send</string>
     <string name="receive_coins">Receive</string>
