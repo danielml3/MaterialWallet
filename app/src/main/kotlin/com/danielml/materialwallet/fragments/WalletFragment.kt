@@ -111,7 +111,7 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
          */
         sendCoinsButton.setOnClickListener {
             val fragmentManager = (context as FragmentActivity).supportFragmentManager
-            val sendCoinsFragment = SendCoinsFragment(walletKit)
+            val sendCoinsFragment = SendCoinsFragment()
 
             fragmentManager.beginTransaction()
                 .setCustomAnimations(

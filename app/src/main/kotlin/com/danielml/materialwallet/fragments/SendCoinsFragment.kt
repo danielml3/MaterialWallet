@@ -15,29 +15,11 @@ import com.danielml.materialwallet.utils.DialogBuilder
 import com.google.android.material.button.MaterialButton
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
-import org.bitcoinj.kits.WalletAppKit
 import org.bitcoinj.wallet.SendRequest
 import java.util.concurrent.atomic.AtomicReference
 
 
-class SendCoinsFragment(private var wallet: WalletAppKit?) : Fragment() {
-    companion object {
-        var lastWallet: WalletAppKit? = null
-    }
-
-    constructor() : this(null)
-
-    init {
-        /*
-         * Store the last wallet that used this fragment, since Android will initialize
-         * this fragment again but with a null wallet after a configuration change
-         */
-        if (wallet == null) {
-            wallet = lastWallet
-        } else {
-            lastWallet = wallet
-        }
-    }
+class SendCoinsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Global.allowBackPress = true
@@ -47,6 +29,7 @@ class SendCoinsFragment(private var wallet: WalletAppKit?) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val walletKit = Global.globalWalletKit!!
 
         val maximumSpendableText = view.findViewById<TextView>(R.id.maximum_spendable_text)
         maximumSpendableText.text = String.format(context!!.getString(R.string.maximum_spendable_text), "N/A")
@@ -67,7 +50,7 @@ class SendCoinsFragment(private var wallet: WalletAppKit?) : Fragment() {
          * This way, the maximum spendable amount will be calculable
          */
         targetAddressText.addTextChangedListener {
-            val balance = wallet!!.wallet().balance
+            val balance = walletKit.wallet().balance
 
             try {
                 val addressText = targetAddressText.text.toString()
@@ -75,7 +58,7 @@ class SendCoinsFragment(private var wallet: WalletAppKit?) : Fragment() {
                 val request = SendRequest.to(address, Coin.ofSat(balance.toSat() - 1))
                 request.setFeePerVkb(Coin.ofSat((Global.SAT_PER_KB_DEF)))
                 request.recipientsPayFees = true
-                wallet!!.wallet().completeTx(request)
+                walletKit.wallet().completeTx(request)
 
                 maximumSpendable.set(balance.toSat() - request.tx.fee.toSat())
                 maximumSpendableText.text =
@@ -129,8 +112,8 @@ class SendCoinsFragment(private var wallet: WalletAppKit?) : Fragment() {
                 val request = SendRequest.to(address, Coin.ofSat(amount.toLong()))
                 request.setFeePerVkb(Coin.ofSat((Global.SAT_PER_KB_DEF)))
 
-                wallet!!.wallet().completeTx(request)
-                wallet!!.wallet().commitTx(request.tx)
+                walletKit.wallet().completeTx(request)
+                walletKit.wallet().commitTx(request.tx)
                 (context as FragmentActivity).supportFragmentManager.popBackStackImmediate()
             } catch (e: Exception) {
                 e.printStackTrace()
