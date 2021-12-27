@@ -39,61 +39,65 @@
 
         </LinearLayout>
 
-        <LinearLayout
-                android:background="@drawable/bottom_wallet_container_background"
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
+        <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                style="@style/Widget.Material3.CardView.Elevated"
+                app:shapeAppearanceOverlay="@style/WalletContainerCardViewShape">
 
             <LinearLayout
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:orientation="horizontal">
-
-                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                        android:id="@+id/send_coins_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_margin="10dp"
-                        android:text="@string/send_coins"
-                        app:icon="@drawable/north_east_arrow"/>
-
-                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                        android:id="@+id/receive_coins_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_margin="10dp"
-                        android:text="@string/receive_coins"
-                        app:icon="@drawable/south_west_arrow"/>
-
-                </LinearLayout>
-
-            <TextView
-                    android:id="@+id/last_block_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"/>
-
-            <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
                 <LinearLayout
-                        android:id="@+id/transaction_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:orientation="vertical">
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal">
+
+                    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                            android:id="@+id/send_coins_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="10dp"
+                            android:text="@string/send_coins"
+                            app:icon="@drawable/north_east_arrow"/>
+
+                    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                            android:id="@+id/receive_coins_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="10dp"
+                            android:text="@string/receive_coins"
+                            app:icon="@drawable/south_west_arrow"/>
 
                 </LinearLayout>
-            </ScrollView>
 
-        </LinearLayout>
+                <TextView
+                        android:id="@+id/last_block_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"/>
 
+                <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    <LinearLayout
+                            android:id="@+id/transaction_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:orientation="vertical">
+
+                    </LinearLayout>
+                </ScrollView>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
