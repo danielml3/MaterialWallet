@@ -4,8 +4,6 @@
     <color name="primaryLightColor">#58d7d6</color>
     <color name="primaryDarkColor">#007576</color>
 
-    <color name="containerBackground">#E5F2F4</color>
-
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="dark_gray">#222222</color>
