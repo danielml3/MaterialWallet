@@ -245,7 +245,7 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
                 }
             }) {
 
-            if (!transaction.isPending && !transactionIdList.contains(transaction.txId.toString())) {
+            if (!transactionIdList.contains(transaction.txId.toString())) {
                 createTransactionCard(transaction, container)
                 transactionIdList.add(transaction.txId.toString())
             }
