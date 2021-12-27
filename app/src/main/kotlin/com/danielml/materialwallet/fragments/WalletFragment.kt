@@ -115,10 +115,10 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
 
             fragmentManager.beginTransaction()
                 .setCustomAnimations(
-                    android.R.anim.fade_in,
-                    android.R.anim.fade_out,
-                    android.R.anim.fade_in,
-                    android.R.anim.fade_out
+                    R.anim.scale_up,
+                    R.anim.scale_down,
+                    R.anim.scale_up,
+                    R.anim.scale_down
                 )
                 .replace(R.id.main_fragment_container, sendCoinsFragment)
                 .addToBackStack(Global.SEND_COINS_BACKSTACK)
