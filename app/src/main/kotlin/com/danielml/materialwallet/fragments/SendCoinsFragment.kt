@@ -15,7 +15,6 @@ import com.danielml.materialwallet.utils.DialogBuilder
 import com.google.android.material.button.MaterialButton
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
-import org.bitcoinj.core.Transaction
 import org.bitcoinj.kits.WalletAppKit
 import org.bitcoinj.wallet.SendRequest
 import java.util.concurrent.atomic.AtomicReference
@@ -73,8 +72,9 @@ class SendCoinsFragment(private var wallet: WalletAppKit?) : Fragment() {
             try {
                 val addressText = targetAddressText.text.toString()
                 val address = Address.fromString(Global.NETWORK_PARAMS, addressText)
-                val request = SendRequest.to(address, Transaction.REFERENCE_DEFAULT_MIN_TX_FEE.multiply(3))
+                val request = SendRequest.to(address, Coin.ofSat(balance.toSat() - 1))
                 request.setFeePerVkb(Coin.ofSat((Global.SAT_PER_KB_DEF)))
+                request.recipientsPayFees = true
                 wallet!!.wallet().completeTx(request)
 
                 maximumSpendable.set(balance.toSat() - request.tx.fee.toSat())
@@ -129,7 +129,8 @@ class SendCoinsFragment(private var wallet: WalletAppKit?) : Fragment() {
                 val request = SendRequest.to(address, Coin.ofSat(amount.toLong()))
                 request.setFeePerVkb(Coin.ofSat((Global.SAT_PER_KB_DEF)))
 
-                wallet!!.wallet().sendCoins(request)
+                wallet!!.wallet().completeTx(request)
+                wallet!!.wallet().commitTx(request.tx)
                 (context as FragmentActivity).supportFragmentManager.popBackStackImmediate()
             } catch (e: Exception) {
                 e.printStackTrace()
