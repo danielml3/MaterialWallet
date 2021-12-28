@@ -13,10 +13,11 @@ import com.danielml.materialwallet.utils.DialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.navigation.NavigationBarView
 import org.bitcoinj.params.TestNet3Params
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     companion object {
-        private var importWalletVisibility = View.VISIBLE
+        private var setupWalletVisibility = View.VISIBLE
     }
 
     private val settingsFragment = SettingsFragment()
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setImportWalletVisibility(importWalletVisibility)
+        setSetupWalletVisibility(setupWalletVisibility)
 
         val isDebuggable = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0)
         if (isDebuggable) {
@@ -64,7 +65,15 @@ class MainActivity : AppCompatActivity() {
             getImportWalletDialog().show()
         }
 
-        importWalletButton.visibility = importWalletVisibility
+        importWalletButton.visibility = setupWalletVisibility
+
+        val createWalletButton = findViewById<ExtendedFloatingActionButton>(R.id.create_wallet_button)
+        createWalletButton.setOnClickListener {
+            val walletKit = walletManager.setupWallet(this, Global.sha256(Date().time.toString()), null)
+            if (walletKit != null) {
+                setSetupWalletVisibility(View.GONE)
+            }
+        }
 
         val walletInformation = WalletDatabaseManager.getWalletInformation(this)
         if (walletInformation.has(WalletDatabaseManager.walletIdKey)) {
@@ -72,7 +81,7 @@ class MainActivity : AppCompatActivity() {
             if (walletId.isNotEmpty()) {
                 val walletKit = walletManager.setupWallet(this, walletId, "")
                 if (walletKit != null) {
-                    setImportWalletVisibility(View.GONE)
+                    setSetupWalletVisibility(View.GONE)
                 }
             }
         }
@@ -93,17 +102,19 @@ class MainActivity : AppCompatActivity() {
                     val mnemonic = mnemonicTextBox.text.toString()
                     val walletKit = walletManager.setupWallet(this, "", mnemonic)
                     if (walletKit != null) {
-                        setImportWalletVisibility(View.GONE)
+                        setSetupWalletVisibility(View.GONE)
                     }
                 }
             }, { _, _ -> }, importForm, false, R.string.import_wallet_title, R.string.import_wallet_message
         )
     }
 
-    private fun setImportWalletVisibility(visibility: Int) {
+    private fun setSetupWalletVisibility(visibility: Int) {
         val importWalletButton = findViewById<ExtendedFloatingActionButton>(R.id.import_wallet_button)
+        val createWalletButton = findViewById<ExtendedFloatingActionButton>(R.id.create_wallet_button)
         importWalletButton.visibility = visibility
-        importWalletVisibility = visibility
+        createWalletButton.visibility = visibility
+        setupWalletVisibility = visibility
     }
 
     override fun onBackPressed() {
