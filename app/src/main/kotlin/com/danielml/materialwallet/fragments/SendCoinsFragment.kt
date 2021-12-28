@@ -6,20 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import androidx.core.widget.addTextChangedListener
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
+import com.danielml.materialwallet.layouts.NumericPad
 import com.danielml.materialwallet.utils.CurrencyUtils
 import com.danielml.materialwallet.utils.DialogBuilder
+import com.danielml.materialwallet.utils.WalletUtils
 import com.google.android.material.button.MaterialButton
-import org.bitcoinj.core.Address
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import org.bitcoinj.core.AddressFormatException
 import org.bitcoinj.core.Coin
-import org.bitcoinj.wallet.SendRequest
+import org.bitcoinj.core.InsufficientMoneyException
+import org.bitcoinj.core.Transaction
+import org.bitcoinj.kits.WalletAppKit
+import org.bitcoinj.wallet.Wallet
 import java.math.BigDecimal
-import java.util.*
-import java.util.concurrent.atomic.AtomicReference
 
 
 class SendCoinsFragment : Fragment() {
@@ -34,96 +38,111 @@ class SendCoinsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val walletKit = Global.globalWalletKit!!
 
-        val maximumSpendableText = view.findViewById<TextView>(R.id.maximum_spendable_text)
-        maximumSpendableText.text = String.format(context!!.getString(R.string.maximum_spendable_text), "N/A")
-
         val sendCoinsButton = view.findViewById<MaterialButton>(R.id.send_coins_button)
         val targetAddressText = view.findViewById<EditText>(R.id.target_address)
-        val amountText = view.findViewById<EditText>(R.id.amount_to_send)
-        val maximumSpendableButton = view.findViewById<MaterialButton>(R.id.use_maximum_spendable)
-        val maximumSpendable: AtomicReference<BigDecimal> = AtomicReference(BigDecimal(0))
-        amountText.isEnabled = false
-        maximumSpendableButton.isEnabled = false
-        sendCoinsButton.isEnabled = false
-
-        /*
-         * This listener will enable the amount input when a valid address
-         * is present on the address text box
-         *
-         * This way, the maximum spendable amount will be calculable
-         */
-        targetAddressText.addTextChangedListener {
-            val balance = walletKit.wallet().balance
-
-            try {
-                val addressText = targetAddressText.text.toString()
-                val address = Address.fromString(Global.NETWORK_PARAMS, addressText)
-                val request = SendRequest.to(address, Coin.ofBtc(balance.toBtc() - Coin.ofSat(1).toBtc()))
-                request.setFeePerVkb(Coin.ofSat((Global.SAT_PER_KB_DEF)))
-                request.recipientsPayFees = true
-                walletKit.wallet().completeTx(request)
-
-                maximumSpendable.set(balance.toBtc() - request.tx.fee.toBtc())
-                maximumSpendableText.text =
-                    String.format(context!!.getString(R.string.maximum_spendable_text), CurrencyUtils.toString(maximumSpendable.get()))
-
-                amountText.isEnabled = true
-                sendCoinsButton.isEnabled = true
-                maximumSpendableButton.isEnabled = true
-            } catch (e: Exception) {
-                amountText.isEnabled = false
-                sendCoinsButton.isEnabled = false
-                maximumSpendableButton.isEnabled = false
-                amountText.setText("")
-                e.printStackTrace()
-            }
-        }
-
-        maximumSpendableButton.setOnClickListener {
-            if (amountText.isEnabled) {
-                amountText.setText(CurrencyUtils.toNumericString(maximumSpendable.get()))
-            }
-        }
+        val numericPad = view.findViewById<NumericPad>(R.id.amount_numeric_pad)
 
         sendCoinsButton.setOnClickListener {
             val targetAddress = targetAddressText.text.toString()
-            val amountString = amountText.text.toString()
-
-            // Validate the given details
-            if (targetAddress.isEmpty() || amountString.isEmpty()) {
-                DialogBuilder.buildDialog(
-                    context!!,
-                    { _, _ -> },
-                    null,
-                    null,
-                    true,
-                    R.string.invalid_send_details,
-                    0
-                ).show()
-                return@setOnClickListener
-            }
+            val amountString = numericPad.getValueString()
 
             val amountDecimal = BigDecimal(amountString)
             val amount = Coin.ofBtc(amountDecimal)
 
             try {
-                /*
-                 * Create the final transaction and broadcast it to the network
-                 *
-                 * On this transaction, the fees are paid by the sender, so the target address will
-                 * receive the same exact amount of coins as per the user's input
-                 */
-                val addressText = targetAddressText.text.toString()
-                val address = Address.fromString(Global.NETWORK_PARAMS, addressText)
-                val request = SendRequest.to(address, amount)
-                request.setFeePerVkb(Coin.ofSat((Global.SAT_PER_KB_DEF)))
-
-                walletKit.wallet().completeTx(request)
-                walletKit.wallet().commitTx(request.tx)
-                (context as FragmentActivity).supportFragmentManager.popBackStackImmediate()
+                val transaction = WalletUtils.createTransaction(walletKit.wallet(), targetAddress, amount)
+                showTransactionPreview(walletKit, transaction, targetAddress)
             } catch (e: Exception) {
-                e.printStackTrace()
+                when (e) {
+                    is Wallet.DustySendRequested -> {
+                        DialogBuilder.buildDialog(
+                            context!!,
+                            { _, _ -> },
+                            null,
+                            null,
+                            true,
+                            R.string.amount_too_small,
+                            0
+                        ).show()
+                    }
+
+                    is InsufficientMoneyException -> {
+                        val balance = CurrencyUtils.toString(walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED))
+                        DialogBuilder.buildDialog(
+                            context!!,
+                            { _, _ -> },
+                            null,
+                            null,
+                            true,
+                            context!!.getString(R.string.insufficient_balance),
+                            String.format(context!!.getString(R.string.current_balance), balance)
+                        ).show()
+                    }
+
+                    is AddressFormatException -> {
+                        DialogBuilder.buildDialog(
+                            context!!,
+                            { _, _ -> },
+                            null,
+                            null,
+                            true,
+                            R.string.invalid_address,
+                            0
+                        ).show()
+                    }
+
+                    else -> {
+                        e.printStackTrace()
+                    }
+                }
             }
+        }
+    }
+
+    private fun showTransactionPreview(walletKit: WalletAppKit, transaction: Transaction, targetAddress: String) {
+        val dialogBuilder = MaterialAlertDialogBuilder(context!!)
+        dialogBuilder.setTitle(R.string.preview_transaction)
+        dialogBuilder.setPositiveButton(R.string.send_coins) { _, _ ->
+            walletKit.wallet().commitTx(transaction)
+            walletKit.peerGroup().broadcastTransaction(transaction)
+            (context as FragmentActivity).supportFragmentManager.popBackStackImmediate()
+        }
+        dialogBuilder.setNegativeButton(android.R.string.cancel) { _, _ -> }
+
+        val transactionPreview = layoutInflater.inflate(R.layout.transaction_preview, null, true)
+        val receiverText = transactionPreview.findViewById<TextView>(R.id.transaction_receiver)
+        val totalSentText = transactionPreview.findViewById<TextView>(R.id.total_sent)
+        val transactionFeeText = transactionPreview.findViewById<TextView>(R.id.transaction_fee)
+        val totalSpentText = transactionPreview.findViewById<TextView>(R.id.total_spent)
+        val currentBalanceText = transactionPreview.findViewById<TextView>(R.id.current_balance)
+        val futureBalanceText = transactionPreview.findViewById<TextView>(R.id.future_balance)
+
+        val receiverOutput = WalletUtils.calculateTransactionValue(walletKit, transaction, false)
+        val transactionFee = transaction.fee
+        val currentBalance = walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED)
+        val futureBalance = currentBalance - transactionFee - Coin.ofBtc(receiverOutput)
+
+        receiverText.text = String.format(context!!.getString(R.string.transaction_receiver, targetAddress))
+        totalSentText.text =
+            String.format(context!!.getString(R.string.total_sent, CurrencyUtils.toString(receiverOutput)))
+        transactionFeeText.text =
+            String.format(context!!.getString(R.string.transaction_fee), CurrencyUtils.toString(transactionFee))
+        totalSpentText.text = String.format(
+            context!!.getString(R.string.total_spent),
+            CurrencyUtils.toString(receiverOutput + transactionFee.toBtc())
+        )
+        currentBalanceText.text =
+            String.format(context!!.getString(R.string.current_balance), CurrencyUtils.toString(currentBalance))
+        futureBalanceText.text =
+            String.format(context!!.getString(R.string.future_balance), CurrencyUtils.toString(futureBalance))
+
+        dialogBuilder.setView(transactionPreview)
+
+        val transactionDialog = dialogBuilder.create()
+        transactionDialog.show()
+
+        transactionPreview.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            setMargins(80, 20, 80, 20)
         }
     }
 }

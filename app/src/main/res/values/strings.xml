@@ -12,23 +12,37 @@
     <string name="send_coins">Send</string>
     <string name="receive_coins">Receive</string>
 
-    <string name="not_enough_coins">Not enough coins</string>
+    <string name="insufficient_balance">Insufficient balance</string>
 
     <string name="invalid_mnemonic">Invalid recovery phrase</string>
     <string name="invalid_mnemonic_hint">Check that the words only have one space in between and that you did not write
         more words than needed
     </string>
-    <string name="invalid_send_details">Invalid recipient details</string>
+    <string name="invalid_address">Invalid address</string>
+    <string name="amount_too_small">Amount too small</string>
 
     <string name="target_address_hint">Target address</string>
-    <string name="amount_to_send_hint">Amount to send</string>
+    <string name="preview_transaction">Preview transaction</string>
+    <string name="transaction_receiver">To: %1$s</string>
+    <string name="total_sent">Sent: %1$s</string>
+    <string name="transaction_fee">Fee: %1$s</string>
+    <string name="total_spent">Total spent: %1$s</string>
+    <string name="current_balance">Current balance: %1$s</string>
+    <string name="future_balance">Future balance: %1$s</string>
 
     <string name="copy_address">Copy address</string>
-    <string name="maximum_spendable_text">Maximum spendable amount is %1$s (total balance - network fee)</string>
-    <string name="use_maximum_spendable">Use maximum spendable</string>
 
     <string name="last_block_date">Last block date: %1$s</string>
-    <string name="pending_balance">Pending balance: %1$s</string>
 
-    <string name="transaction_fee">Fee: %1$s</string>
+    <string name="_1">1</string>
+    <string name="_2">2</string>
+    <string name="_3">3</string>
+    <string name="_4">4</string>
+    <string name="_5">5</string>
+    <string name="_6">6</string>
+    <string name="_7">7</string>
+    <string name="_8">8</string>
+    <string name="_9">9</string>
+    <string name="_dot">.</string>
+    <string name="_0">0</string>
 </resources>

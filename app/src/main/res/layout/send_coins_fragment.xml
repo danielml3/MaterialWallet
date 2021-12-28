@@ -5,13 +5,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="10dp"
+        android:gravity="center_horizontal"
         android:background="@color/window_background"
         tools:context=".MainActivity">
 
     <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:hint="@string/target_address_hint">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -21,38 +22,16 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="@string/amount_to_send_hint">
-
-        <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/amount_to_send"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-            android:id="@+id/maximum_spendable_text"
+    <com.danielml.materialwallet.layouts.NumericPad
+            android:id="@+id/amount_numeric_pad"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:layout_margin="10dp"/>
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/use_maximum_spendable"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="@string/use_maximum_spendable"/>
+            android:layout_height="wrap_content"/>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/send_coins_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="@string/send_coins"/>
+            android:text="@string/preview_transaction"/>
 
 </LinearLayout>

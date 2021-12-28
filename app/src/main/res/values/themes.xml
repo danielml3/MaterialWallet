@@ -23,4 +23,11 @@
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
+
+    <style name="NumericPadButton" parent="@style/Widget.Material3.ExtendedFloatingActionButton.Primary">
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:textSize">10pt</item>
+        <item name="android:layout_width">75dp</item>
+        <item name="android:layout_height">75dp</item>
+    </style>
 </resources>

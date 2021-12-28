@@ -131,26 +131,19 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
          * Triggered when the "Receive" button on a wallet is clicked
          */
         view.findViewById<Button>(R.id.receive_coins_button).setOnClickListener {
-            val address = walletKit.wallet().currentReceiveAddress().toString()
-            val copyAddressButton = MaterialButton(context!!)
-            copyAddressButton.setText(R.string.copy_address)
-            copyAddressButton.setOnClickListener {
-                ClipboardUtils.copyToClipboard(context!!, address)
-            }
+            val fragmentManager = (context as FragmentActivity).supportFragmentManager
+            val receiveCoinsFragment = ReceiveCoinsFragment()
 
-            DialogBuilder.buildDialog(
-                context!!,
-                null,
-                null,
-                copyAddressButton,
-                true,
-                context!!.getString(R.string.receive_coins),
-                address
-            ).show()
-
-            copyAddressButton.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                setMargins(20, 20, 20, 20)
-            }
+            fragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.scale_up,
+                    R.anim.scale_down,
+                    R.anim.scale_up,
+                    R.anim.scale_down
+                )
+                .replace(R.id.main_fragment_container, receiveCoinsFragment)
+                .addToBackStack(Global.RECEIVE_COINS_BACKSTACK)
+                .commit()
         }
 
         setupTransactionsList()
@@ -172,13 +165,6 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
     }
 
     /*
-     * @returns the view that shall contain the pending wallet balance
-     */
-    private fun getWalletPendingBalanceView(): TextView? {
-        return view?.findViewById(R.id.pending_wallet_balance)
-    }
-
-    /*
      * @returns the view that shall contain the last block date
      */
     private fun getLastBlockDateView(): TextView? {
@@ -192,12 +178,8 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
     private fun syncBalance() {
         handler.post {
             if (context != null) {
-                val availableBalance = walletKit.wallet().getBalance(Wallet.BalanceType.AVAILABLE)
                 val estimatedBalance = walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED)
-
-                getWalletBalanceView()?.text = CurrencyUtils.toString(availableBalance)
-                getWalletPendingBalanceView()?.text =
-                    String.format(context!!.getString(R.string.pending_balance), CurrencyUtils.toString((estimatedBalance - availableBalance)))
+                getWalletBalanceView()?.text = CurrencyUtils.toString(estimatedBalance)
 
                 setupTransactionsList()
             }
@@ -234,7 +216,7 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
      * Sorts the transactions and creates a card for each one
      */
     private fun setupTransactionsList() {
-        val container = view!!.findViewById<LinearLayout>(R.id.transaction_container)
+        val container = view?.findViewById<LinearLayout>(R.id.transaction_container)
 
         for (transaction: Transaction in walletKit.wallet().getTransactions(false)
             .sortedWith { transaction1, transaction2 ->
@@ -245,7 +227,7 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
                 }
             }) {
 
-            if (!transactionIdList.contains(transaction.txId.toString())) {
+            if (!transactionIdList.contains(transaction.txId.toString()) && container != null) {
                 createTransactionCard(transaction, container)
                 transactionIdList.add(transaction.txId.toString())
             }
@@ -287,6 +269,7 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
 
         valueTextView.text = CurrencyUtils.toString(WalletUtils.calculateTransactionValue(walletKit, transaction, isIncoming))
         dateTextView.text = formattedDate
+
         container.addView(cardView, 0)
     }
 }
