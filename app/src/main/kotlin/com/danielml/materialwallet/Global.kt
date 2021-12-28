@@ -23,6 +23,9 @@ class Global {
         const val RECEIVE_COINS_BACKSTACK = "receive_coins"
         const val SETTINGS_BACKSTACK = "settings"
 
+        const val NETWORK_TYPE_KEY = "network_type_key"
+        const val NETWORK_TYPE_DEFAULT = "0"
+
         /*
          * @returns the sha256 of the given string
          */

@@ -30,4 +30,7 @@
     <string name="pending_balance">Pending balance: %1$s</string>
 
     <string name="transaction_fee">Fee: %1$s</string>
+
+    <string name="network_type">Network type</string>
+    <string name="network_type_description">Select the network type (requires a restart)</string>
 </resources>

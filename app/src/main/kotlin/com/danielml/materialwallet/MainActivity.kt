@@ -2,10 +2,13 @@ package com.danielml.materialwallet
 
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
+import com.danielml.materialwallet.Global.Companion.TAG
 import com.danielml.materialwallet.fragments.SettingsFragment
 import com.danielml.materialwallet.managers.WalletDatabaseManager
 import com.danielml.materialwallet.managers.WalletManager
@@ -29,10 +32,7 @@ class MainActivity : AppCompatActivity() {
 
         setImportWalletVisibility(importWalletVisibility)
 
-        val isDebuggable = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0)
-        if (isDebuggable) {
-            Global.NETWORK_PARAMS = TestNet3Params.get()
-        }
+        loadSettings()
 
         val navigationBarView = findViewById<NavigationBarView>(R.id.bottom_navigation)
         navigationBarView.setOnItemSelectedListener { item ->
@@ -104,6 +104,15 @@ class MainActivity : AppCompatActivity() {
         val importWalletButton = findViewById<ExtendedFloatingActionButton>(R.id.import_wallet_button)
         importWalletButton.visibility = visibility
         importWalletVisibility = visibility
+    }
+
+    private fun loadSettings() {
+        val settingsPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val networkTypeValue = settingsPreferences.getString(Global.NETWORK_TYPE_KEY, Global.NETWORK_TYPE_DEFAULT)
+
+        if (networkTypeValue != Global.NETWORK_TYPE_DEFAULT) {
+            Global.NETWORK_PARAMS = TestNet3Params.get()
+        }
     }
 
     override fun onBackPressed() {

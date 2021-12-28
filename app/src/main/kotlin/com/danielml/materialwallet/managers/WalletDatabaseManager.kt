@@ -1,13 +1,16 @@
 package com.danielml.materialwallet.managers
 
 import android.content.Context
+import com.danielml.materialwallet.Global
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
 
 class WalletDatabaseManager {
     companion object {
-        private const val databaseFilename = "wallet-database.json"
+        private fun getDatabaseFilename() : String {
+            return "wallet-database." + Global.NETWORK_PARAMS.id + ".json"
+        }
 
         const val mnemonicKey = "mnemonic"
         const val walletIdKey = "walletId"
@@ -39,11 +42,10 @@ class WalletDatabaseManager {
          */
         private fun getDatabase(context: Context): File {
             val dataDir = context.applicationContext.dataDir
-            val databaseFile = File("$dataDir/$databaseFilename")
+            val databaseFile = File("$dataDir/" + getDatabaseFilename())
             if (!databaseFile.exists()) {
                 databaseFile.writeText("")
             }
-
             return databaseFile
         }
     }
