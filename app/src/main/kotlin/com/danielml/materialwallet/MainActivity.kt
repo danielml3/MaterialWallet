@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private val setupWalletFragment = SetupWalletFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super.onCreate(null)
         setContentView(R.layout.activity_main)
 
         val isDebuggable = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0)
