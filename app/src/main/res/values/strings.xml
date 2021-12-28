@@ -4,6 +4,7 @@
     <string name="wallet">Wallet</string>
     <string name="settings">Settings</string>
 
+    <string name="create_wallet">Create wallet</string>
     <string name="import_wallet_title">Import wallet</string>
     <string name="import_wallet_message">Import an existing wallet using the recovery phrase</string>
     <string name="mnemonic_hint">12-word key</string>

@@ -15,6 +15,13 @@
             android:layout_height="match_parent"
             android:layout_weight="1"/>
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/create_wallet_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_margin="20dp"
+            android:text="@string/create_wallet"/>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/import_wallet_button"
