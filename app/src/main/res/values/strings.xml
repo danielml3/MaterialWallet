@@ -12,13 +12,14 @@
     <string name="send_coins">Send</string>
     <string name="receive_coins">Receive</string>
 
-    <string name="not_enough_coins">Not enough coins</string>
+    <string name="insufficient_balance">Insufficient balance</string>
 
     <string name="invalid_mnemonic">Invalid recovery phrase</string>
     <string name="invalid_mnemonic_hint">Check that the words only have one space in between and that you did not write
         more words than needed
     </string>
     <string name="invalid_send_details">Invalid recipient details</string>
+    <string name="invalid_address">Invalid address</string>
 
     <string name="target_address_hint">Target address</string>
     <string name="amount_to_send_hint">Amount to send</string>

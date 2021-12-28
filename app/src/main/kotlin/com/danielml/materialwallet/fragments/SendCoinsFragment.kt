@@ -15,8 +15,11 @@ import com.danielml.materialwallet.utils.CurrencyUtils
 import com.danielml.materialwallet.utils.DialogBuilder
 import com.google.android.material.button.MaterialButton
 import org.bitcoinj.core.Address
+import org.bitcoinj.core.AddressFormatException
 import org.bitcoinj.core.Coin
+import org.bitcoinj.core.InsufficientMoneyException
 import org.bitcoinj.wallet.SendRequest
+import org.bitcoinj.wallet.Wallet
 import java.math.BigDecimal
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
@@ -70,12 +73,28 @@ class SendCoinsFragment : Fragment() {
                 amountText.isEnabled = true
                 sendCoinsButton.isEnabled = true
                 maximumSpendableButton.isEnabled = true
+                targetAddressText.error = ""
             } catch (e: Exception) {
+                when (e) {
+                    is AddressFormatException -> {
+                        if (targetAddressText.text.isNotEmpty()) {
+                            targetAddressText.error = context?.getString(R.string.invalid_address) ?: ""
+                        }
+                    }
+
+                    is Wallet.DustySendRequested, is InsufficientMoneyException -> {
+                        targetAddressText.error = context?.getString(R.string.insufficient_balance) ?: ""
+                    }
+
+                    else -> {
+                        e.printStackTrace()
+                    }
+                }
+
                 amountText.isEnabled = false
                 sendCoinsButton.isEnabled = false
                 maximumSpendableButton.isEnabled = false
                 amountText.setText("")
-                e.printStackTrace()
             }
         }
 
