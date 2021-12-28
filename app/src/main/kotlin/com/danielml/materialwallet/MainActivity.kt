@@ -40,13 +40,22 @@ class MainActivity : AppCompatActivity() {
 
             when (item.itemId) {
                 R.id.wallet_page -> {
-                    supportFragmentManager.popBackStack(Global.lastWalletBackStack, 0)
+                    if (Global.lastWalletBackStack.isNotEmpty()) {
+                        supportFragmentManager.popBackStack(Global.lastWalletBackStack, 0)
+                    } else {
+                        supportFragmentManager
+                            .beginTransaction()
+                            .hide(settingsFragment)
+                            .commit()
+                    }
+
                     true
                 }
 
                 R.id.settings_page -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_fragment_container, settingsFragment)
+                        .show(settingsFragment)
                         .addToBackStack(Global.SETTINGS_BACKSTACK)
                         .commit()
                     true
