@@ -288,5 +288,4 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         valueTextView.text = CurrencyUtils.toString(WalletUtils.calculateTransactionValue(walletKit, transaction, isIncoming))
         dateTextView.text = formattedDate
         container.addView(cardView, 0)
-    }
-}
+    } }
