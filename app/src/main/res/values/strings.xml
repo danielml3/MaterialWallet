@@ -27,12 +27,15 @@
     <string name="total_sent">Sent: %1$s</string>
     <string name="transaction_fee">Fee: %1$s</string>
     <string name="total_spent">Total spent: %1$s</string>
-    <string name="current_balance">Current balance: %1$s</string>
+    <string name="current_balance">Current balance:</string>
     <string name="future_balance">Future balance: %1$s</string>
 
+    <string name="current_receive_address">Current address</string>
+    <string name="used_addresses">Used addresses</string>
     <string name="copy_address">Copy address</string>
 
     <string name="last_block_date">Last block date: %1$s</string>
+    <string name="transactions">Transactions</string>
 
     <string name="_1">1</string>
     <string name="_2">2</string>

@@ -13,40 +13,40 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:gravity="center_horizontal"
-                android:layout_margin="20dp"
-                android:orientation="vertical">
-
-            <TextView
-                    android:id="@+id/wallet_balance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textSize="18pt"
-                    android:layout_marginBottom="10dp"/>
-
-        </LinearLayout>
-
         <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                style="@style/Widget.Material3.CardView.Elevated"
-                app:shapeAppearanceOverlay="@style/WalletContainerCardViewShape">
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/primaryCardBackground"
+                app:cardCornerRadius="15dp"
+                style="@style/Widget.Material3.CardView.Elevated">
 
             <LinearLayout
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_margin="20dp"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/current_balance"/>
+
+                <TextView
+                        android:id="@+id/wallet_balance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textSize="18pt"
+                        android:layout_marginBottom="10dp"/>
 
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
                         android:orientation="horizontal">
 
                     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -69,27 +69,45 @@
 
                 </LinearLayout>
 
-                <TextView
-                        android:id="@+id/last_block_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"/>
-
-                <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                    <LinearLayout
-                            android:id="@+id/transaction_container"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:orientation="vertical">
-
-                    </LinearLayout>
-                </ScrollView>
             </LinearLayout>
+
         </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+            <TextView
+                    android:id="@+id/last_block_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:layout_gravity="start"
+                    android:text="@string/transactions"
+                    android:textStyle="bold"/>
+
+            <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <LinearLayout
+                        android:id="@+id/transaction_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:orientation="vertical">
+
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

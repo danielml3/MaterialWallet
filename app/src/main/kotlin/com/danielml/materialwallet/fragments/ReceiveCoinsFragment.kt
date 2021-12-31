@@ -24,24 +24,24 @@ class ReceiveCoinsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val walletKit = Global.globalWalletKit!!
-        val container = view.findViewById<LinearLayout>(R.id.address_card_container)
+        val usedAddressesContainer = view.findViewById<LinearLayout>(R.id.used_address_container)
+        val currentAddressContainer = view.findViewById<LinearLayout>(R.id.current_address_container)
 
         for (address: Address in walletKit.wallet().issuedReceiveAddresses) {
+            val container = if (address.toString() == walletKit.wallet().currentReceiveAddress().toString()) {
+                currentAddressContainer
+            } else {
+                usedAddressesContainer
+            }
+
             val addressString = address.toString()
             val addressCard = layoutInflater.inflate(R.layout.address_card, container, false)
             val addressTextView = addressCard.findViewById<TextView>(R.id.address_text)
             val copyAddressButton = addressCard.findViewById<MaterialButton>(R.id.copy_address)
-            val internalContainer = addressCard.findViewById<LinearLayout>(R.id.internal_address_container)
 
             addressTextView.text = addressString
             copyAddressButton.setOnClickListener {
                 ClipboardUtils.copyToClipboard(context!!, addressString)
-            }
-
-            if (addressString != walletKit.wallet().currentReceiveAddress().toString()) {
-                internalContainer.background = ColorDrawable(context!!.getColor(R.color.gray))
-            } else {
-                internalContainer.background = ColorDrawable(context!!.getColor(R.color.secondaryColor))
             }
 
             container.addView(addressCard, 0)

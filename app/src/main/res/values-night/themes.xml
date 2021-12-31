@@ -6,10 +6,10 @@
         <item name="colorPrimaryContainer">@color/primaryColor</item>
         <item name="colorOnPrimaryContainer">@color/black</item>
 
-        <item name="colorSecondary">@color/secondaryColor</item>
-        <item name="colorSecondaryVariant">@color/secondaryDarkColor</item>
+        <item name="colorSecondary">@color/primaryColor</item>
+        <item name="colorSecondaryVariant">@color/primaryLightColor</item>
         <item name="colorOnSecondary">@color/black</item>
-        <item name="colorSecondaryContainer">@color/secondaryColor</item>
+        <item name="colorSecondaryContainer">@color/primaryColor</item>
         <item name="colorOnSecondaryContainer">@color/black</item>
 
         <item name="android:statusBarColor">@color/window_background</item>
