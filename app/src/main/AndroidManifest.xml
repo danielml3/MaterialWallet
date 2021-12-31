@@ -15,7 +15,8 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.MaterialWallet">
         <activity android:name="com.danielml.materialwallet.MainActivity" android:exported="true"
-                  android:screenOrientation="portrait">
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

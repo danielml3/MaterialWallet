@@ -11,6 +11,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="@string/_0"
+            android:maxLines="1"
             android:textSize="20pt"
             android:textStyle="bold"/>
 
@@ -76,11 +77,8 @@
         <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/backslash_button"
                 android:src="@drawable/backspace"
-                android:layout_margin="20dp"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                app:fabCustomSize="72.5dp"
-                style="@style/Widget.Material3.FloatingActionButton.Primary"/>
+                app:fabCustomSize="80dp"
+                style="@style/NumericPadButton"/>
 
     </GridLayout>
 

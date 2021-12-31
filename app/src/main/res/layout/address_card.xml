@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="5dp"
@@ -8,15 +9,16 @@
         android:focusable="true"
         android:layout_margin="10dp"
         android:foreground="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="15dp"
         style="@style/Widget.Material3.CardView.Elevated">
 
     <LinearLayout
-            android:id="@+id/internal_address_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dp"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            android:background="@color/primaryCardBackground">
 
         <TextView
                 android:id="@+id/address_text"
@@ -24,7 +26,6 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:layout_margin="10dp"
-                android:textColor="@color/white"
                 android:textSize="12pt"/>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton

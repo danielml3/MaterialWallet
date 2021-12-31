@@ -27,7 +27,7 @@ class NumericPad(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defS
         Pair(R.id.button_9, "9")
     )
 
-    private val maximumValueLength = 14
+    private val maximumValueLength = 140
     private val maxDecimalsLength = 7
 
     private val decimalSymbol = "."
