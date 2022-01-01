@@ -22,17 +22,17 @@ import com.danielml.materialwallet.utils.ClipboardUtils
 import com.danielml.materialwallet.utils.DialogBuilder
 import com.danielml.materialwallet.utils.WalletUtils
 import com.google.android.material.button.MaterialButton
-import org.bitcoinj.core.Coin
-import org.bitcoinj.core.Peer
-import org.bitcoinj.core.Transaction
-import org.bitcoinj.core.TransactionInput
+import org.bitcoinj.core.*
 import org.bitcoinj.core.listeners.BlocksDownloadedEventListener
+import org.bitcoinj.core.listeners.PeerConnectedEventListener
+import org.bitcoinj.core.listeners.PeerDisconnectedEventListener
 import org.bitcoinj.wallet.Wallet
 import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener
 import org.bitcoinj.wallet.listeners.WalletCoinsSentEventListener
 import java.util.*
 
-class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoinsSentEventListener {
+class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoinsSentEventListener, BlocksDownloadedEventListener,
+    PeerConnectedEventListener, PeerDisconnectedEventListener {
     private val handler = Handler(Looper.getMainLooper())
 
     private val walletKit = Global.globalWalletKit!!
@@ -40,8 +40,6 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
     private var lastBlockFetchDate: Long = 0
 
     private var blockDateUpdateThresholdMs = 1000
-
-    private var blocksDownloadedListener: BlocksDownloadedEventListener? = null
 
     private val transactionIdList: ArrayList<String> = ArrayList()
 
@@ -57,41 +55,11 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
 
         walletKit.wallet().addCoinsSentEventListener(this)
         walletKit.wallet().addCoinsReceivedEventListener(this)
+        walletKit.peerGroup().addBlocksDownloadedEventListener(this)
+        walletKit.peerGroup().addConnectedEventListener(this)
+        walletKit.peerGroup().addDisconnectedEventListener(this)
 
         val sendCoinsButton = view.findViewById<Button>(R.id.send_coins_button)
-
-        blocksDownloadedListener = BlocksDownloadedEventListener { _, block, _, blocksLeft ->
-            val newBlockFetchDate = Date().time
-            if (newBlockFetchDate - lastBlockFetchDate > blockDateUpdateThresholdMs || blocksLeft <= 1) {
-                handler.post {
-                    setLastBlockDate(block.time)
-                    syncBalance()
-
-                    // Enable the send coins button if no blocks are pending
-                    sendCoinsButton.isEnabled = (blocksLeft == 0)
-                }
-
-                lastBlockFetchDate = newBlockFetchDate
-            }
-        }
-
-        walletKit.peerGroup().addBlocksDownloadedEventListener(blocksDownloadedListener!!)
-        walletKit.peerGroup().addConnectedEventListener { peer, _ ->
-            handler.post {
-                // Enable the send coins button if no blocks are pending
-                if (!sendCoinsButton.isEnabled) {
-                    sendCoinsButton.isEnabled = (peer.peerBlockHeightDifference == 0)
-                }
-            }
-        }
-
-        walletKit.peerGroup().addDisconnectedEventListener { _, peerCount ->
-            handler.post {
-                if (peerCount < 1) {
-                    sendCoinsButton.isEnabled = false
-                }
-            }
-        }
 
         // Enable the send coins button if no blocks are pending
         val connectedPeers = walletKit.peerGroup().connectedPeers
@@ -162,7 +130,9 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
 
         walletKit.wallet().removeCoinsReceivedEventListener(this)
         walletKit.wallet().removeCoinsReceivedEventListener(this)
-        walletKit.peerGroup().removeBlocksDownloadedEventListener(blocksDownloadedListener)
+        walletKit.peerGroup().removeBlocksDownloadedEventListener(this)
+        walletKit.peerGroup().removeConnectedEventListener(this)
+        walletKit.peerGroup().removeDisconnectedEventListener(this)
     }
 
     /*
@@ -209,6 +179,43 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         if (tx != null) {
             val container = view!!.findViewById<LinearLayout>(R.id.transaction_container)
             createTransactionCard(tx, container)
+        }
+    }
+
+    override fun onPeerConnected(peer: Peer?, peerCount: Int) {
+        val sendCoinsButton = view?.findViewById<Button>(R.id.send_coins_button)
+        handler.post {
+            // Enable the send coins button if no blocks are pending
+            if (sendCoinsButton?.isEnabled == false) {
+                sendCoinsButton.isEnabled = (peer?.peerBlockHeightDifference == 0)
+            }
+        }
+    }
+
+    override fun onPeerDisconnected(peer: Peer?, peerCount: Int) {
+        val sendCoinsButton = view?.findViewById<Button>(R.id.send_coins_button)
+        handler.post {
+            if (peerCount < 1) {
+                sendCoinsButton?.isEnabled = false
+            }
+        }
+    }
+
+    override fun onBlocksDownloaded(peer: Peer?, block: Block?, filteredBlock: FilteredBlock?, blocksLeft: Int) {
+        val sendCoinsButton = view?.findViewById<Button>(R.id.send_coins_button)
+        val newBlockFetchDate = Date().time
+        if (newBlockFetchDate - lastBlockFetchDate > blockDateUpdateThresholdMs || blocksLeft <= 1) {
+            handler.post {
+                if (block != null) {
+                    setLastBlockDate(block.time)
+                }
+                syncBalance()
+
+                // Enable the send coins button if no blocks are pending
+                sendCoinsButton?.isEnabled = (blocksLeft == 0)
+            }
+
+            lastBlockFetchDate = newBlockFetchDate
         }
     }
 
