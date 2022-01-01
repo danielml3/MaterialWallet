@@ -85,6 +85,14 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
             }
         }
 
+        walletKit.peerGroup().addDisconnectedEventListener { _, peerCount ->
+            handler.post {
+                if (peerCount < 1) {
+                    sendCoinsButton.isEnabled = false
+                }
+            }
+        }
+
         // Enable the send coins button if no blocks are pending
         val connectedPeers = walletKit.peerGroup().connectedPeers
         if (connectedPeers != null && connectedPeers.isNotEmpty()) {
