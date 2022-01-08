@@ -17,7 +17,7 @@ class WalletManager {
     companion object {
         // Sync the blockchain from 2015-12-21, which is the first date of
         // BIP 141
-        private const val walletCreationDate: Long = 1450656000
+        const val walletCreationDate: Long = 1450656000
 
         /*
      * Sets up a wallet with the given details and generates a card for the wallet
@@ -26,7 +26,7 @@ class WalletManager {
      * @returns the BitcoinWallet object if the operation was successful
      * @returns null if the operation failed
      */
-        fun setupWallet(context: Context, selectedWalletId: String, mnemonic: String?): WalletAppKit? {
+        fun setupWallet(context: Context, selectedWalletId: String, mnemonic: String?, creationDate: Long = walletCreationDate): WalletAppKit? {
             val handler = Handler(Looper.getMainLooper())
 
             try {
@@ -73,7 +73,7 @@ class WalletManager {
                 }
 
                 if (mnemonic?.isNotEmpty() == true) {
-                    val seed = DeterministicSeed(mnemonic, null, "", walletCreationDate)
+                    val seed = DeterministicSeed(mnemonic, null, "", creationDate)
                     walletKit.restoreWalletFromSeed(seed)
                 }
 
