@@ -17,5 +17,21 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/sync_from_date">
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/sync_from_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:focusable="false"
+                android:text="@string/default_sync_date"
+                android:maxLines="1"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
 </LinearLayout>

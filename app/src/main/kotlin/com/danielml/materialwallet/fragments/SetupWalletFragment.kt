@@ -1,7 +1,9 @@
 package com.danielml.materialwallet.fragments
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +47,24 @@ class SetupWalletFragment : Fragment() {
     */
     private fun getImportWalletDialog(): AlertDialog {
         val importForm = layoutInflater.inflate(R.layout.import_wallet_form, null)
+        val dateEditText = importForm.findViewById<EditText>(R.id.sync_from_date)
+        var syncTimestamp = WalletManager.walletCreationDate
+
+        dateEditText.setOnClickListener {
+            val datePickerDialog = DatePickerDialog(context!!, 0, null, 2015, 11, 21) // 2015-12-21
+            datePickerDialog.datePicker.minDate = 1230940800000 // 2009-01-03 (first block date)
+            datePickerDialog.datePicker.maxDate = Date().time
+
+            datePickerDialog.setOnDateSetListener { _, year, month, dayOfMonth ->
+                val calendar = Calendar.getInstance()
+                calendar[year, month] = dayOfMonth
+                syncTimestamp = calendar.time.time / 1000
+
+                dateEditText.setText(DateFormat.format("yyyy-MM-dd", calendar.time))
+            }
+
+            datePickerDialog.show()
+        }
 
         return DialogBuilder.buildDialog(
             context!!,
@@ -52,7 +72,7 @@ class SetupWalletFragment : Fragment() {
                 run {
                     val mnemonicTextBox = importForm.findViewById<EditText>(R.id.mnemonic_text_box)
                     val mnemonic = mnemonicTextBox.text.toString()
-                    val walletKit = WalletManager.setupWallet(context!!, "", mnemonic)
+                    val walletKit = WalletManager.setupWallet(context!!, "", mnemonic, syncTimestamp)
                     if (walletKit != null) {
                         detachSetupFragment(context!!, this)
                     }
