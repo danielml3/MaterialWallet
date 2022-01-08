@@ -10,6 +10,7 @@
         android:layout_margin="10dp"
         android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="15dp"
+        app:cardBackgroundColor="@color/primaryCardBackground"
         style="@style/Widget.Material3.CardView.Elevated">
 
     <LinearLayout
@@ -17,8 +18,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dp"
-            android:gravity="center_horizontal"
-            android:background="@color/primaryCardBackground">
+            android:gravity="center_horizontal">
 
         <TextView
                 android:id="@+id/address_text"
