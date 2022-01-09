@@ -12,4 +12,5 @@
 
     <color name="window_background">@color/light_gray</color>
     <color name="primaryCardBackground">@color/white</color>
+    <color name="numeric_pad_content_color">@color/black</color>
 </resources>
