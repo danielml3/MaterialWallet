@@ -2,4 +2,5 @@
 <resources>
     <color name="window_background">@color/dark_gray</color>
     <color name="primaryCardBackground">@color/dark_gray</color>
+    <color name="numeric_pad_content_color">@color/white</color>
 </resources>
