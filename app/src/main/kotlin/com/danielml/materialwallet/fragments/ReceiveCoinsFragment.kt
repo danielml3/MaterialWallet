@@ -1,7 +1,8 @@
 package com.danielml.materialwallet.fragments
 
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,9 @@ import com.google.android.material.button.MaterialButton
 import org.bitcoinj.core.Address
 
 class ReceiveCoinsFragment : Fragment() {
+
+    private val handler = Handler(Looper.getMainLooper())
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Global.allowBackPress = true
         Global.lastWalletBackStack = Global.RECEIVE_COINS_BACKSTACK
@@ -27,24 +31,32 @@ class ReceiveCoinsFragment : Fragment() {
         val usedAddressesContainer = view.findViewById<LinearLayout>(R.id.used_address_container)
         val currentAddressContainer = view.findViewById<LinearLayout>(R.id.current_address_container)
 
-        for (address: Address in walletKit.wallet().issuedReceiveAddresses) {
-            val container = if (address.toString() == walletKit.wallet().currentReceiveAddress().toString()) {
-                currentAddressContainer
-            } else {
-                usedAddressesContainer
+        Thread {
+            for (address: Address in walletKit.wallet().issuedReceiveAddresses.reversed()) {
+                val container = if (address.toString() == walletKit.wallet().currentReceiveAddress().toString()) {
+                    currentAddressContainer
+                } else {
+                    usedAddressesContainer
+                }
+
+                if (context == null) {
+                    break
+                }
+
+                val addressString = address.toString()
+                val addressCard = layoutInflater.inflate(R.layout.address_card, container, false)
+                val addressTextView = addressCard.findViewById<TextView>(R.id.address_text)
+                val copyAddressButton = addressCard.findViewById<MaterialButton>(R.id.copy_address)
+
+                addressTextView.text = addressString
+                copyAddressButton.setOnClickListener {
+                    ClipboardUtils.copyToClipboard(context!!, addressString)
+                }
+
+                handler.post {
+                    container.addView(addressCard)
+                }
             }
-
-            val addressString = address.toString()
-            val addressCard = layoutInflater.inflate(R.layout.address_card, container, false)
-            val addressTextView = addressCard.findViewById<TextView>(R.id.address_text)
-            val copyAddressButton = addressCard.findViewById<MaterialButton>(R.id.copy_address)
-
-            addressTextView.text = addressString
-            copyAddressButton.setOnClickListener {
-                ClipboardUtils.copyToClipboard(context!!, addressString)
-            }
-
-            container.addView(addressCard, 0)
-        }
+        }.start()
     }
 }
