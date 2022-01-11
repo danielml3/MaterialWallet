@@ -12,16 +12,12 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
 import com.danielml.materialwallet.utils.CurrencyUtils
-import com.danielml.materialwallet.utils.ClipboardUtils
-import com.danielml.materialwallet.utils.DialogBuilder
 import com.danielml.materialwallet.utils.WalletUtils
-import com.google.android.material.button.MaterialButton
 import org.bitcoinj.core.*
 import org.bitcoinj.core.listeners.BlocksDownloadedEventListener
 import org.bitcoinj.core.listeners.PeerConnectedEventListener
@@ -31,7 +27,8 @@ import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener
 import org.bitcoinj.wallet.listeners.WalletCoinsSentEventListener
 import java.util.*
 
-class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoinsSentEventListener, BlocksDownloadedEventListener,
+class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoinsSentEventListener,
+    BlocksDownloadedEventListener,
     PeerConnectedEventListener, PeerDisconnectedEventListener {
     private val handler = Handler(Looper.getMainLooper())
 
@@ -231,22 +228,28 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
      * Sorts the transactions and creates a card for each one
      */
     private fun setupTransactionsList() {
-        val container = view?.findViewById<LinearLayout>(R.id.transaction_container)
+        Thread {
+            val container = view?.findViewById<LinearLayout>(R.id.transaction_container)
 
-        for (transaction: Transaction in walletKit.wallet().getTransactions(false)
-            .sortedWith { transaction1, transaction2 ->
-                if ((transaction1?.updateTime?.time ?: 0) > (transaction2?.updateTime?.time ?: 0)) {
-                    1
-                } else {
-                    -1
+            for (transaction: Transaction in walletKit.wallet().getTransactions(false)
+                .sortedWith { transaction1, transaction2 ->
+                    if ((transaction1?.updateTime?.time ?: 0) > (transaction2?.updateTime?.time ?: 0)) {
+                        -1
+                    } else {
+                        1
+                    }
+                }) {
+
+                if (context == null) {
+                    break
                 }
-            }) {
 
-            if (!transactionIdList.contains(transaction.txId.toString()) && container != null) {
-                createTransactionCard(transaction, container)
-                transactionIdList.add(transaction.txId.toString())
+                if (!transactionIdList.contains(transaction.txId.toString()) && container != null) {
+                    transactionIdList.add(transaction.txId.toString())
+                    createTransactionCard(transaction, container)
+                }
             }
-        }
+        }.start()
     }
 
     /*
@@ -277,14 +280,18 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         }
 
         if (transaction.fee != null) {
-            feeTextView.text = String.format(context!!.getString(R.string.transaction_fee), CurrencyUtils.toString(transaction.fee))
+            feeTextView.text =
+                String.format(context!!.getString(R.string.transaction_fee), CurrencyUtils.toString(transaction.fee))
         } else {
             feeTextView.visibility = View.GONE
         }
 
-        valueTextView.text = CurrencyUtils.toString(WalletUtils.calculateTransactionValue(walletKit, transaction, isIncoming))
+        valueTextView.text =
+            CurrencyUtils.toString(WalletUtils.calculateTransactionValue(walletKit, transaction, isIncoming))
         dateTextView.text = formattedDate
 
-        container.addView(cardView, 0)
+        handler.post {
+            container.addView(cardView)
+        }
     }
 }
