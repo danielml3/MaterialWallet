@@ -67,7 +67,8 @@ class SendCoinsFragment : Fragment() {
                     }
 
                     is InsufficientMoneyException -> {
-                        val balance = CurrencyUtils.toString(walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED))
+                        val balance =
+                            CurrencyUtils.toString(walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED))
                         DialogBuilder.buildDialog(
                             context!!,
                             { _, _ -> },

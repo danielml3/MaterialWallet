@@ -26,7 +26,12 @@ class WalletManager {
      * @returns the BitcoinWallet object if the operation was successful
      * @returns null if the operation failed
      */
-        fun setupWallet(context: Context, selectedWalletId: String, mnemonic: String?, creationDate: Long = walletCreationDate): WalletAppKit? {
+        fun setupWallet(
+            context: Context,
+            selectedWalletId: String,
+            mnemonic: String?,
+            creationDate: Long = walletCreationDate
+        ): WalletAppKit? {
             val handler = Handler(Looper.getMainLooper())
 
             try {
