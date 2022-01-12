@@ -2,19 +2,13 @@ package com.danielml.materialwallet
 
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
-import android.view.View
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.danielml.materialwallet.fragments.SettingsFragment
 import com.danielml.materialwallet.fragments.SetupWalletFragment
 import com.danielml.materialwallet.managers.WalletDatabaseManager
 import com.danielml.materialwallet.managers.WalletManager
-import com.danielml.materialwallet.utils.DialogBuilder
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.navigation.NavigationBarView
 import org.bitcoinj.params.TestNet3Params
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private val settingsFragment = SettingsFragment()
@@ -67,7 +61,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadWallet() {
-              val walletInformation = WalletDatabaseManager.getWalletInformation(this)
+        val walletInformation = WalletDatabaseManager.getWalletInformation(this)
         if (walletInformation.has(WalletDatabaseManager.walletIdKey)) {
             val walletId = walletInformation.getString(WalletDatabaseManager.walletIdKey)
             if (walletId.isNotEmpty()) {

@@ -8,7 +8,7 @@ import java.text.DecimalFormat
 
 class CurrencyUtils {
     companion object {
-        fun toString(coin: Coin) : String {
+        fun toString(coin: Coin): String {
             val value = coin.toBtc()
             val format = "0.######## " + if (Global.NETWORK_PARAMS == TestNet3Params.get()) {
                 "tBTC"
@@ -18,25 +18,25 @@ class CurrencyUtils {
             return DecimalFormat(format).format(value)
         }
 
-        fun toString(satoshis: Long) : String {
+        fun toString(satoshis: Long): String {
             return toString(Coin.ofSat(satoshis))
         }
 
-        fun toString(btc: BigDecimal) : String {
+        fun toString(btc: BigDecimal): String {
             return toString(Coin.ofBtc(btc))
         }
 
-        fun toNumericString(coin: Coin) : String {
+        fun toNumericString(coin: Coin): String {
             val value = coin.toBtc()
             val format = "0.########"
             return DecimalFormat(format).format(value)
         }
 
-        fun toNumericString(satoshis: Long) : String {
+        fun toNumericString(satoshis: Long): String {
             return toNumericString(Coin.ofSat(satoshis))
         }
 
-        fun toNumericString(btc: BigDecimal) : String {
+        fun toNumericString(btc: BigDecimal): String {
             return toNumericString(Coin.ofBtc(btc))
         }
     }

@@ -3,7 +3,10 @@ package com.danielml.materialwallet.utils
 import android.util.Log
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.Global.Companion.TAG
-import org.bitcoinj.core.*
+import org.bitcoinj.core.Address
+import org.bitcoinj.core.Coin
+import org.bitcoinj.core.Transaction
+import org.bitcoinj.core.TransactionOutput
 import org.bitcoinj.kits.WalletAppKit
 import org.bitcoinj.wallet.SendRequest
 import org.bitcoinj.wallet.Wallet

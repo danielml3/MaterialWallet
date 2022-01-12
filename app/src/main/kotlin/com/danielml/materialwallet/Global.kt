@@ -3,7 +3,6 @@ package com.danielml.materialwallet
 import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.kits.WalletAppKit
 import org.bitcoinj.params.MainNetParams
-import org.bitcoinj.params.TestNet3Params
 import java.security.MessageDigest
 
 class Global {
