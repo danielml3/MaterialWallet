@@ -59,6 +59,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        if (Global.globalWalletKit != null && Global.walletSetupFinished) {
+            WalletManager.attachWalletFragment(this)
+        }
+        
         loadWallet()
     }
 

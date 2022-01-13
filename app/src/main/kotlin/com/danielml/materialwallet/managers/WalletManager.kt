@@ -54,18 +54,16 @@ class WalletManager {
                         super.onSetupCompleted()
                         val mnemonicString = wallet().keyChainSeed.mnemonicString ?: ""
                         WalletDatabaseManager.storeWalletInformation(context, mnemonicString, walletId)
+                        Global.walletSetupFinished = true
 
                         handler.post {
-                            (context as FragmentActivity).supportFragmentManager
-                                .beginTransaction()
-                                .add(R.id.main_fragment_container, WalletFragment())
-                                .addToBackStack(Global.WALLET_BACKSTACK)
-                                .commit()
+                            attachWalletFragment(context)
                         }
                     }
                 }
 
                 Log.e(TAG, "Creating wallet $walletId")
+                Global.walletSetupFinished = false
 
                 if (walletKit.isChainFileLocked) {
                     Log.e(TAG, "Chain file is locked")
@@ -87,6 +85,14 @@ class WalletManager {
             }
 
             return null
+        }
+
+        fun attachWalletFragment(context: Context) {
+            (context as FragmentActivity).supportFragmentManager
+                .beginTransaction()
+                .add(R.id.main_fragment_container, WalletFragment())
+                .addToBackStack(Global.WALLET_BACKSTACK)
+                .commit()
         }
     }
 }
