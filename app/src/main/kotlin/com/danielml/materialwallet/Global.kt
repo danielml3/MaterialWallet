@@ -18,6 +18,7 @@ class Global {
         var allowBackPress = false
         var lastWalletBackStack = ""
         var setupFinished = false
+        var walletSetupFinished = false
 
         const val SETUP_BACKSTACK = "setup"
         const val WALLET_BACKSTACK = "wallet"
