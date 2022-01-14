@@ -244,8 +244,7 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
                     break
                 }
 
-                if (!transactionIdList.contains(transaction.txId.toString()) && container != null) {
-                    transactionIdList.add(transaction.txId.toString())
+                if (container != null) {
                     createTransactionCard(transaction, container)
                 }
             }
@@ -262,6 +261,12 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         val valueTextView = cardView.findViewById<TextView>(R.id.transaction_value)
         val feeTextView = cardView.findViewById<TextView>(R.id.transaction_fee)
         val transactionIcon = cardView.findViewById<ImageView>(R.id.transaction_icon)
+
+        if (transactionIdList.contains(transaction.txId.toString())) {
+            return
+        }
+
+        transactionIdList.add(transaction.txId.toString())
 
         val formattedDate = DateFormat.format("dd/MM/yyyy - HH:mm:ss", transaction.updateTime).toString()
         var isIncoming = true
