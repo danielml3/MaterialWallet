@@ -6,20 +6,22 @@
         android:orientation="vertical"
         android:layout_gravity="bottom">
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <com.google.android.material.button.MaterialButton
             android:id="@+id/create_wallet_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="20dp"
-            android:text="@string/create_wallet"/>
+            android:text="@string/create_wallet"
+            style="@style/MainButton"/>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <com.google.android.material.button.MaterialButton
             android:id="@+id/import_wallet_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="20dp"
-            android:text="@string/import_wallet_title"/>
+            android:text="@string/import_wallet_title"
+            style="@style/MainButton"/>
 
 </LinearLayout>

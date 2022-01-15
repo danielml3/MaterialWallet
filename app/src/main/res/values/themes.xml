@@ -14,23 +14,25 @@
 
         <item name="android:statusBarColor">@color/window_background</item>
         <item name="android:windowBackground">@color/window_background</item>
+        <item name="android:navigationBarColor">#f5f5ff</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <style name="WalletContainerCardViewShape">
-        <item name="cornerSizeTopRight">30dp</item>
-        <item name="cornerSizeTopLeft">30dp</item>
-        <item name="cornerSizeBottomRight">0dp</item>
-        <item name="cornerSizeBottomLeft">0dp</item>
-    </style>
-
-    <style name="NumericPadButton" parent="@style/Widget.Material3.ExtendedFloatingActionButton.Primary">
-        <item name="android:layout_margin">10dp</item>
+    <style name="NumericPadButton" parent="@style/Widget.Material3.Button.UnelevatedButton">
+        <item name="android:layout_margin">5dp</item>
         <item name="android:textSize">10pt</item>
         <item name="android:layout_width">85dp</item>
-        <item name="android:layout_height">85dp</item>
+        <item name="android:layout_height">60dp</item>
         <item name="android:textColor">@color/numeric_pad_content_color</item>
         <item name="backgroundTint">@color/window_background</item>
+        <item name="cornerRadius">10dp</item>
         <item name="tint">@color/numeric_pad_content_color</item>
+    </style>
+
+    <style name="MainButton">
+        <item name="textAllCaps">true</item>
+        <item name="cornerRadius">15dp</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
     </style>
 </resources>

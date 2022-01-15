@@ -15,7 +15,7 @@ import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
 import com.danielml.materialwallet.managers.WalletManager
 import com.danielml.materialwallet.utils.DialogBuilder
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.button.MaterialButton
 import java.util.*
 
 class SetupWalletFragment : Fragment() {
@@ -27,12 +27,12 @@ class SetupWalletFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Global.lastWalletBackStack = Global.SETUP_BACKSTACK
-        val importWalletButton = view.findViewById<ExtendedFloatingActionButton>(R.id.import_wallet_button)
+        val importWalletButton = view.findViewById<MaterialButton>(R.id.import_wallet_button)
         importWalletButton.setOnClickListener {
             getImportWalletDialog().show()
         }
 
-        val createWalletButton = view.findViewById<ExtendedFloatingActionButton>(R.id.create_wallet_button)
+        val createWalletButton = view.findViewById<MaterialButton>(R.id.create_wallet_button)
         createWalletButton.setOnClickListener {
             val walletKit = WalletManager.setupWallet(context!!, Global.sha256(Date().time.toString()), null)
             if (walletKit != null) {
@@ -77,7 +77,7 @@ class SetupWalletFragment : Fragment() {
                         detachSetupFragment(context!!, this)
                     }
                 }
-            }, { _, _ -> }, importForm, false, R.string.import_wallet_title, R.string.import_wallet_message
+            }, { _, _ -> }, null, importForm, false, R.string.import_wallet_title, R.string.import_wallet_message
         )
     }
 

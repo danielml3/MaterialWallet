@@ -5,8 +5,7 @@ import android.util.AttributeSet
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.danielml.materialwallet.R
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.button.MaterialButton
 
 class NumericPad(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) :
     LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
@@ -41,7 +40,7 @@ class NumericPad(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defS
             val buttonId = buttonInfo.first
             val buttonValue = buttonInfo.second
 
-            val button = findViewById<ExtendedFloatingActionButton>(buttonId)
+            val button = findViewById<MaterialButton>(buttonId)
             button.setOnClickListener {
                 if (valueString == "0") {
                     valueString = buttonValue
@@ -55,7 +54,7 @@ class NumericPad(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defS
             }
         }
 
-        val dotButton = findViewById<ExtendedFloatingActionButton>(R.id.button_dot)
+        val dotButton = findViewById<MaterialButton>(R.id.button_dot)
         dotButton.setOnClickListener {
             if (valueString.length <= maximumValueLength) {
                 if (!valueString.contains(decimalSymbol)) {
@@ -66,7 +65,7 @@ class NumericPad(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defS
             updateValueText()
         }
 
-        val backSlashButton = findViewById<FloatingActionButton>(R.id.backslash_button)
+        val backSlashButton = findViewById<MaterialButton>(R.id.backslash_button)
         backSlashButton.setOnClickListener {
             valueString = if (valueString.length > 1) {
                 valueString.dropLast(1)

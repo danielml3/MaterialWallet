@@ -15,6 +15,7 @@ object DialogBuilder {
         context: Context,
         onPositiveButton: DialogInterface.OnClickListener?,
         onNegativeButton: DialogInterface.OnClickListener?,
+        onDismiss: DialogInterface.OnDismissListener?,
         content: View?,
         cancelable: Boolean,
         title: String?,
@@ -44,6 +45,10 @@ object DialogBuilder {
             builder.setNegativeButton(android.R.string.cancel, onNegativeButton)
         }
 
+        if (onDismiss != null) {
+            builder.setOnDismissListener(onDismiss)
+        }
+
         return builder.create()
     }
 
@@ -54,6 +59,7 @@ object DialogBuilder {
         context: Context,
         onPositiveButton: DialogInterface.OnClickListener?,
         onNegativeButton: DialogInterface.OnClickListener?,
+        onDismiss: DialogInterface.OnDismissListener?,
         content: View?,
         cancelable: Boolean,
         titleResId: Int,
@@ -72,7 +78,7 @@ object DialogBuilder {
         }
 
         return buildDialog(
-            context, onPositiveButton, onNegativeButton, content, cancelable,
+            context, onPositiveButton, onNegativeButton, onDismiss, content, cancelable,
             title, message
         )
     }
