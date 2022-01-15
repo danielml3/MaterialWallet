@@ -1,5 +1,6 @@
 package com.danielml.materialwallet.fragments
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
 import com.danielml.materialwallet.layouts.NumericPad
+import com.danielml.materialwallet.layouts.SlideToAction
 import com.danielml.materialwallet.utils.CurrencyUtils
 import com.danielml.materialwallet.utils.DialogBuilder
 import com.danielml.materialwallet.utils.WalletUtils
@@ -28,6 +30,16 @@ import java.math.BigDecimal
 
 class SendCoinsFragment : Fragment() {
 
+    private var sendCoinsSlider: SlideToAction? = null
+
+    private val retractSlider = DialogInterface.OnClickListener { _, _ ->
+        sendCoinsSlider?.retractSlider()
+    }
+
+    private val retractSliderDismiss = DialogInterface.OnDismissListener {
+        sendCoinsSlider?.retractSlider()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Global.allowBackPress = true
         Global.lastWalletBackStack = Global.SEND_COINS_BACKSTACK
@@ -38,11 +50,11 @@ class SendCoinsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val walletKit = Global.globalWalletKit!!
 
-        val sendCoinsButton = view.findViewById<MaterialButton>(R.id.send_coins_button)
+        sendCoinsSlider = view.findViewById(R.id.send_coins_button)
         val targetAddressText = view.findViewById<EditText>(R.id.target_address)
         val numericPad = view.findViewById<NumericPad>(R.id.amount_numeric_pad)
 
-        sendCoinsButton.setOnClickListener {
+        sendCoinsSlider?.setOnActionTriggeredListener {
             val targetAddress = targetAddressText.text.toString()
             val amountString = numericPad.getValueString()
 
@@ -57,8 +69,9 @@ class SendCoinsFragment : Fragment() {
                     is Wallet.DustySendRequested -> {
                         DialogBuilder.buildDialog(
                             context!!,
-                            { _, _ -> },
+                            retractSlider,
                             null,
+                            retractSliderDismiss,
                             null,
                             true,
                             R.string.amount_too_small,
@@ -71,8 +84,9 @@ class SendCoinsFragment : Fragment() {
                             CurrencyUtils.toString(walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED))
                         DialogBuilder.buildDialog(
                             context!!,
-                            { _, _ -> },
+                            retractSlider,
                             null,
+                            retractSliderDismiss,
                             null,
                             true,
                             context!!.getString(R.string.insufficient_balance),
@@ -83,8 +97,9 @@ class SendCoinsFragment : Fragment() {
                     is AddressFormatException -> {
                         DialogBuilder.buildDialog(
                             context!!,
-                            { _, _ -> },
+                            retractSlider,
                             null,
+                            retractSliderDismiss,
                             null,
                             true,
                             R.string.invalid_address,
@@ -108,7 +123,7 @@ class SendCoinsFragment : Fragment() {
             walletKit.peerGroup().broadcastTransaction(transaction)
             (context as FragmentActivity).supportFragmentManager.popBackStackImmediate()
         }
-        dialogBuilder.setNegativeButton(android.R.string.cancel) { _, _ -> }
+        dialogBuilder.setNegativeButton(android.R.string.cancel, retractSlider)
 
         val transactionPreview = layoutInflater.inflate(R.layout.transaction_preview, null, true)
         val receiverText = transactionPreview.findViewById<TextView>(R.id.transaction_receiver)

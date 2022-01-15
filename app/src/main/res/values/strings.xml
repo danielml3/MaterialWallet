@@ -29,6 +29,7 @@
     <string name="total_spent">Total spent: %1$s</string>
     <string name="current_balance">Current balance:</string>
     <string name="future_balance">Future balance: %1$s</string>
+    <string name="slide_to_continue">Slide to continue</string>
 
     <string name="current_receive_address">Current address</string>
     <string name="used_addresses">Used addresses</string>
@@ -48,6 +49,7 @@
     <string name="_9">9</string>
     <string name="_dot">.</string>
     <string name="_0">0</string>
+    <string name="_X">X</string>
     <string name="sync_from_date">Sync from date:</string>
     <string name="default_sync_date">2015-12-21</string>
 </resources>

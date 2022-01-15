@@ -18,65 +18,64 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:columnCount="3">
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_1"
                 android:text="@string/_1"
                 style="@style/NumericPadButton"/>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_2"
                 android:text="@string/_2"
                 style="@style/NumericPadButton"/>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_3"
                 android:text="@string/_3"
                 style="@style/NumericPadButton"/>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_4"
                 android:text="@string/_4"
                 style="@style/NumericPadButton"/>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_5"
                 android:text="@string/_5"
                 style="@style/NumericPadButton"/>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_6"
                 android:text="@string/_6"
                 style="@style/NumericPadButton"/>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_7"
                 android:text="@string/_7"
                 style="@style/NumericPadButton"/>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_8"
                 android:text="@string/_8"
                 style="@style/NumericPadButton"/>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_9"
                 android:text="@string/_9"
                 style="@style/NumericPadButton"/>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_dot"
                 android:text="@string/_dot"
                 style="@style/NumericPadButton"/>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_0"
                 android:text="@string/_0"
                 style="@style/NumericPadButton"/>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <com.google.android.material.button.MaterialButton
                 android:id="@+id/backslash_button"
-                android:src="@drawable/backspace"
-                app:fabCustomSize="80dp"
+                android:text="@string/_X"
                 style="@style/NumericPadButton"/>
 
     </GridLayout>
