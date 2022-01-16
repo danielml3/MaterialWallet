@@ -65,50 +65,52 @@ class SendCoinsFragment : Fragment() {
                 val transaction = WalletUtils.createTransaction(walletKit.wallet(), targetAddress, amount)
                 showTransactionPreview(walletKit, transaction, targetAddress)
             } catch (e: Exception) {
-                when (e) {
-                    is Wallet.DustySendRequested -> {
-                        DialogBuilder.buildDialog(
-                            context!!,
-                            retractSlider,
-                            null,
-                            retractSliderDismiss,
-                            null,
-                            true,
-                            R.string.amount_too_small,
-                            0
-                        ).show()
-                    }
+                if (context != null) {
+                    when (e) {
+                        is Wallet.DustySendRequested -> {
+                            DialogBuilder.buildDialog(
+                                context!!,
+                                retractSlider,
+                                null,
+                                retractSliderDismiss,
+                                null,
+                                true,
+                                R.string.amount_too_small,
+                                0
+                            ).show()
+                        }
 
-                    is InsufficientMoneyException -> {
-                        val balance =
-                            CurrencyUtils.toString(walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED))
-                        DialogBuilder.buildDialog(
-                            context!!,
-                            retractSlider,
-                            null,
-                            retractSliderDismiss,
-                            null,
-                            true,
-                            context!!.getString(R.string.insufficient_balance),
-                            (context!!.getString(R.string.current_balance) + " $balance")
-                        ).show()
-                    }
+                        is InsufficientMoneyException -> {
+                            val balance =
+                                CurrencyUtils.toString(walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED))
+                            DialogBuilder.buildDialog(
+                                context!!,
+                                retractSlider,
+                                null,
+                                retractSliderDismiss,
+                                null,
+                                true,
+                                context!!.getString(R.string.insufficient_balance),
+                                (context!!.getString(R.string.current_balance) + " $balance")
+                            ).show()
+                        }
 
-                    is AddressFormatException -> {
-                        DialogBuilder.buildDialog(
-                            context!!,
-                            retractSlider,
-                            null,
-                            retractSliderDismiss,
-                            null,
-                            true,
-                            R.string.invalid_address,
-                            0
-                        ).show()
-                    }
+                        is AddressFormatException -> {
+                            DialogBuilder.buildDialog(
+                                context!!,
+                                retractSlider,
+                                null,
+                                retractSliderDismiss,
+                                null,
+                                true,
+                                R.string.invalid_address,
+                                0
+                            ).show()
+                        }
 
-                    else -> {
-                        e.printStackTrace()
+                        else -> {
+                            e.printStackTrace()
+                        }
                     }
                 }
             }
@@ -116,6 +118,10 @@ class SendCoinsFragment : Fragment() {
     }
 
     private fun showTransactionPreview(walletKit: WalletAppKit, transaction: Transaction, targetAddress: String) {
+        if (context == null) {
+            return
+        }
+
         val dialogBuilder = MaterialAlertDialogBuilder(context!!)
         dialogBuilder.setTitle(R.string.preview_transaction)
         dialogBuilder.setPositiveButton(R.string.send_coins) { _, _ ->
