@@ -61,9 +61,7 @@ class WalletManager {
                         WalletDatabaseManager.storeWalletInformation(context, mnemonicString, walletId)
                         Global.walletSetupFinished = true
 
-                        handler.post {
-                            attachWalletFragment(context)
-                        }
+                        attachWalletFragment(context)
                     }
                 }
 

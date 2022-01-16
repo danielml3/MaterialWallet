@@ -163,18 +163,18 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
 
     override fun onCoinsSent(wallet: Wallet?, tx: Transaction?, prevBalance: Coin?, newBalance: Coin?) {
         syncBalance()
+        val container = view?.findViewById<LinearLayout>(R.id.transaction_container)
 
-        if (tx != null) {
-            val container = view!!.findViewById<LinearLayout>(R.id.transaction_container)
+        if (tx != null && container != null) {
             createTransactionCard(tx, container)
         }
     }
 
     override fun onCoinsReceived(wallet: Wallet?, tx: Transaction?, prevBalance: Coin?, newBalance: Coin?) {
         syncBalance()
+        val container = view?.findViewById<LinearLayout>(R.id.transaction_container)
 
-        if (tx != null) {
-            val container = view!!.findViewById<LinearLayout>(R.id.transaction_container)
+        if (tx != null && container != null) {
             createTransactionCard(tx, container)
         }
     }
@@ -219,7 +219,7 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
     private fun setLastBlockDate(date: Date) {
         if (context != null) {
             val formattedDate = DateFormat.format("dd, MMMM yyyy - HH:mm:ss", date).toString()
-            val formattedText = String.format(context!!.getText(R.string.last_block_date).toString(), formattedDate)
+            val formattedText = String.format(context?.getText(R.string.last_block_date)?.toString() ?: "", formattedDate)
             getLastBlockDateView()?.text = formattedText
         }
     }
@@ -286,7 +286,7 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
 
         if (transaction.fee != null) {
             feeTextView.text =
-                String.format(context!!.getString(R.string.transaction_fee), CurrencyUtils.toString(transaction.fee))
+                String.format(context?.getString(R.string.transaction_fee) ?: "", CurrencyUtils.toString(transaction.fee))
         } else {
             feeTextView.visibility = View.GONE
         }
