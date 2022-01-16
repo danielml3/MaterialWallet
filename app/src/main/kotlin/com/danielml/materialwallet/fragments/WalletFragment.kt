@@ -166,7 +166,7 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         val container = view?.findViewById<LinearLayout>(R.id.transaction_container)
 
         if (tx != null && container != null) {
-            createTransactionCard(tx, container)
+            createTransactionCard(tx, container, true)
         }
     }
 
@@ -175,7 +175,7 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         val container = view?.findViewById<LinearLayout>(R.id.transaction_container)
 
         if (tx != null && container != null) {
-            createTransactionCard(tx, container)
+            createTransactionCard(tx, container, true)
         }
     }
 
@@ -255,7 +255,7 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
      * Creates a transaction card from the given transaction and attaches it to the
      * given container
      */
-    private fun createTransactionCard(transaction: Transaction, container: LinearLayout) {
+    private fun createTransactionCard(transaction: Transaction, container: LinearLayout, goesOnTop: Boolean = false) {
         val cardView = layoutInflater.inflate(R.layout.transaction_card, container, false)
         val dateTextView = cardView.findViewById<TextView>(R.id.transaction_date)
         val valueTextView = cardView.findViewById<TextView>(R.id.transaction_value)
@@ -296,7 +296,11 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         dateTextView.text = formattedDate
 
         handler.post {
-            container.addView(cardView)
+            if (goesOnTop) {
+                container.addView(cardView, 0)
+            } else {
+                container.addView(cardView)
+            }
         }
     }
 }
