@@ -24,6 +24,39 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.card.MaterialCardView
+            android:id="@+id/paste_address_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/primaryCardBackground"
+            style="@style/Widget.Material3.CardView.Filled">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/paste_address_from_clipboard"
+                    android:textStyle="bold"
+                    android:textSize="8pt"/>
+
+            <TextView
+                    android:id="@+id/address_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
     <View
             android:layout_width="match_parent"
             android:layout_height="0dp"

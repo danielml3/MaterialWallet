@@ -14,5 +14,13 @@ class ClipboardUtils {
             val clip = ClipData.newPlainText(text, text)
             clipboard.setPrimaryClip(clip)
         }
+
+        /*
+         * @returns the content of the clipboard
+         */
+        fun readClipboard(context: Context) : String {
+            val clipboard: ClipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            return clipboard.primaryClip?.getItemAt(0)?.text?.toString() ?: ""
+        }
     }
 }

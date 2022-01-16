@@ -52,4 +52,5 @@
     <string name="_X">X</string>
     <string name="sync_from_date">Sync from date:</string>
     <string name="default_sync_date">2015-12-21</string>
+    <string name="paste_address_from_clipboard">Paste address from clipboard</string>
 </resources>
