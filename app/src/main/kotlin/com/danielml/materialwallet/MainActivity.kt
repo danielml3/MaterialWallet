@@ -15,7 +15,11 @@ class MainActivity : AppCompatActivity() {
     private val setupWalletFragment = SetupWalletFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(null)
+        if (Global.globalWalletKit == null) {
+            super.onCreate(null)
+        } else {
+            super.onCreate(savedInstanceState)
+        }
         setContentView(R.layout.activity_main)
 
         val isDebuggable = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0)
@@ -25,7 +29,6 @@ class MainActivity : AppCompatActivity() {
 
         val navigationBarView = findViewById<NavigationBarView>(R.id.bottom_navigation)
         navigationBarView.setOnItemSelectedListener { item ->
-
             when (item.itemId) {
                 R.id.wallet_page -> {
                     if (Global.lastWalletBackStack.isNotEmpty()) {
@@ -53,11 +56,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
-        if (Global.globalWalletKit != null && Global.walletSetupFinished) {
-            WalletManager.attachWalletFragment(this)
-        }
-        
         loadWallet()
     }
 
