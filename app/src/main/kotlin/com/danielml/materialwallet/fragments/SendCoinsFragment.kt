@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.view.updateLayoutParams
 import androidx.core.widget.addTextChangedListener
@@ -33,6 +34,8 @@ class SendCoinsFragment : Fragment() {
 
     private var sendCoinsSlider: SlideToAction? = null
     private var clipboardAddress = ""
+
+    private var selectedFee = Global.SAT_PER_KB_DEF
 
     private val retractSlider = DialogInterface.OnClickListener { _, _ ->
         sendCoinsSlider?.retractSlider()
@@ -87,7 +90,7 @@ class SendCoinsFragment : Fragment() {
             val amount = Coin.ofBtc(amountDecimal)
 
             try {
-                val transaction = WalletUtils.createTransaction(walletKit.wallet(), targetAddress, amount)
+                val transaction = WalletUtils.createTransaction(walletKit.wallet(), targetAddress, amount, selectedFee)
                 showTransactionPreview(walletKit, transaction, targetAddress)
             } catch (e: Exception) {
                 if (context != null) {
@@ -140,6 +143,29 @@ class SendCoinsFragment : Fragment() {
                 }
             }
         }
+
+        val feeSeekBar = view.findViewById<SeekBar>(R.id.fee_seekbar)
+        feeSeekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                updateFeeRate(progress)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
+
+        updateFeeRate(feeSeekBar.progress)
+    }
+
+    fun updateFeeRate(seekbarProgress: Int) {
+        val feeRate = seekbarProgress + 1
+        val selectedFeeText = view?.findViewById<TextView>(R.id.selected_fee_value)
+        selectedFeeText?.text = feeRate.toString()
+
+        selectedFee = (feeRate * 1000).toLong()
     }
 
     override fun onResume() {

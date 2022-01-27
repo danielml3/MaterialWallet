@@ -32,20 +32,21 @@ class WalletUtils {
             return value
         }
 
-        fun createTransaction(wallet: Wallet, addressString: String, amount: Coin): Transaction {
-            return createTransactionInternal(wallet, addressString, amount)
+        fun createTransaction(wallet: Wallet, addressString: String, amount: Coin, feePerKb: Long): Transaction {
+            return createTransactionInternal(wallet, addressString, amount, feePerKb)
         }
 
         private fun createTransactionInternal(
             wallet: Wallet,
             addressString: String,
             amount: Coin,
+            feePerKb: Long,
             recipientPayFees: Boolean = false
         ): Transaction {
             return try {
                 val address = Address.fromString(Global.NETWORK_PARAMS, addressString)
                 val request = SendRequest.to(address, amount)
-                request.setFeePerVkb(Coin.ofSat((Global.SAT_PER_KB_DEF)))
+                request.setFeePerVkb(Coin.ofSat(feePerKb))
                 request.recipientsPayFees = recipientPayFees
                 request.allowUnconfirmed()
 
@@ -54,7 +55,7 @@ class WalletUtils {
             } catch (e: Exception) {
                 if (!recipientPayFees) {
                     Log.e(TAG, "Failed to transact, trying with recipientPayFees")
-                    createTransactionInternal(wallet, addressString, amount, true)
+                    createTransactionInternal(wallet, addressString, amount, feePerKb, true)
                 } else {
                     throw e
                 }
