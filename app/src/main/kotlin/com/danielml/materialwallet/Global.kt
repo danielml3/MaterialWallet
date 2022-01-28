@@ -21,6 +21,7 @@ class Global {
 
         const val SETUP_BACKSTACK = "setup"
         const val WALLET_BACKSTACK = "wallet"
+        const val SECURITY_BACKSTACK = "security"
         const val SEND_COINS_BACKSTACK = "send_coins"
         const val RECEIVE_COINS_BACKSTACK = "receive_coins"
         const val SETTINGS_BACKSTACK = "settings"

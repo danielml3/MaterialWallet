@@ -2,6 +2,7 @@
     <string name="app_name">MaterialWallet</string>
 
     <string name="wallet">Wallet</string>
+    <string name="security">Security</string>
     <string name="settings">Settings</string>
 
     <string name="create_wallet">Create wallet</string>
@@ -30,6 +31,7 @@
     <string name="current_balance">Current balance:</string>
     <string name="future_balance">Future balance: %1$s</string>
     <string name="slide_to_continue">Slide to continue</string>
+    <string name="slide_to_show_hide">Slide to show/hide</string>
 
     <string name="current_receive_address">Current address</string>
     <string name="used_addresses">Used addresses</string>
@@ -37,6 +39,9 @@
 
     <string name="last_block_date">Last block date: %1$s</string>
     <string name="transactions">Transactions</string>
+
+    <string name="mnemonic_card_title">Hold to show the recovery phrase</string>
+    <string name="recovery_phrase">Recovery phrase</string>
 
     <string name="_1">1</string>
     <string name="_2">2</string>
