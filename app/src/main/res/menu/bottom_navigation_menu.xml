@@ -5,6 +5,13 @@
             android:enabled="true"
             android:icon="@drawable/wallet_icon"
             android:title="@string/wallet"/>
+
+    <item
+            android:id="@+id/security_page"
+            android:enabled="true"
+            android:icon="@drawable/shield"
+            android:title="@string/security"/>
+
     <item
             android:id="@+id/settings_page"
             android:enabled="true"

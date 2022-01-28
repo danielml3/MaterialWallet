@@ -102,6 +102,10 @@ class SlideToAction(context: Context, attrs: AttributeSet?, defStyleAttr: Int, d
             .start()
     }
 
+    fun setHintText(hint: String) {
+        hintText.text = hint
+    }
+
     private fun showHint() {
         hintText.visibility = View.VISIBLE
         hintText.animation?.cancel()

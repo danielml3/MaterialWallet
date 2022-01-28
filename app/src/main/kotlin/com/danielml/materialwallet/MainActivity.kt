@@ -3,6 +3,8 @@ package com.danielml.materialwallet
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
+import com.danielml.materialwallet.fragments.SecurityFragment
 import com.danielml.materialwallet.fragments.SettingsFragment
 import com.danielml.materialwallet.fragments.SetupWalletFragment
 import com.danielml.materialwallet.managers.WalletDatabaseManager
@@ -50,6 +52,20 @@ class MainActivity : AppCompatActivity() {
                         .addToBackStack(Global.SETTINGS_BACKSTACK)
                         .commit()
                     true
+                }
+
+                R.id.security_page -> {
+                    if (Global.walletSetupFinished) {
+                        val securityFragment = SecurityFragment()
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.main_fragment_container, securityFragment)
+                            .show(securityFragment)
+                            .addToBackStack(Global.SECURITY_BACKSTACK)
+                            .commit()
+                        true
+                    } else {
+                        false
+                    }
                 }
 
                 else -> false
