@@ -3,13 +3,15 @@ package com.danielml.materialwallet
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import com.danielml.materialwallet.fragments.SecurityFragment
 import com.danielml.materialwallet.fragments.SettingsFragment
 import com.danielml.materialwallet.fragments.SetupWalletFragment
 import com.danielml.materialwallet.managers.WalletDatabaseManager
 import com.danielml.materialwallet.managers.WalletManager
 import com.google.android.material.navigation.NavigationBarView
+import org.apache.log4j.BasicConfigurator
+import org.bitcoinj.params.LitecoinMainNetParams
+import org.bitcoinj.params.LitecoinTestNet3Params
 import org.bitcoinj.params.TestNet3Params
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         val isDebuggable = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0)
         if (isDebuggable) {
+            BasicConfigurator.configure()
             Global.NETWORK_PARAMS = TestNet3Params.get()
         }
 

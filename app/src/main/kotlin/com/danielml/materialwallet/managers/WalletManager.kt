@@ -62,6 +62,7 @@ class WalletManager {
                         Global.walletSetupFinished = true
 
                         attachWalletFragment(context)
+                        peerGroup().pingIntervalMsec = 0
                     }
                 }
 
