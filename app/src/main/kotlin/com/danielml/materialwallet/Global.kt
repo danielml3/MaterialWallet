@@ -3,6 +3,7 @@ package com.danielml.materialwallet
 import com.danielml.materialwallet.priceprovider.CoinbasePriceProvider
 import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.kits.WalletAppKit
+import org.bitcoinj.params.LitecoinMainNetParams
 import org.bitcoinj.params.MainNetParams
 import java.security.MessageDigest
 
