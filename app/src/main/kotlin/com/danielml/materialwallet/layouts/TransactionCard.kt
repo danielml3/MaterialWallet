@@ -49,7 +49,7 @@ class TransactionCard(context: Context, private val initialTransaction: Transact
         var isIncoming = true
 
         for (input: TransactionInput in initialTransaction.inputs) {
-            val address = input.connectedOutput?.scriptPubKey?.getToAddress(Global.NETWORK_PARAMS)
+            val address = input.connectedOutput?.scriptPubKey?.getToAddress(Global.selectedCoin?.getNetworkParameters())
             if (address != null && walletKit.wallet().isAddressMine(address)) {
                 isIncoming = false
             }

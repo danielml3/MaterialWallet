@@ -2,23 +2,33 @@ package com.danielml.materialwallet.fragments
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
+import com.danielml.materialwallet.coins.AbstractCoin
+import com.danielml.materialwallet.coins.Bitcoin
+import com.danielml.materialwallet.managers.CoinManager
 import com.danielml.materialwallet.managers.WalletManager
+import com.danielml.materialwallet.utils.CurrencyUtils
 import com.danielml.materialwallet.utils.DialogBuilder
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
+import org.bitcoinj.core.Coin
 import java.util.*
 
 class SetupWalletFragment : Fragment() {
+    var selectedCoin = CoinManager.getDefaultCoin()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.setup_wallet_fragment, container, false)
     }
@@ -34,10 +44,32 @@ class SetupWalletFragment : Fragment() {
 
         val createWalletButton = view.findViewById<MaterialButton>(R.id.create_wallet_button)
         createWalletButton.setOnClickListener {
-            val walletKit = WalletManager.setupWallet(context!!, Global.sha256(Date().time.toString()), null)
+            val walletKit = WalletManager.setupWallet(context!!, Global.sha256(Date().time.toString()), null, selectedCoin)
             if (walletKit != null) {
                 detachSetupFragment(context!!, this)
             }
+        }
+
+        val selectCoinCard = view.findViewById<MaterialCardView>(R.id.select_coin_card)
+        val selectedCoinText = view.findViewById<TextView>(R.id.selected_coin_text)
+        val selectedCoinBaseTest = getString(R.string.selected_coin)
+        selectedCoinText.text = String.format(selectedCoinBaseTest, CoinManager.getDefaultCoin().getDisplayName())
+
+        selectCoinCard.setOnClickListener {
+            val supportedCoins = CoinManager.getSupportedCoins()
+            val supportedCoinsNames = supportedCoins.map {
+                it.getDisplayName()
+            }.toTypedArray()
+            val builder: AlertDialog.Builder = AlertDialog.Builder(context!!)
+            builder.setTitle(R.string.select_coin)
+            builder.setItems(
+                supportedCoinsNames
+            ) { _, item ->
+                selectedCoin = supportedCoins[item]
+                selectedCoinText.text = String.format(selectedCoinBaseTest, selectedCoin.getDisplayName())
+            }
+            val alert: AlertDialog = builder.create()
+            alert.show()
         }
     }
 
@@ -72,7 +104,7 @@ class SetupWalletFragment : Fragment() {
                 run {
                     val mnemonicTextBox = importForm.findViewById<EditText>(R.id.mnemonic_text_box)
                     val mnemonic = mnemonicTextBox.text.toString()
-                    val walletKit = WalletManager.setupWallet(context!!, "", mnemonic, syncTimestamp)
+                    val walletKit = WalletManager.setupWallet(context!!, "", mnemonic, selectedCoin, syncTimestamp)
                     if (walletKit != null) {
                         detachSetupFragment(context!!, this)
                     }

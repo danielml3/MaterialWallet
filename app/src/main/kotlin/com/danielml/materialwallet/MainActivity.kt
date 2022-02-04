@@ -1,15 +1,18 @@
 package com.danielml.materialwallet
 
+import android.content.DialogInterface
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.danielml.materialwallet.fragments.SecurityFragment
 import com.danielml.materialwallet.fragments.SettingsFragment
 import com.danielml.materialwallet.fragments.SetupWalletFragment
+import com.danielml.materialwallet.managers.CoinManager
 import com.danielml.materialwallet.managers.WalletDatabaseManager
 import com.danielml.materialwallet.managers.WalletManager
 import com.google.android.material.navigation.NavigationBarView
-import org.bitcoinj.params.TestNet3Params
 
 class MainActivity : AppCompatActivity() {
     private val settingsFragment = SettingsFragment()
@@ -23,10 +26,7 @@ class MainActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_main)
 
-        val isDebuggable = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0)
-        if (isDebuggable) {
-            Global.NETWORK_PARAMS = TestNet3Params.get()
-        }
+        Global.isDebuggable = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0)
 
         val navigationBarView = findViewById<NavigationBarView>(R.id.bottom_navigation)
         navigationBarView.setOnItemSelectedListener { item ->
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
         if (walletInformation.has(WalletDatabaseManager.walletIdKey)) {
             val walletId = walletInformation.getString(WalletDatabaseManager.walletIdKey)
             if (walletId.isNotEmpty()) {
-                val walletKit = WalletManager.setupWallet(this, walletId, "")
+                val walletKit = WalletManager.setupWallet(this, walletId, "", CoinManager.getSelectedCoin(this))
                 if (walletKit != null) {
                     Global.setupFinished = true
 

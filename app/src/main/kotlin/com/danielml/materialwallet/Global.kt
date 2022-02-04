@@ -1,10 +1,8 @@
 package com.danielml.materialwallet
 
 import com.danielml.materialwallet.priceprovider.CoinbasePriceProvider
-import org.bitcoinj.core.NetworkParameters
+import com.danielml.materialwallet.coins.AbstractCoin
 import org.bitcoinj.kits.WalletAppKit
-import org.bitcoinj.params.LitecoinMainNetParams
-import org.bitcoinj.params.MainNetParams
 import java.security.MessageDigest
 
 class Global {
@@ -12,14 +10,15 @@ class Global {
         const val TAG: String = "MaterialWallet"
 
         // Define various values used when initializing a wallet
-        var NETWORK_PARAMS: NetworkParameters = MainNetParams.get()
         const val SAT_PER_KB_DEF: Long = 4000
 
         var globalWalletKit: WalletAppKit? = null
+        var selectedCoin: AbstractCoin? = null
         var allowBackPress = false
         var lastWalletBackStack = ""
         var setupFinished = false
         var walletSetupFinished = false
+        var isDebuggable = false
 
         val globalPriceProvider = CoinbasePriceProvider()
 

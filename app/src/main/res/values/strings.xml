@@ -9,6 +9,9 @@
     <string name="import_wallet_title">Import wallet</string>
     <string name="import_wallet_message">Import an existing wallet using the recovery phrase</string>
     <string name="mnemonic_hint">12-word key</string>
+    <string name="select_coin">Select a coin</string>
+    <string name="selected_coin">Selected coin: %1$s</string>
+    <string name="tap_to_view_supported_coins">Tap to view the supported coins</string>
 
     <string name="send_coins">Send</string>
     <string name="receive_coins">Receive</string>
