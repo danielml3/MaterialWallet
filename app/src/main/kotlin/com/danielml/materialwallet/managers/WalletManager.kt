@@ -8,7 +8,11 @@ import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.Global.Companion.TAG
 import com.danielml.materialwallet.R
+import com.danielml.materialwallet.coins.AbstractCoin
+import com.danielml.materialwallet.coins.Bitcoin
+import com.danielml.materialwallet.coins.Litecoin
 import com.danielml.materialwallet.fragments.WalletFragment
+import com.danielml.materialwallet.utils.WalletUtils
 import org.bitcoinj.kits.WalletAppKit
 import org.bitcoinj.script.Script
 import org.bitcoinj.wallet.DeterministicSeed
@@ -30,10 +34,9 @@ class WalletManager {
             context: Context,
             selectedWalletId: String,
             mnemonic: String?,
+            selectedCoin: AbstractCoin = Litecoin.get(),
             creationDate: Long = walletCreationDate
         ): WalletAppKit? {
-            val handler = Handler(Looper.getMainLooper())
-
             try {
                 val walletId: String = if (selectedWalletId.isEmpty() && mnemonic?.isNotEmpty() == true) {
                     Global.sha256(mnemonic)
@@ -49,16 +52,16 @@ class WalletManager {
                 }
 
                 val walletKit = object : WalletAppKit(
-                    Global.NETWORK_PARAMS,
-                    Script.ScriptType.P2WPKH,
+                    selectedCoin.getNetworkParameters(),
+                    selectedCoin.getScriptType(),
                     null,
                     context.applicationContext.dataDir,
-                    walletId + Global.NETWORK_PARAMS.id
+                    walletId + selectedCoin.getNetworkParameters().id
                 ) {
                     override fun onSetupCompleted() {
                         super.onSetupCompleted()
                         val mnemonicString = wallet().keyChainSeed.mnemonicString ?: ""
-                        WalletDatabaseManager.storeWalletInformation(context, mnemonicString, walletId)
+                        WalletDatabaseManager.storeWalletInformation(context, mnemonicString, walletId, selectedCoin.getName())
                         Global.walletSetupFinished = true
 
                         attachWalletFragment(context)
@@ -74,6 +77,7 @@ class WalletManager {
                     return null
                 }
 
+                Global.selectedCoin = selectedCoin
                 if (mnemonic?.isNotEmpty() == true) {
                     val seed = DeterministicSeed(mnemonic, null, "", creationDate)
                     walletKit.restoreWalletFromSeed(seed)

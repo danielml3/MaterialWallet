@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.danielml.materialwallet.fragments.SecurityFragment
 import com.danielml.materialwallet.fragments.SettingsFragment
 import com.danielml.materialwallet.fragments.SetupWalletFragment
+import com.danielml.materialwallet.managers.CoinManager
 import com.danielml.materialwallet.managers.WalletDatabaseManager
 import com.danielml.materialwallet.managers.WalletManager
 import com.google.android.material.navigation.NavigationBarView
@@ -26,10 +27,9 @@ class MainActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_main)
 
-        val isDebuggable = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0)
-        if (isDebuggable) {
+        Global.isDebuggable = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0)
+        if (Global.isDebuggable) {
             BasicConfigurator.configure()
-            Global.NETWORK_PARAMS = TestNet3Params.get()
         }
 
         val navigationBarView = findViewById<NavigationBarView>(R.id.bottom_navigation)
@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         if (walletInformation.has(WalletDatabaseManager.walletIdKey)) {
             val walletId = walletInformation.getString(WalletDatabaseManager.walletIdKey)
             if (walletId.isNotEmpty()) {
-                val walletKit = WalletManager.setupWallet(this, walletId, "")
+                val walletKit = WalletManager.setupWallet(this, walletId, "", CoinManager.getSelectedCoin(this))
                 if (walletKit != null) {
                     Global.setupFinished = true
 

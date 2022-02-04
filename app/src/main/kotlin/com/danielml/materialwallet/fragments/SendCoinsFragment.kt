@@ -182,7 +182,7 @@ class SendCoinsFragment : Fragment() {
         val clipboardContent = ClipboardUtils.readClipboard(context!!)
 
         try {
-            Address.fromString(Global.NETWORK_PARAMS, clipboardContent)
+            Address.fromString(Global.selectedCoin?.getNetworkParameters(), clipboardContent)
             addressText?.text = clipboardContent
 
             pasteAddressCard?.setOnClickListener {

@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
+import com.danielml.materialwallet.coins.Bitcoin
 import com.danielml.materialwallet.managers.WalletManager
 import com.danielml.materialwallet.utils.DialogBuilder
 import com.google.android.material.button.MaterialButton
@@ -72,7 +73,7 @@ class SetupWalletFragment : Fragment() {
                 run {
                     val mnemonicTextBox = importForm.findViewById<EditText>(R.id.mnemonic_text_box)
                     val mnemonic = mnemonicTextBox.text.toString()
-                    val walletKit = WalletManager.setupWallet(context!!, "", mnemonic, syncTimestamp)
+                    val walletKit = WalletManager.setupWallet(context!!, "", mnemonic, creationDate = syncTimestamp)
                     if (walletKit != null) {
                         detachSetupFragment(context!!, this)
                     }

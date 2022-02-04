@@ -1,6 +1,7 @@
 package com.danielml.materialwallet.utils
 
 import com.danielml.materialwallet.Global
+import com.danielml.materialwallet.managers.CoinManager
 import org.bitcoinj.core.Coin
 import org.bitcoinj.params.TestNet3Params
 import java.math.BigDecimal
@@ -10,10 +11,12 @@ class CurrencyUtils {
     companion object {
         fun toString(coin: Coin): String {
             val value = coin.toBtc()
-            val format = "0.######## " + if (Global.NETWORK_PARAMS == TestNet3Params.get()) {
-                "tBTC"
+            val unitString = Global.selectedCoin?.getUnitString()
+
+            val format = "0.######## " + if (Global.selectedCoin?.isTestNet() == true) {
+                "t$unitString"
             } else {
-                "BTC"
+                unitString
             }
             return DecimalFormat(format).format(value)
         }
