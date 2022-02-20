@@ -68,14 +68,24 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <TextView
-            android:id="@+id/last_block_date"
-            android:layout_width="wrap_content"
+    <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"/>
+            android:layout_margin="20dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/primaryCardBackground"
+            style="@style/Widget.Material3.CardView.Filled">
+
+        <TextView
+                android:id="@+id/last_block_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"/>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <LinearLayout
             android:orientation="vertical"
