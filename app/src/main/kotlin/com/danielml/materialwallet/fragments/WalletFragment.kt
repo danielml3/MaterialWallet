@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
+import com.danielml.materialwallet.listeners.PeersSyncedListener
 import com.danielml.materialwallet.utils.CurrencyUtils
 import com.danielml.materialwallet.utils.WalletUtils
 import org.bitcoinj.core.*
@@ -28,8 +29,7 @@ import org.bitcoinj.wallet.listeners.WalletCoinsSentEventListener
 import java.util.*
 
 class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoinsSentEventListener,
-    BlocksDownloadedEventListener,
-    PeerConnectedEventListener, PeerDisconnectedEventListener {
+    BlocksDownloadedEventListener {
     private val handler = Handler(Looper.getMainLooper())
 
     private val walletKit = Global.globalWalletKit!!
@@ -39,6 +39,8 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
     private var blockDateUpdateThresholdMs = 1000
 
     private val transactionIdList: ArrayList<String> = ArrayList()
+
+    private var peerSyncListener: PeersSyncedListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.wallet_fragment, container, false)
@@ -53,27 +55,18 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         walletKit.wallet().addCoinsSentEventListener(this)
         walletKit.wallet().addCoinsReceivedEventListener(this)
         walletKit.peerGroup().addBlocksDownloadedEventListener(this)
-        walletKit.peerGroup().addConnectedEventListener(this)
-        walletKit.peerGroup().addDisconnectedEventListener(this)
 
         val sendCoinsButton = view.findViewById<Button>(R.id.send_coins_button)
 
         // Enable the send coins button if no blocks are pending
-        val connectedPeers = walletKit.peerGroup().connectedPeers
-        if (connectedPeers != null && connectedPeers.isNotEmpty()) {
-            var bestBlockHeightDifference = Int.MAX_VALUE
-
-            for (peer: Peer in connectedPeers) {
-                val heightDifference = peer.peerBlockHeightDifference
-                if (heightDifference in 0 until bestBlockHeightDifference) {
-                    bestBlockHeightDifference = heightDifference
+        peerSyncListener = object: PeersSyncedListener() {
+            override fun onPeersSyncStatusChanged(synced: Boolean) {
+                handler.post {
+                    sendCoinsButton.isEnabled = synced
                 }
             }
-
-            sendCoinsButton.isEnabled = (bestBlockHeightDifference == 0)
-        } else {
-            sendCoinsButton.isEnabled = false
         }
+        peerSyncListener?.register(walletKit)
 
         val lastBlockDate = walletKit.wallet()?.lastBlockSeenTime
         if (lastBlockDate != null) {
@@ -128,8 +121,7 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         walletKit.wallet().removeCoinsReceivedEventListener(this)
         walletKit.wallet().removeCoinsReceivedEventListener(this)
         walletKit.peerGroup().removeBlocksDownloadedEventListener(this)
-        walletKit.peerGroup().removeConnectedEventListener(this)
-        walletKit.peerGroup().removeDisconnectedEventListener(this)
+        peerSyncListener?.unregister()
     }
 
     /*
@@ -176,25 +168,6 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
 
         if (tx != null && container != null) {
             createTransactionCard(tx, container, true)
-        }
-    }
-
-    override fun onPeerConnected(peer: Peer?, peerCount: Int) {
-        val sendCoinsButton = view?.findViewById<Button>(R.id.send_coins_button)
-        handler.post {
-            // Enable the send coins button if no blocks are pending
-            if (sendCoinsButton?.isEnabled == false) {
-                sendCoinsButton.isEnabled = (peer?.peerBlockHeightDifference == 0)
-            }
-        }
-    }
-
-    override fun onPeerDisconnected(peer: Peer?, peerCount: Int) {
-        val sendCoinsButton = view?.findViewById<Button>(R.id.send_coins_button)
-        handler.post {
-            if (peerCount < 1) {
-                sendCoinsButton?.isEnabled = false
-            }
         }
     }
 
