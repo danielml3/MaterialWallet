@@ -2,6 +2,8 @@ package com.danielml.materialwallet.layouts
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -28,6 +30,7 @@ class SlideToAction(context: Context, attrs: AttributeSet?, defStyleAttr: Int, d
     private val hintText: TextView
 
     private var keepHintHidden = false
+    private var sliderEnabled = true
 
     init {
         inflate(context, R.layout.slide_to_action, this)
@@ -47,6 +50,10 @@ class SlideToAction(context: Context, attrs: AttributeSet?, defStyleAttr: Int, d
                 }
 
                 MotionEvent.ACTION_MOVE -> {
+                    if (!sliderEnabled) {
+                        return@setOnTouchListener false
+                    }
+
                     keepHintHidden = true
                     slider.updateLayoutParams<LayoutParams> {
                         if (event.x <= maximumWidth && event.x > minSliderWidth) {
@@ -57,7 +64,7 @@ class SlideToAction(context: Context, attrs: AttributeSet?, defStyleAttr: Int, d
 
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     keepHintHidden = false
-                    if (slider.width >= triggerWidth) {
+                    if (slider.width >= triggerWidth && sliderEnabled) {
                         listener?.run()
                         VibrationUtils.vibrateDefault(context)
                     } else {
@@ -104,6 +111,16 @@ class SlideToAction(context: Context, attrs: AttributeSet?, defStyleAttr: Int, d
 
     fun setHintText(hint: String) {
         hintText.text = hint
+    }
+
+    fun setSliderEnabled(isEnabled: Boolean) {
+        sliderEnabled = isEnabled
+
+        if (isEnabled) {
+            slider.setBackgroundColor(context.getColor(R.color.primaryColor))
+        } else {
+            slider.setBackgroundColor(Color.GRAY)
+        }
     }
 
     private fun showHint() {

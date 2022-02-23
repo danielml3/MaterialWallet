@@ -18,6 +18,7 @@ import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
 import com.danielml.materialwallet.layouts.NumericPad
 import com.danielml.materialwallet.layouts.SlideToAction
+import com.danielml.materialwallet.listeners.PeersSyncedListener
 import com.danielml.materialwallet.utils.ClipboardUtils
 import com.danielml.materialwallet.utils.CurrencyUtils
 import com.danielml.materialwallet.utils.DialogBuilder
@@ -45,6 +46,8 @@ class SendCoinsFragment : Fragment() {
         sendCoinsSlider?.retractSlider()
     }
 
+    private var peerSyncListener: PeersSyncedListener? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Global.allowBackPress = true
         Global.lastWalletBackStack = Global.SEND_COINS_BACKSTACK
@@ -59,6 +62,13 @@ class SendCoinsFragment : Fragment() {
         val targetAddressText = view.findViewById<EditText>(R.id.target_address)
         val numericPad = view.findViewById<NumericPad>(R.id.amount_numeric_pad)
         val pasteAddressCard = view.findViewById<MaterialCardView>(R.id.paste_address_card)
+
+        peerSyncListener = object: PeersSyncedListener() {
+            override fun onPeersSyncStatusChanged(synced: Boolean) {
+                sendCoinsSlider?.setSliderEnabled(synced)
+            }
+        }
+        peerSyncListener?.register(walletKit)
 
         targetAddressText.addTextChangedListener {
             if (clipboardAddress.isEmpty() || clipboardAddress == targetAddressText.text.toString()) {
@@ -173,6 +183,12 @@ class SendCoinsFragment : Fragment() {
         Handler(Looper.getMainLooper()).post {
             configurePasteAddressCard()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        peerSyncListener?.unregister()
     }
 
     private fun configurePasteAddressCard() {
