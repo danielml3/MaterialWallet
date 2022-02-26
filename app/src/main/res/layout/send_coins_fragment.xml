@@ -114,6 +114,7 @@
     </LinearLayout>
 
     <com.danielml.materialwallet.layouts.DraggableLinearLayout
+            android:id="@+id/draggable_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
