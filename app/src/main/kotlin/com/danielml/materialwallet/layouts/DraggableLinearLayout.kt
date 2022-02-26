@@ -3,19 +3,16 @@ package com.danielml.materialwallet.layouts
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.content.Context
+import android.os.Bundle
+import android.os.Parcelable
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
-import android.view.Gravity
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
 import androidx.core.view.*
-import com.danielml.materialwallet.Global.Companion.TAG
 import com.danielml.materialwallet.R
-import kotlin.math.abs
+
 
 class DraggableLinearLayout(context: Context, attributeSet: AttributeSet?, defStyle: Int) :
     LinearLayout(context, attributeSet, defStyle), View.OnTouchListener {
@@ -35,6 +32,7 @@ class DraggableLinearLayout(context: Context, attributeSet: AttributeSet?, defSt
     private val handleCornerRadius = 10f
     private val handleWidth = LayoutParams.MATCH_PARENT
     private val handleHeight = 15
+    private var isExpanded = false
 
     private val setStaticTranslationRunnable: Runnable
 
@@ -67,6 +65,10 @@ class DraggableLinearLayout(context: Context, attributeSet: AttributeSet?, defSt
         if (maxTranslationY == 0f) {
             maxTranslationY = height - (handleView.height + handleView.marginTop + handleView.marginBottom).toFloat()
             translationY = maxTranslationY
+        }
+
+        if (isExpanded) {
+            setTranslationInstant(0f)
         }
     }
 
@@ -124,6 +126,19 @@ class DraggableLinearLayout(context: Context, attributeSet: AttributeSet?, defSt
         return true
     }
 
+    override fun onSaveInstanceState(): Parcelable {
+        val bundle = Bundle()
+        bundle.putParcelable("superState", super.onSaveInstanceState())
+        bundle.putBoolean("isExpanded", isExpanded)
+        return bundle
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        val bundle = state as Bundle
+        isExpanded = bundle.getBoolean("isExpanded")
+        super.onRestoreInstanceState(bundle.getParcelable("superState"))
+    }
+
     private fun setTranslationInstant(height: Float) {
         setTranslationAnimated(height, 0)
     }
@@ -134,10 +149,13 @@ class DraggableLinearLayout(context: Context, attributeSet: AttributeSet?, defSt
 
     private fun setTranslationAnimated(translation: Float, duration: Long) {
         val targetTranslationY = if (translation < 0) {
+            isExpanded = true
             0f
         } else if (translation > maxTranslationY) {
+            isExpanded = false
             maxTranslationY
         } else {
+            isExpanded = true
             translation
         }
 
