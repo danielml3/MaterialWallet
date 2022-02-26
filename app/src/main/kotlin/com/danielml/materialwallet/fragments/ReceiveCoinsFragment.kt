@@ -29,13 +29,18 @@ class ReceiveCoinsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val walletKit = Global.globalWalletKit!!
         val usedAddressesContainer = view.findViewById<LinearLayout>(R.id.used_address_container)
+        val usedAddressesTitle = view.findViewById<TextView>(R.id.used_address_title)
         val currentAddressContainer = view.findViewById<LinearLayout>(R.id.current_address_container)
 
+        usedAddressesTitle.visibility = View.GONE
         Thread {
             for (address: Address in walletKit.wallet().issuedReceiveAddresses.reversed()) {
                 val container = if (address.toString() == walletKit.wallet().currentReceiveAddress().toString()) {
                     currentAddressContainer
                 } else {
+                    handler.postAtFrontOfQueue {
+                        usedAddressesTitle.visibility = View.VISIBLE
+                    }
                     usedAddressesContainer
                 }
 
