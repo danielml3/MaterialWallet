@@ -7,10 +7,14 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.*
+import android.view.Gravity
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
-import androidx.core.view.*
+import androidx.core.view.marginBottom
+import androidx.core.view.marginTop
 import com.danielml.materialwallet.R
 
 

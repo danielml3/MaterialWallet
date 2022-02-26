@@ -21,8 +21,6 @@ import com.danielml.materialwallet.utils.CurrencyUtils
 import com.danielml.materialwallet.utils.WalletUtils
 import org.bitcoinj.core.*
 import org.bitcoinj.core.listeners.BlocksDownloadedEventListener
-import org.bitcoinj.core.listeners.PeerConnectedEventListener
-import org.bitcoinj.core.listeners.PeerDisconnectedEventListener
 import org.bitcoinj.wallet.Wallet
 import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener
 import org.bitcoinj.wallet.listeners.WalletCoinsSentEventListener
@@ -59,7 +57,7 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         val sendCoinsButton = view.findViewById<Button>(R.id.send_coins_button)
 
         // Enable the send coins button if no blocks are pending
-        peerSyncListener = object: PeersSyncedListener() {
+        peerSyncListener = object : PeersSyncedListener() {
             override fun onPeersSyncStatusChanged(synced: Boolean) {
                 handler.post {
                     sendCoinsButton.isEnabled = synced
@@ -192,7 +190,8 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
     private fun setLastBlockDate(date: Date) {
         if (context != null) {
             val formattedDate = DateFormat.format("dd, MMMM yyyy - HH:mm:ss", date).toString()
-            val formattedText = String.format(context?.getText(R.string.last_block_date)?.toString() ?: "", formattedDate)
+            val formattedText =
+                String.format(context?.getText(R.string.last_block_date)?.toString() ?: "", formattedDate)
             getLastBlockDateView()?.text = formattedText
         }
     }
@@ -259,7 +258,10 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
 
         if (transaction.fee != null) {
             feeTextView.text =
-                String.format(context?.getString(R.string.transaction_fee) ?: "", CurrencyUtils.toString(transaction.fee))
+                String.format(
+                    context?.getString(R.string.transaction_fee) ?: "",
+                    CurrencyUtils.toString(transaction.fee)
+                )
         } else {
             feeTextView.visibility = View.GONE
         }
