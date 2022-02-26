@@ -3,7 +3,6 @@ package com.danielml.materialwallet
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import com.danielml.materialwallet.fragments.SecurityFragment
 import com.danielml.materialwallet.fragments.SettingsFragment
 import com.danielml.materialwallet.fragments.SetupWalletFragment

@@ -63,7 +63,7 @@ class SendCoinsFragment : Fragment() {
         val numericPad = view.findViewById<NumericPad>(R.id.amount_numeric_pad)
         val pasteAddressCard = view.findViewById<MaterialCardView>(R.id.paste_address_card)
 
-        peerSyncListener = object: PeersSyncedListener() {
+        peerSyncListener = object : PeersSyncedListener() {
             override fun onPeersSyncStatusChanged(synced: Boolean) {
                 sendCoinsSlider?.setSliderEnabled(synced)
             }
@@ -155,7 +155,7 @@ class SendCoinsFragment : Fragment() {
         }
 
         val feeSeekBar = view.findViewById<SeekBar>(R.id.fee_seekbar)
-        feeSeekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+        feeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 updateFeeRate(progress)
             }
