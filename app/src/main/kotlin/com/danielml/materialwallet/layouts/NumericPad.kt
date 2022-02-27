@@ -87,6 +87,14 @@ class NumericPad(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defS
         return valueString
     }
 
+    fun setValueString(value: String) {
+        valueString = value.replace(",", decimalSymbol)
+
+        handler.post {
+            updateValueText()
+        }
+    }
+
     private fun updateValueText() {
         val valueTextView = findViewById<TextView>(R.id.value_text)
         valueTextView.text = valueString
