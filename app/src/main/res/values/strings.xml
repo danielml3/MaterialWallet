@@ -12,6 +12,7 @@
 
     <string name="send_coins">Send</string>
     <string name="receive_coins">Receive</string>
+    <string name="empty_wallet">Empty wallet</string>
 
     <string name="insufficient_balance">Insufficient balance</string>
 

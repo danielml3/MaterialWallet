@@ -23,6 +23,7 @@ import com.danielml.materialwallet.utils.ClipboardUtils
 import com.danielml.materialwallet.utils.CurrencyUtils
 import com.danielml.materialwallet.utils.DialogBuilder
 import com.danielml.materialwallet.utils.WalletUtils
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.bitcoinj.core.*
@@ -62,6 +63,11 @@ class SendCoinsFragment : Fragment() {
         val targetAddressText = view.findViewById<EditText>(R.id.target_address)
         val numericPad = view.findViewById<NumericPad>(R.id.amount_numeric_pad)
         val pasteAddressCard = view.findViewById<MaterialCardView>(R.id.paste_address_card)
+        val sendEverythingButton = view.findViewById<MaterialButton>(R.id.empty_wallet_button)
+
+        sendEverythingButton.setOnClickListener {
+            numericPad.setValueString(CurrencyUtils.toNumericString(walletKit.wallet().balance))
+        }
 
         peerSyncListener = object : PeersSyncedListener() {
             override fun onPeersSyncStatusChanged(synced: Boolean) {
