@@ -64,4 +64,5 @@
     <string name="paste_address_from_clipboard">Paste address from clipboard</string>
     <string name="network_fee_title">Network fee (sat/vB)</string>
     <string name="n_a">N/A</string>
+    <string name="refresh">Refresh</string>
 </resources>

@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -19,7 +18,7 @@ import com.danielml.materialwallet.R
 import com.danielml.materialwallet.layouts.TransactionCard
 import com.danielml.materialwallet.listeners.PeersSyncedListener
 import com.danielml.materialwallet.utils.CurrencyUtils
-import com.danielml.materialwallet.utils.WalletUtils
+import com.google.android.material.button.MaterialButton
 import org.bitcoinj.core.*
 import org.bitcoinj.core.listeners.BlocksDownloadedEventListener
 import org.bitcoinj.wallet.Wallet
@@ -40,6 +39,8 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
     private val transactionIdList: ArrayList<String> = ArrayList()
 
     private var peerSyncListener: PeersSyncedListener? = null
+
+    private var transactionThread: Thread? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.wallet_fragment, container, false)
@@ -111,6 +112,11 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
                 .commit()
         }
 
+        val refreshTransactionsButton = view.findViewById<MaterialButton>(R.id.refresh_transactions)
+        refreshTransactionsButton.setOnClickListener {
+            recreateTransactionsList()
+        }
+
         setupTransactionsList()
     }
 
@@ -146,8 +152,6 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
             if (context != null) {
                 val estimatedBalance = walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED)
                 getWalletBalanceView()?.text = CurrencyUtils.toString(estimatedBalance)
-
-                setupTransactionsList()
             }
         }
     }
@@ -198,10 +202,25 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
     }
 
     /*
+     * Destroys the existing transaction cards and creates them again
+     */
+    private fun recreateTransactionsList() {
+        if (transactionThread?.isAlive == false) {
+            handler.post {
+                val container = view?.findViewById<LinearLayout>(R.id.transaction_container)
+                container?.removeAllViews()
+
+                transactionIdList.clear()
+                setupTransactionsList()
+            }
+        }
+    }
+
+    /*
      * Sorts the transactions and creates a card for each one
      */
     private fun setupTransactionsList() {
-        Thread {
+        transactionThread = Thread {
             val container = view?.findViewById<LinearLayout>(R.id.transaction_container)
 
             for (transaction: Transaction in walletKit.wallet().getTransactions(false)
@@ -221,7 +240,9 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
                     createTransactionCard(transaction, container)
                 }
             }
-        }.start()
+        }
+
+        transactionThread?.start()
     }
 
     /*
