@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
+import com.danielml.materialwallet.layouts.DraggableLinearLayout
 import com.danielml.materialwallet.layouts.NumericPad
 import com.danielml.materialwallet.layouts.SlideToAction
 import com.danielml.materialwallet.listeners.PeersSyncedListener
@@ -38,6 +39,7 @@ class SendCoinsFragment : Fragment() {
     private var clipboardAddress = ""
 
     private var selectedFee = Global.SAT_PER_KB_DEF
+    private var draggableLayout: DraggableLinearLayout? = null
 
     private val retractSlider = DialogInterface.OnClickListener { _, _ ->
         sendCoinsSlider?.retractSlider()
@@ -64,6 +66,7 @@ class SendCoinsFragment : Fragment() {
         val numericPad = view.findViewById<NumericPad>(R.id.amount_numeric_pad)
         val pasteAddressCard = view.findViewById<MaterialCardView>(R.id.paste_address_card)
         val sendEverythingButton = view.findViewById<MaterialButton>(R.id.empty_wallet_button)
+        draggableLayout = view.findViewById(R.id.draggable_layout)
 
         sendEverythingButton.setOnClickListener {
             numericPad.setValueString(CurrencyUtils.toNumericString(walletKit.wallet().balance))
@@ -209,17 +212,20 @@ class SendCoinsFragment : Fragment() {
 
             pasteAddressCard?.setOnClickListener {
                 targetAddressText?.setText(clipboardContent)
+                draggableLayout?.setTranslationAnimated(DraggableLinearLayout.TRANSLATION_EXPANDED)
             }
 
             clipboardAddress = clipboardContent
 
             pasteAddressCard?.visibility = if (clipboardAddress == (targetAddressText?.text?.toString() ?: "")) {
+                draggableLayout?.setTranslationInstant(DraggableLinearLayout.TRANSLATION_EXPANDED)
                 View.GONE
             } else {
                 View.VISIBLE
             }
         } catch (e: AddressFormatException) {
             clipboardAddress = ""
+            draggableLayout?.setTranslationInstant(DraggableLinearLayout.TRANSLATION_EXPANDED)
             pasteAddressCard?.visibility = View.GONE
         }
     }

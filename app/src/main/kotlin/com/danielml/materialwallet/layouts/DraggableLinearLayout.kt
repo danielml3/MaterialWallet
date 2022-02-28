@@ -23,6 +23,11 @@ class DraggableLinearLayout(context: Context, attributeSet: AttributeSet?, defSt
     constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
     constructor(context: Context) : this(context, null)
 
+    companion object {
+        const val TRANSLATION_EXPANDED = 0f
+        const val TRANSLATION_RETRACTED = Float.MAX_VALUE
+    }
+
     private val handleView: CardView
     private val handleContainer: LinearLayout
 
@@ -143,11 +148,11 @@ class DraggableLinearLayout(context: Context, attributeSet: AttributeSet?, defSt
         super.onRestoreInstanceState(bundle.getParcelable("superState"))
     }
 
-    private fun setTranslationInstant(height: Float) {
+    fun setTranslationInstant(height: Float) {
         setTranslationAnimated(height, 0)
     }
 
-    private fun setTranslationAnimated(height: Float) {
+    fun setTranslationAnimated(height: Float) {
         setTranslationAnimated(height, animationDelay)
     }
 
