@@ -28,6 +28,9 @@
     <string name="transaction_receiver">To: %1$s</string>
     <string name="total_sent">Sent: %1$s</string>
     <string name="transaction_fee">Fee: %1$s</string>
+    <string name="transaction_id">Transaction id:</string>
+    <string name="copied_tx_id">Transaction id copied</string>
+    <string name="confirmations">Confirmations:</string>
     <string name="total_spent">Total spent: %1$s</string>
     <string name="current_balance">Current balance:</string>
     <string name="future_balance">Future balance: %1$s</string>

@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
+import com.danielml.materialwallet.layouts.TransactionCard
 import com.danielml.materialwallet.listeners.PeersSyncedListener
 import com.danielml.materialwallet.utils.CurrencyUtils
 import com.danielml.materialwallet.utils.WalletUtils
@@ -228,47 +229,13 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
      * given container
      */
     private fun createTransactionCard(transaction: Transaction, container: LinearLayout, goesOnTop: Boolean = false) {
-        val cardView = layoutInflater.inflate(R.layout.transaction_card, container, false)
-        val dateTextView = cardView.findViewById<TextView>(R.id.transaction_date)
-        val valueTextView = cardView.findViewById<TextView>(R.id.transaction_value)
-        val feeTextView = cardView.findViewById<TextView>(R.id.transaction_fee)
-        val transactionIcon = cardView.findViewById<ImageView>(R.id.transaction_icon)
-
         if (transactionIdList.contains(transaction.txId.toString())) {
             return
         }
 
+        val card = TransactionCard(context!!, transaction, container)
+        val cardView = card.getView()
         transactionIdList.add(transaction.txId.toString())
-
-        val formattedDate = DateFormat.format("dd/MM/yyyy - HH:mm:ss", transaction.updateTime).toString()
-        var isIncoming = true
-
-        for (input: TransactionInput in transaction.inputs) {
-            val address = input.connectedOutput?.scriptPubKey?.getToAddress(Global.NETWORK_PARAMS)
-            if (address != null && walletKit.wallet().isAddressMine(address)) {
-                isIncoming = false
-            }
-        }
-
-        if (isIncoming) {
-            transactionIcon.setImageResource(R.drawable.south_west_arrow)
-        } else {
-            transactionIcon.setImageResource(R.drawable.north_east_arrow)
-        }
-
-        if (transaction.fee != null) {
-            feeTextView.text =
-                String.format(
-                    context?.getString(R.string.transaction_fee) ?: "",
-                    CurrencyUtils.toString(transaction.fee)
-                )
-        } else {
-            feeTextView.visibility = View.GONE
-        }
-
-        valueTextView.text =
-            CurrencyUtils.toString(WalletUtils.calculateTransactionValue(walletKit, transaction, isIncoming))
-        dateTextView.text = formattedDate
 
         handler.post {
             if (goesOnTop) {

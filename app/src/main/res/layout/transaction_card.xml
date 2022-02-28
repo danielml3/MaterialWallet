@@ -49,6 +49,48 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
+            <LinearLayout
+                    android:id="@+id/expanded_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/gray"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/transaction_id"
+                        android:textStyle="bold"/>
+
+                <TextView
+                        android:id="@+id/transaction_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/confirmations"
+                            android:layout_marginEnd="5dp"
+                            android:textStyle="bold"/>
+
+                    <TextView
+                            android:id="@+id/transaction_confirmations"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
