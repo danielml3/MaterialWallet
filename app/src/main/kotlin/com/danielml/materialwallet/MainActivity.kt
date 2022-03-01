@@ -100,6 +100,8 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (Global.allowBackPress) {
             super.onBackPressed()
+        } else {
+            moveTaskToBack(true);
         }
     }
 }
