@@ -55,4 +55,5 @@ dependencies {
     implementation 'org.bitcoinj:bitcoinj-core:0.16.1'
     implementation "org.slf4j:slf4j-nop:1.7.32"
     implementation 'org.json:json:20211205'
+    implementation 'com.google.zxing:core:3.4.1'
 }
