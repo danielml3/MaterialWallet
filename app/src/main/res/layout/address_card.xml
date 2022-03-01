@@ -28,6 +28,11 @@
                 android:layout_margin="10dp"
                 android:textSize="12pt"/>
 
+        <ImageView
+                android:id="@+id/address_qr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
         <com.google.android.material.button.MaterialButton
                 android:id="@+id/copy_address"
                 android:layout_width="match_parent"
