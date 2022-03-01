@@ -2,8 +2,6 @@ package com.danielml.materialwallet.fragments
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +9,6 @@ import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.view.updateLayoutParams
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
@@ -20,14 +17,15 @@ import com.danielml.materialwallet.layouts.DraggableLinearLayout
 import com.danielml.materialwallet.layouts.NumericPad
 import com.danielml.materialwallet.layouts.SlideToAction
 import com.danielml.materialwallet.listeners.PeersSyncedListener
-import com.danielml.materialwallet.utils.ClipboardUtils
 import com.danielml.materialwallet.utils.CurrencyUtils
 import com.danielml.materialwallet.utils.DialogBuilder
 import com.danielml.materialwallet.utils.WalletUtils
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import org.bitcoinj.core.*
+import org.bitcoinj.core.AddressFormatException
+import org.bitcoinj.core.Coin
+import org.bitcoinj.core.InsufficientMoneyException
+import org.bitcoinj.core.Transaction
 import org.bitcoinj.kits.WalletAppKit
 import org.bitcoinj.wallet.Wallet
 import java.math.BigDecimal
@@ -36,7 +34,6 @@ import java.math.BigDecimal
 class SendCoinsFragment : Fragment() {
 
     private var sendCoinsSlider: SlideToAction? = null
-    private var clipboardAddress = ""
 
     private var selectedFee = Global.SAT_PER_KB_DEF
     private var draggableLayout: DraggableLinearLayout? = null
@@ -64,7 +61,6 @@ class SendCoinsFragment : Fragment() {
         sendCoinsSlider = view.findViewById(R.id.send_coins_button)
         val targetAddressText = view.findViewById<EditText>(R.id.target_address)
         val numericPad = view.findViewById<NumericPad>(R.id.amount_numeric_pad)
-        val pasteAddressCard = view.findViewById<MaterialCardView>(R.id.paste_address_card)
         val sendEverythingButton = view.findViewById<MaterialButton>(R.id.empty_wallet_button)
         draggableLayout = view.findViewById(R.id.draggable_layout)
 
@@ -78,28 +74,6 @@ class SendCoinsFragment : Fragment() {
             }
         }
         peerSyncListener?.register(walletKit)
-
-        targetAddressText.addTextChangedListener {
-            if (clipboardAddress.isEmpty() || clipboardAddress == targetAddressText.text.toString()) {
-                pasteAddressCard
-                    .animate()
-                    .setDuration(250)
-                    .alpha(0f)
-                    .withEndAction {
-                        pasteAddressCard.visibility = View.GONE
-                        pasteAddressCard.alpha = 1f
-                    }
-                    .start()
-            } else {
-                pasteAddressCard.alpha = 0f
-                pasteAddressCard.visibility = View.VISIBLE
-                pasteAddressCard
-                    .animate()
-                    .setDuration(250)
-                    .alpha(1f)
-                    .start()
-            }
-        }
 
         sendCoinsSlider?.setOnActionTriggeredListener {
             val targetAddress = targetAddressText.text.toString()
@@ -187,47 +161,10 @@ class SendCoinsFragment : Fragment() {
         selectedFee = (feeRate * 1000).toLong()
     }
 
-    override fun onResume() {
-        super.onResume()
-        Handler(Looper.getMainLooper()).post {
-            configurePasteAddressCard()
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
 
         peerSyncListener?.unregister()
-    }
-
-    private fun configurePasteAddressCard() {
-        val pasteAddressCard = view?.findViewById<MaterialCardView>(R.id.paste_address_card)
-        val addressText = view?.findViewById<TextView>(R.id.address_placeholder)
-        val targetAddressText = view?.findViewById<EditText>(R.id.target_address)
-        val clipboardContent = ClipboardUtils.readClipboard(context!!)
-
-        try {
-            Address.fromString(Global.NETWORK_PARAMS, clipboardContent)
-            addressText?.text = clipboardContent
-
-            pasteAddressCard?.setOnClickListener {
-                targetAddressText?.setText(clipboardContent)
-                draggableLayout?.setTranslationAnimated(DraggableLinearLayout.TRANSLATION_EXPANDED)
-            }
-
-            clipboardAddress = clipboardContent
-
-            pasteAddressCard?.visibility = if (clipboardAddress == (targetAddressText?.text?.toString() ?: "")) {
-                draggableLayout?.setTranslationInstant(DraggableLinearLayout.TRANSLATION_EXPANDED)
-                View.GONE
-            } else {
-                View.VISIBLE
-            }
-        } catch (e: AddressFormatException) {
-            clipboardAddress = ""
-            draggableLayout?.setTranslationInstant(DraggableLinearLayout.TRANSLATION_EXPANDED)
-            pasteAddressCard?.visibility = View.GONE
-        }
     }
 
     private fun showTransactionPreview(walletKit: WalletAppKit, transaction: Transaction, targetAddress: String) {
