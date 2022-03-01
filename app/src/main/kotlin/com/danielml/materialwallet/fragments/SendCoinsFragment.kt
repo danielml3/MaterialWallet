@@ -129,6 +129,19 @@ class SendCoinsFragment : Fragment() {
                             ).show()
                         }
 
+                        is Wallet.CouldNotAdjustDownwards -> {
+                            DialogBuilder.buildDialog(
+                                context!!,
+                                retractSlider,
+                                null,
+                                retractSliderDismiss,
+                                null,
+                                true,
+                                R.string.not_enough_balance,
+                                R.string.not_enough_balance_hint
+                            ).show()
+                        }
+
                         else -> {
                             e.printStackTrace()
                         }
