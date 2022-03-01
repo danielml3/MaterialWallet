@@ -22,7 +22,7 @@
         <item name="android:layout_margin">5dp</item>
         <item name="android:textSize">10pt</item>
         <item name="android:layout_width">85dp</item>
-        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_height">50dp</item>
         <item name="android:textColor">@color/numeric_pad_content_color</item>
         <item name="backgroundTint">@color/window_background</item>
         <item name="cornerRadius">10dp</item>
