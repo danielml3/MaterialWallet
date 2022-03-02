@@ -1,3 +1,13 @@
+## v1.4
+#### 02 Mar 2022
+- Added a security screen to view the recovery phrase
+- Added QR code when tapping on the address card
+- Added more information to the transaction cards when clicked
+- Added a button to manually refresh the transaction list
+- Made the send coins buttons smaller
+- Added a button to use the maximum balance when sending coins
+- General design and behaviour improvements
+
 ## v1.3
 #### 27 Jan 2022
 - Improved the transaction list behaviour
