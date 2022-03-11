@@ -2,9 +2,11 @@
 <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:focusableInTouchMode="true"
+        android:clickable="true"
+        android:focusable="true"
         tools:context=".MainActivity">
 
     <LinearLayout
@@ -13,74 +15,46 @@
             android:background="@color/window_background"
             android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:hint="@string/target_address_hint">
+                android:orientation="horizontal">
 
-            <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/target_address"
-                    android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:inputType="text"/>
+                    android:layout_margin="10dp"
+                    android:hint="@string/target_address_hint"
+                    android:layout_weight="6">
 
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                app:cardBackgroundColor="@color/primaryCardBackground"
-                style="@style/Widget.Material3.CardView.Filled">
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                <TextView
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:text="@string/network_fee_title"
-                        android:textStyle="bold"
-                        android:layout_margin="10dp"/>
-
-                <LinearLayout
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/target_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:maxLines="1"
+                        android:inputType="text"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <TextView
-                            android:id="@+id/selected_fee_value"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_marginStart="10dp"
-                            android:text="@string/n_a"/>
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:hint="@string/network_fee"
+                    android:layout_weight="4">
 
-                    <!-- Actual maximum fee is 20, as the fee is selected by using
-                         the seekbar progress + 1 -->
-                    <SeekBar
-                            android:id="@+id/fee_seekbar"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:max="19"
-                            android:progress="3"
-                            android:layout_marginBottom="10dp"/>
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/network_fee_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="@string/_1"
+                        android:inputType="number"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
     </LinearLayout>
 
-    <com.danielml.materialwallet.layouts.DraggableLinearLayout
+    <LinearLayout
             android:id="@+id/draggable_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -119,6 +93,6 @@
                 android:layout_marginBottom="10dp"
                 android:text="@string/preview_transaction"/>
 
-    </com.danielml.materialwallet.layouts.DraggableLinearLayout>
+    </LinearLayout>
 
 </FrameLayout>
