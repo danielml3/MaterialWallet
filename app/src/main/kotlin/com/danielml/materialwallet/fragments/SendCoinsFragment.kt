@@ -6,14 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.view.updateLayoutParams
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
-import com.danielml.materialwallet.layouts.DraggableLinearLayout
 import com.danielml.materialwallet.layouts.NumericPad
 import com.danielml.materialwallet.layouts.SlideToAction
 import com.danielml.materialwallet.listeners.PeersSyncedListener
@@ -36,7 +35,6 @@ class SendCoinsFragment : Fragment() {
     private var sendCoinsSlider: SlideToAction? = null
 
     private var selectedFee = Global.SAT_PER_KB_DEF
-    private var draggableLayout: DraggableLinearLayout? = null
 
     private val retractSlider = DialogInterface.OnClickListener { _, _ ->
         sendCoinsSlider?.retractSlider()
@@ -62,7 +60,6 @@ class SendCoinsFragment : Fragment() {
         val targetAddressText = view.findViewById<EditText>(R.id.target_address)
         val numericPad = view.findViewById<NumericPad>(R.id.amount_numeric_pad)
         val sendEverythingButton = view.findViewById<MaterialButton>(R.id.empty_wallet_button)
-        draggableLayout = view.findViewById(R.id.draggable_layout)
 
         sendEverythingButton.setOnClickListener {
             numericPad.setValueString(CurrencyUtils.toNumericString(walletKit.wallet().balance))
@@ -150,27 +147,24 @@ class SendCoinsFragment : Fragment() {
             }
         }
 
-        val feeSeekBar = view.findViewById<SeekBar>(R.id.fee_seekbar)
-        feeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                updateFeeRate(progress)
+        val feeText = view.findViewById<EditText>(R.id.network_fee_text)
+        feeText.addTextChangedListener {
+            if (feeText.text.isNotEmpty()) {
+                updateFeeRate(feeText)
             }
+        }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+        feeText.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus && feeText.text.isEmpty()) {
+                feeText.setText((selectedFee / 1000).toInt().toString())
             }
+        }
 
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            }
-        })
-
-        updateFeeRate(feeSeekBar.progress)
+        updateFeeRate(feeText)
     }
 
-    fun updateFeeRate(seekbarProgress: Int) {
-        val feeRate = seekbarProgress + 1
-        val selectedFeeText = view?.findViewById<TextView>(R.id.selected_fee_value)
-        selectedFeeText?.text = feeRate.toString()
-
+    private fun updateFeeRate(feeText: EditText) {
+        val feeRate = feeText.text.toString().toFloat()
         selectedFee = (feeRate * 1000).toLong()
     }
 

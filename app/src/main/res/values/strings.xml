@@ -13,6 +13,7 @@
     <string name="send_coins">Send</string>
     <string name="receive_coins">Receive</string>
     <string name="empty_wallet">Empty wallet</string>
+    <string name="network_fee">Fee (sat/vByte)</string>
 
     <string name="insufficient_balance">Insufficient balance</string>
 
@@ -64,7 +65,6 @@
     <string name="sync_from_date">Sync from date:</string>
     <string name="default_sync_date">2015-12-21</string>
     <string name="paste_address_from_clipboard">Paste address from clipboard</string>
-    <string name="network_fee_title">Network fee (sat/vB)</string>
     <string name="n_a">N/A</string>
     <string name="refresh">Refresh</string>
 </resources>
