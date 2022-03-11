@@ -27,7 +27,7 @@
                     android:hint="@string/target_address_hint"
                     android:layout_weight="6">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <com.danielml.materialwallet.layouts.CustomEditText
                         android:id="@+id/target_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
                     android:hint="@string/network_fee"
                     android:layout_weight="4">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <com.danielml.materialwallet.layouts.CustomEditText
                         android:id="@+id/network_fee_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
