@@ -8,13 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.transition.TransitionManager
 import com.danielml.materialwallet.R
 import com.danielml.materialwallet.utils.ClipboardUtils
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.zxing.BarcodeFormat
+import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.QRCodeWriter
 import org.bitcoinj.core.Address
+import java.util.*
+
 
 class AddressCard(context: Context, address: Address, root: ViewGroup) {
     val view: MaterialCardView
@@ -43,12 +47,18 @@ class AddressCard(context: Context, address: Address, root: ViewGroup) {
                 addressQRShown = true
                 View.VISIBLE
             }
+
+            TransitionManager.beginDelayedTransition(view)
         }
     }
 
     private fun getAddressQrBitmap(address: String): Bitmap {
         val size = 512
-        val bits = QRCodeWriter().encode(address, BarcodeFormat.QR_CODE, size, size)
+        val hints: MutableMap<EncodeHintType, Any> = EnumMap(EncodeHintType::class.java)
+        hints[EncodeHintType.CHARACTER_SET] = "UTF-8"
+        hints[EncodeHintType.MARGIN] = 0
+
+        val bits = QRCodeWriter().encode(address, BarcodeFormat.QR_CODE, size, size, hints)
         return Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565).also {
             for (x in 0 until size) {
                 for (y in 0 until size) {
