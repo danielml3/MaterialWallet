@@ -51,7 +51,6 @@
                         android:layout_weight="1"
                         android:layout_margin="10dp"
                         android:text="@string/send_coins"
-                        app:icon="@drawable/north_east_arrow"
                         style="@style/MainButton"/>
 
                 <com.google.android.material.button.MaterialButton
@@ -61,7 +60,6 @@
                         android:layout_weight="1"
                         android:layout_margin="10dp"
                         android:text="@string/receive_coins"
-                        app:icon="@drawable/south_west_arrow"
                         style="@style/MainButton"/>
 
             </LinearLayout>
