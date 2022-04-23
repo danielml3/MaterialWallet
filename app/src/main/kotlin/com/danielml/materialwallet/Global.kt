@@ -1,5 +1,6 @@
 package com.danielml.materialwallet
 
+import com.danielml.materialwallet.priceprovider.CoinbasePriceProvider
 import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.kits.WalletAppKit
 import org.bitcoinj.params.MainNetParams
@@ -18,6 +19,8 @@ class Global {
         var lastWalletBackStack = ""
         var setupFinished = false
         var walletSetupFinished = false
+
+        val globalPriceProvider = CoinbasePriceProvider()
 
         const val SETUP_BACKSTACK = "setup"
         const val WALLET_BACKSTACK = "wallet"
