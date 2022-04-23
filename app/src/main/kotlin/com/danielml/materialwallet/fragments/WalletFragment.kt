@@ -17,6 +17,8 @@ import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
 import com.danielml.materialwallet.layouts.TransactionCard
 import com.danielml.materialwallet.listeners.PeersSyncedListener
+import com.danielml.materialwallet.priceprovider.CoinbasePriceProvider
+import com.danielml.materialwallet.priceprovider.PriceChangeListener
 import com.danielml.materialwallet.utils.CurrencyUtils
 import com.google.android.material.button.MaterialButton
 import org.bitcoinj.core.*
@@ -24,10 +26,12 @@ import org.bitcoinj.core.listeners.BlocksDownloadedEventListener
 import org.bitcoinj.wallet.Wallet
 import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener
 import org.bitcoinj.wallet.listeners.WalletCoinsSentEventListener
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.*
 
 class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoinsSentEventListener,
-    BlocksDownloadedEventListener {
+    BlocksDownloadedEventListener, PriceChangeListener {
     private val handler = Handler(Looper.getMainLooper())
 
     private val walletKit = Global.globalWalletKit!!
@@ -118,6 +122,8 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         }
 
         setupTransactionsList()
+
+        Global.globalPriceProvider.addOnPriceChangeListener(this)
     }
 
     override fun onDestroyView() {
@@ -127,6 +133,8 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         walletKit.wallet().removeCoinsReceivedEventListener(this)
         walletKit.peerGroup().removeBlocksDownloadedEventListener(this)
         peerSyncListener?.unregister()
+
+        Global.globalPriceProvider.removeOnPriceChangeListener(this)
     }
 
     /*
@@ -134,6 +142,13 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
      */
     private fun getWalletBalanceView(): TextView? {
         return view?.findViewById(R.id.wallet_balance)
+    }
+
+    /*
+     * @returns the view that shall contain the wallet balance in a fiat currency
+     */
+    private fun getCurrentBalanceView(): TextView? {
+        return view?.findViewById(R.id.current_balance_text)
     }
 
     /*
@@ -152,6 +167,13 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
             if (context != null) {
                 val estimatedBalance = walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED)
                 getWalletBalanceView()?.text = CurrencyUtils.toString(estimatedBalance)
+
+                val priceDecimal = BigDecimal.valueOf(Global.globalPriceProvider.getPrice().toDouble())
+                var fiatPrice = estimatedBalance.toBtc().multiply(priceDecimal)
+                fiatPrice = fiatPrice.setScale(2, RoundingMode.HALF_EVEN)
+
+                val fiatString = "$fiatPrice ${CoinbasePriceProvider.FIAT_CURRENCY}"
+                getCurrentBalanceView()?.text = resources.getString(R.string.current_balance, fiatString)
             }
         }
     }
@@ -265,5 +287,9 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
                 container.addView(cardView)
             }
         }
+    }
+
+    override fun onPriceChange(price: Float, fiat: String) {
+        syncBalance()
     }
 }

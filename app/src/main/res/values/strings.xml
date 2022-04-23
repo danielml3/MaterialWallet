@@ -35,7 +35,7 @@
     <string name="copied_tx_id">Transaction id copied</string>
     <string name="confirmations">Confirmations:</string>
     <string name="total_spent">Total spent: %1$s</string>
-    <string name="current_balance">Current balance:</string>
+    <string name="current_balance">Current balance: %1$s</string>
     <string name="future_balance">Future balance: %1$s</string>
     <string name="slide_to_continue">Slide to continue</string>
     <string name="slide_to_show_hide">Slide to show/hide</string>

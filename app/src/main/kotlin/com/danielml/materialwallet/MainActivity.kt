@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         loadWallet()
+        Global.globalPriceProvider.start()
     }
 
     private fun loadWallet() {
