@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
+import com.danielml.materialwallet.layouts.DraggableLinearLayout
 import com.danielml.materialwallet.layouts.NumericPad
 import com.danielml.materialwallet.layouts.SlideToAction
 import com.danielml.materialwallet.listeners.PeersSyncedListener
@@ -60,6 +61,8 @@ class SendCoinsFragment : Fragment() {
         val targetAddressText = view.findViewById<EditText>(R.id.target_address)
         val numericPad = view.findViewById<NumericPad>(R.id.amount_numeric_pad)
         val sendEverythingButton = view.findViewById<MaterialButton>(R.id.empty_wallet_button)
+        val draggableLayout = view.findViewById<DraggableLinearLayout>(R.id.draggable_layout)
+        draggableLayout.setTranslationInstant(DraggableLinearLayout.TRANSLATION_EXPANDED)
 
         sendEverythingButton.setOnClickListener {
             numericPad.setValueString(CurrencyUtils.toNumericString(walletKit.wallet().balance))
