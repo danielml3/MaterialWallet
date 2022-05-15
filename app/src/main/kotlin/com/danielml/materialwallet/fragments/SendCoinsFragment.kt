@@ -112,7 +112,7 @@ class SendCoinsFragment : Fragment() {
                                 null,
                                 true,
                                 context!!.getString(R.string.insufficient_balance),
-                                (context!!.getString(R.string.current_balance) + " $balance")
+                                resources.getString(R.string.current_balance, balance)
                             ).show()
                         }
 
@@ -213,8 +213,7 @@ class SendCoinsFragment : Fragment() {
             context!!.getString(R.string.total_spent),
             CurrencyUtils.toString(receiverOutput + transactionFee.toBtc())
         )
-        currentBalanceText.text =
-            (context!!.getString(R.string.current_balance) + " ${CurrencyUtils.toString(currentBalance)}")
+        currentBalanceText.text = resources.getString(R.string.current_balance, CurrencyUtils.toString(currentBalance))
         futureBalanceText.text =
             String.format(context!!.getString(R.string.future_balance), CurrencyUtils.toString(futureBalance))
 
