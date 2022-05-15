@@ -13,6 +13,7 @@
             android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="20dp"
             android:text="@string/create_wallet"
+            android:backgroundTint="@color/primaryCardBackground"
             style="@style/MainButton"/>
 
     <com.google.android.material.button.MaterialButton
@@ -22,6 +23,7 @@
             android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="20dp"
             android:text="@string/import_wallet_title"
+            android:backgroundTint="@color/primaryCardBackground"
             style="@style/MainButton"/>
 
 </LinearLayout>

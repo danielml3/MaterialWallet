@@ -3,4 +3,5 @@
     <color name="window_background">@color/black</color>
     <color name="primaryCardBackground">@color/dark_gray</color>
     <color name="numeric_pad_content_color">@color/white</color>
+    <color name="button_text_color">@color/white</color>
 </resources>
