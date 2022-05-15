@@ -16,7 +16,6 @@ import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
 import com.danielml.materialwallet.layouts.TransactionCard
-import com.danielml.materialwallet.listeners.PeersSyncedListener
 import com.danielml.materialwallet.priceprovider.CoinbasePriceProvider
 import com.danielml.materialwallet.priceprovider.PriceChangeListener
 import com.danielml.materialwallet.utils.CurrencyUtils
@@ -42,8 +41,6 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
 
     private val transactionIdList: ArrayList<String> = ArrayList()
 
-    private var peerSyncListener: PeersSyncedListener? = null
-
     private var transactionThread: Thread? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -61,16 +58,6 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         walletKit.peerGroup().addBlocksDownloadedEventListener(this)
 
         val sendCoinsButton = view.findViewById<Button>(R.id.send_coins_button)
-
-        // Enable the send coins button if no blocks are pending
-        peerSyncListener = object : PeersSyncedListener() {
-            override fun onPeersSyncStatusChanged(synced: Boolean) {
-                handler.post {
-                    sendCoinsButton.isEnabled = synced
-                }
-            }
-        }
-        peerSyncListener?.register(walletKit)
 
         val lastBlockDate = walletKit.wallet()?.lastBlockSeenTime
         if (lastBlockDate != null) {
@@ -132,7 +119,6 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         walletKit.wallet().removeCoinsReceivedEventListener(this)
         walletKit.wallet().removeCoinsReceivedEventListener(this)
         walletKit.peerGroup().removeBlocksDownloadedEventListener(this)
-        peerSyncListener?.unregister()
 
         Global.globalPriceProvider.removeOnPriceChangeListener(this)
     }
@@ -205,9 +191,6 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
                     setLastBlockDate(block.time)
                 }
                 syncBalance()
-
-                // Enable the send coins button if no blocks are pending
-                sendCoinsButton?.isEnabled = (blocksLeft == 0)
             }
 
             lastBlockFetchDate = newBlockFetchDate

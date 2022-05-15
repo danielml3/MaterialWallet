@@ -34,5 +34,12 @@
         <item name="cornerRadius">15dp</item>
         <item name="android:paddingTop">15dp</item>
         <item name="android:paddingBottom">15dp</item>
+        <item name="backgroundTint">@color/window_background</item>
+        <item name="android:textColor">@color/button_text_color</item>
+    </style>
+
+    <style name="TransactButton">
+        <item name="backgroundTint">@color/window_background</item>
+        <item name="android:textColor">@color/button_text_color</item>
     </style>
 </resources>
