@@ -65,7 +65,7 @@ class SendCoinsFragment : Fragment() {
         draggableLayout.setTranslationInstant(DraggableLinearLayout.TRANSLATION_EXPANDED)
 
         sendEverythingButton.setOnClickListener {
-            numericPad.setValueString(CurrencyUtils.toNumericString(walletKit.wallet().balance))
+            numericPad.setValueString(CurrencyUtils.toNumericString(walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED)))
         }
 
         peerSyncListener = object : PeersSyncedListener() {
