@@ -75,7 +75,7 @@
                 android:paddingStart="40dp"
                 android:paddingEnd="40dp">
 
-            <com.google.android.material.button.MaterialButton
+            <com.danielml.materialwallet.layouts.CustomMaterialButton
                     android:id="@+id/empty_wallet_button"
                     android:text="@string/empty_wallet"
                     android:layout_width="match_parent"
