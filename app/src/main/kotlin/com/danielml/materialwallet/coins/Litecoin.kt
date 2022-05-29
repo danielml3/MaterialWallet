@@ -15,11 +15,7 @@ class Litecoin : AbstractCoin() {
     }
 
     override fun getNetworkParameters() : NetworkParameters {
-        return if (isTestNet()) {
-            LitecoinTestNet3Params.get()
-        } else {
-            LitecoinMainNetParams.get()
-        }
+        return LitecoinMainNetParams.get()
     }
 
     override fun getUnitString(): String {
