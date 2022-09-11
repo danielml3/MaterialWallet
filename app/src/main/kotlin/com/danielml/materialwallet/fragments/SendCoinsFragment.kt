@@ -13,13 +13,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
+import com.danielml.materialwallet.barcode.BarcodeScanActivityLauncher
 import com.danielml.materialwallet.layouts.SlideToAction
 import com.danielml.materialwallet.listeners.PeersSyncedListener
-import com.danielml.materialwallet.utils.CurrencyUtils
+ import com.danielml.materialwallet.utils.CurrencyUtils
 import com.danielml.materialwallet.utils.DialogBuilder
 import com.danielml.materialwallet.utils.WalletUtils
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.bitcoinj.core.AddressFormatException
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.InsufficientMoneyException
@@ -59,6 +61,17 @@ class SendCoinsFragment : Fragment() {
         val targetAddressText = view.findViewById<EditText>(R.id.target_address)
         val amountToSendText = view.findViewById<EditText>(R.id.amount_to_send)
         val sendEverythingButton = view.findViewById<MaterialButton>(R.id.empty_wallet_button)
+        val scanAddressButton = view.findViewById<FloatingActionButton>(R.id.scan_address)
+
+        val barcodeScanLauncher = BarcodeScanActivityLauncher()
+        barcodeScanLauncher.registerScanActivity(this) { barcodes ->
+            val barcode = barcodes[0]
+            targetAddressText.setText(barcode)
+        }
+
+        scanAddressButton.setOnClickListener {
+            barcodeScanLauncher.startScanActivity(this)
+        }
 
         sendEverythingButton.setOnClickListener {
             amountToSendText.setText(CurrencyUtils.toNumericString(walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED)))

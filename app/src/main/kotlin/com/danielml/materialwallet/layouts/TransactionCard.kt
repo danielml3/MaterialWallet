@@ -90,11 +90,11 @@ class TransactionCard(context: Context, private val initialTransaction: Transact
 
         val transactionCard = this
         view.addOnAttachStateChangeListener(object: View.OnAttachStateChangeListener {
-            override fun onViewAttachedToWindow(v: View?) {
+            override fun onViewAttachedToWindow(v: View) {
                 walletKit.wallet()?.addTransactionConfidenceEventListener(transactionCard)
             }
 
-            override fun onViewDetachedFromWindow(v: View?) {
+            override fun onViewDetachedFromWindow(v: View) {
                 walletKit.wallet().removeTransactionConfidenceEventListener(transactionCard)
             }
         })

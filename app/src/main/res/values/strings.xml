@@ -70,4 +70,10 @@
     <string name="paste_address_from_clipboard">Paste address from clipboard</string>
     <string name="n_a">N/A</string>
     <string name="refresh">Refresh</string>
+
+    <string name="camera_permission_title">Camera permission needed</string>
+    <string name="camera_permission_message">In order to use the QR scanner, the app must be able to access to the camera.</string>
+
+    <string name="failed_to_scan_title">Failed to scan</string>
+    <string name="failed_to_scan_message">The scan failed due to an exception. Try restarting the app and/or the device.</string>
 </resources>
