@@ -1,37 +1,42 @@
 <resources>
     <string name="app_name">MaterialWallet</string>
 
+    <!-- Fragments -->
     <string name="wallet">Wallet</string>
     <string name="security">Security</string>
     <string name="settings">Settings</string>
 
+    <!-- Setup wallet fragment -->
     <string name="create_wallet">Create wallet</string>
     <string name="import_wallet_title">Import wallet</string>
     <string name="import_wallet_message">Import an existing wallet using the recovery phrase</string>
     <string name="mnemonic_hint">12-word key</string>
-
-    <string name="send_coins">Send</string>
-    <string name="receive_coins">Receive</string>
-    <string name="empty_wallet">Empty wallet</string>
-    <string name="network_fee">Fee (sat/vByte)</string>
-
-    <string name="insufficient_balance">Insufficient balance</string>
-
     <string name="invalid_mnemonic">Invalid recovery phrase</string>
     <string name="invalid_mnemonic_hint">Check that the words only have one space in between and that you did not write
         more words than needed
     </string>
-    <string name="invalid_address">Invalid address</string>
-    <string name="amount_too_small">Amount too small</string>
-    <string name="transaction_details">Transaction details</string>
-    <string name="amount_to_send">Amount to send (BTC)</string>
-    <string name="not_enough_balance">Not enough balance</string>
-    <string name="not_enough_balance_hint">Try reducing the network fee</string>
 
+    <!-- Main wallet fragment -->
+    <string name="sync_from_date">Sync from date:</string>
+    <string name="default_sync_date">2015–12–21</string>
+    <string name="refresh">Refresh</string>
+    <string name="last_block_date">Last block date: %1$s</string>
+    <string name="transactions">Transactions</string>
+
+    <!-- Send coins fragment -->
+    <string name="send_coins">Send</string>
+    <string name="amount_too_small">Amount too small</string>
+    <string name="amount_to_send">Amount to send (BTC)</string>
+    <string name="insufficient_balance">Insufficient balance</string>
+    <string name="insufficient_balance_hint">Try reducing the network fee</string>
+    <string name="empty_wallet">Empty wallet</string>
+    <string name="invalid_address">Invalid address</string>
     <string name="target_address_hint">Target address</string>
     <string name="recipient_details">Recipient details</string>
     <string name="preview_transaction">Preview transaction</string>
+    <string name="network_fee">Fee (sat/vByte)</string>
     <string name="transaction_receiver">To: %1$s</string>
+    <string name="transaction_details">Transaction details</string>
     <string name="total_sent">Sent: %1$s</string>
     <string name="transaction_fee">Fee: %1$s</string>
     <string name="transaction_id">Transaction id:</string>
@@ -43,16 +48,17 @@
     <string name="slide_to_continue">Slide to continue</string>
     <string name="slide_to_show_hide">Slide to show/hide</string>
 
+    <!-- Receive coins fragment -->
+    <string name="receive_coins">Receive</string>
     <string name="current_receive_address">Current address</string>
     <string name="used_addresses">Used addresses</string>
     <string name="copy_address">Copy address</string>
 
-    <string name="last_block_date">Last block date: %1$s</string>
-    <string name="transactions">Transactions</string>
-
+    <!-- Security fragment -->
     <string name="mnemonic_card_title">Hold to show the recovery phrase</string>
     <string name="recovery_phrase">Recovery phrase</string>
 
+    <!-- General -->
     <string name="_1">1</string>
     <string name="_2">2</string>
     <string name="_3">3</string>
@@ -62,18 +68,12 @@
     <string name="_7">7</string>
     <string name="_8">8</string>
     <string name="_9">9</string>
-    <string name="_dot">.</string>
     <string name="_0">0</string>
-    <string name="_X">X</string>
-    <string name="sync_from_date">Sync from date:</string>
-    <string name="default_sync_date">2015-12-21</string>
-    <string name="paste_address_from_clipboard">Paste address from clipboard</string>
     <string name="n_a">N/A</string>
-    <string name="refresh">Refresh</string>
 
+    <!-- Barcode scanner -->
     <string name="camera_permission_title">Camera permission needed</string>
     <string name="camera_permission_message">In order to use the QR scanner, the app must be able to access to the camera.</string>
-
     <string name="failed_to_scan_title">Failed to scan</string>
     <string name="failed_to_scan_message">The scan failed due to an exception. Try restarting the app and/or the device.</string>
 </resources>

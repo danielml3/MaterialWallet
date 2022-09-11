@@ -1,7 +1,5 @@
 package com.danielml.materialwallet.priceprovider
 
-import java.util.ArrayList
-
 abstract class BasePriceProvider {
     val listeners = ArrayList<PriceChangeListener>()
 

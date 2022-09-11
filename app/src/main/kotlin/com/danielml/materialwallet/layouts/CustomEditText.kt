@@ -10,7 +10,12 @@ import com.google.android.material.textfield.TextInputEditText
 
 class CustomEditText(context: Context, attributeSet: AttributeSet?, defStyle: Int) :
     TextInputEditText(context, attributeSet, defStyle) {
-    constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, R.attr.editTextStyle)
+    constructor(context: Context, attributeSet: AttributeSet?) : this(
+        context,
+        attributeSet,
+        R.attr.editTextStyle
+    )
+
     constructor(context: Context) : this(context, null)
 
     override fun onFocusChanged(focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {

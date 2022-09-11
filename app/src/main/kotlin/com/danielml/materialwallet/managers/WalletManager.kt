@@ -1,8 +1,6 @@
 package com.danielml.materialwallet.managers
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
@@ -33,13 +31,14 @@ class WalletManager {
             creationDate: Long = walletCreationDate
         ): WalletAppKit? {
             try {
-                val walletId: String = if (selectedWalletId.isEmpty() && mnemonic?.isNotEmpty() == true) {
-                    Global.sha256(mnemonic)
-                } else if (selectedWalletId.isNotEmpty()) {
-                    selectedWalletId
-                } else {
-                    return null
-                }
+                val walletId: String =
+                    if (selectedWalletId.isEmpty() && mnemonic?.isNotEmpty() == true) {
+                        Global.sha256(mnemonic)
+                    } else if (selectedWalletId.isNotEmpty()) {
+                        selectedWalletId
+                    } else {
+                        return null
+                    }
 
                 if (Global.globalWalletKit != null) {
                     Log.i(TAG, "A wallet has already been created")
@@ -56,7 +55,11 @@ class WalletManager {
                     override fun onSetupCompleted() {
                         super.onSetupCompleted()
                         val mnemonicString = wallet().keyChainSeed.mnemonicString ?: ""
-                        WalletDatabaseManager.storeWalletInformation(context, mnemonicString, walletId)
+                        WalletDatabaseManager.storeWalletInformation(
+                            context,
+                            mnemonicString,
+                            walletId
+                        )
                         Global.walletSetupFinished = true
 
                         attachWalletFragment(context)

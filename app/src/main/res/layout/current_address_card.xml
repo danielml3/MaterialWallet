@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="5dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:layout_margin="10dp"
-        style="@style/Widget.Material3.CardView.Filled">
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.Material3.CardView.Filled"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:clickable="true"
+    android:elevation="5dp"
+    android:focusable="true">
 
     <include layout="@layout/address_card_content" />
 

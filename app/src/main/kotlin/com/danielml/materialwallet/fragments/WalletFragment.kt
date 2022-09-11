@@ -43,7 +43,11 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
 
     private var transactionThread: Thread? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.wallet_fragment, container, false)
     }
 
@@ -154,17 +158,24 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
                 val estimatedBalance = walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED)
                 getWalletBalanceView()?.text = CurrencyUtils.toString(estimatedBalance)
 
-                val priceDecimal = BigDecimal.valueOf(Global.globalPriceProvider.getPrice().toDouble())
+                val priceDecimal =
+                    BigDecimal.valueOf(Global.globalPriceProvider.getPrice().toDouble())
                 var fiatPrice = estimatedBalance.toBtc().multiply(priceDecimal)
                 fiatPrice = fiatPrice.setScale(2, RoundingMode.HALF_EVEN)
 
                 val fiatString = "$fiatPrice ${CoinbasePriceProvider.FIAT_CURRENCY}"
-                getCurrentBalanceView()?.text = resources.getString(R.string.current_balance, fiatString)
+                getCurrentBalanceView()?.text =
+                    resources.getString(R.string.current_balance, fiatString)
             }
         }
     }
 
-    override fun onCoinsSent(wallet: Wallet?, tx: Transaction?, prevBalance: Coin?, newBalance: Coin?) {
+    override fun onCoinsSent(
+        wallet: Wallet?,
+        tx: Transaction?,
+        prevBalance: Coin?,
+        newBalance: Coin?
+    ) {
         syncBalance()
         val container = view?.findViewById<LinearLayout>(R.id.transaction_container)
 
@@ -173,7 +184,12 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         }
     }
 
-    override fun onCoinsReceived(wallet: Wallet?, tx: Transaction?, prevBalance: Coin?, newBalance: Coin?) {
+    override fun onCoinsReceived(
+        wallet: Wallet?,
+        tx: Transaction?,
+        prevBalance: Coin?,
+        newBalance: Coin?
+    ) {
         syncBalance()
         val container = view?.findViewById<LinearLayout>(R.id.transaction_container)
 
@@ -182,7 +198,12 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         }
     }
 
-    override fun onBlocksDownloaded(peer: Peer?, block: Block?, filteredBlock: FilteredBlock?, blocksLeft: Int) {
+    override fun onBlocksDownloaded(
+        peer: Peer?,
+        block: Block?,
+        filteredBlock: FilteredBlock?,
+        blocksLeft: Int
+    ) {
         val newBlockFetchDate = Date().time
         if (newBlockFetchDate - lastBlockFetchDate > blockDateUpdateThresholdMs || blocksLeft <= 1) {
             handler.post {
@@ -200,7 +221,10 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
         if (context != null) {
             val formattedDate = DateFormat.format("dd, MMMM yyyy - HH:mm:ss", date).toString()
             val formattedText =
-                String.format(context?.getText(R.string.last_block_date)?.toString() ?: "", formattedDate)
+                String.format(
+                    context?.getText(R.string.last_block_date)?.toString() ?: "",
+                    formattedDate
+                )
             getLastBlockDateView()?.text = formattedText
         }
     }
@@ -229,7 +253,9 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
 
             for (transaction: Transaction in walletKit.wallet().getTransactions(false)
                 .sortedWith { transaction1, transaction2 ->
-                    if ((transaction1?.updateTime?.time ?: 0) > (transaction2?.updateTime?.time ?: 0)) {
+                    if ((transaction1?.updateTime?.time ?: 0) > (transaction2?.updateTime?.time
+                            ?: 0)
+                    ) {
                         -1
                     } else {
                         1
@@ -253,7 +279,11 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
      * Creates a transaction card from the given transaction and attaches it to the
      * given container
      */
-    private fun createTransactionCard(transaction: Transaction, container: LinearLayout, goesOnTop: Boolean = false) {
+    private fun createTransactionCard(
+        transaction: Transaction,
+        container: LinearLayout,
+        goesOnTop: Boolean = false
+    ) {
         if (transactionIdList.contains(transaction.txId.toString())) {
             return
         }

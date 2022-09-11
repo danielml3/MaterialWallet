@@ -19,7 +19,11 @@ import com.google.android.material.button.MaterialButton
 import java.util.*
 
 class SetupWalletFragment : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.setup_wallet_fragment, container, false)
     }
 
@@ -34,7 +38,11 @@ class SetupWalletFragment : Fragment() {
 
         val createWalletButton = view.findViewById<MaterialButton>(R.id.create_wallet_button)
         createWalletButton.setOnClickListener {
-            val walletKit = WalletManager.setupWallet(requireContext(), Global.sha256(Date().time.toString()), null)
+            val walletKit = WalletManager.setupWallet(
+                requireContext(),
+                Global.sha256(Date().time.toString()),
+                null
+            )
             if (walletKit != null) {
                 detachSetupFragment(requireContext(), this)
             }
@@ -51,7 +59,8 @@ class SetupWalletFragment : Fragment() {
         var syncTimestamp = WalletManager.walletCreationDate
 
         dateEditText.setOnClickListener {
-            val datePickerDialog = DatePickerDialog(requireContext(), 0, null, 2015, 11, 21) // 2015-12-21
+            val datePickerDialog =
+                DatePickerDialog(requireContext(), 0, null, 2015, 11, 21) // 2015-12-21
             datePickerDialog.datePicker.minDate = 1230940800000 // 2009-01-03 (first block date)
             datePickerDialog.datePicker.maxDate = Date().time
 
@@ -72,7 +81,8 @@ class SetupWalletFragment : Fragment() {
             .setOnPositiveButton { _, _ ->
                 val mnemonicTextBox = importForm.findViewById<EditText>(R.id.mnemonic_text_box)
                 val mnemonic = mnemonicTextBox.text.toString()
-                val walletKit = WalletManager.setupWallet(requireContext(), "", mnemonic, syncTimestamp)
+                val walletKit =
+                    WalletManager.setupWallet(requireContext(), "", mnemonic, syncTimestamp)
                 if (walletKit != null) {
                     detachSetupFragment(requireContext(), this)
                 }

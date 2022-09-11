@@ -16,7 +16,7 @@ import com.danielml.materialwallet.R
 import com.danielml.materialwallet.barcode.BarcodeScanActivityLauncher
 import com.danielml.materialwallet.layouts.SlideToAction
 import com.danielml.materialwallet.listeners.PeersSyncedListener
- import com.danielml.materialwallet.utils.CurrencyUtils
+import com.danielml.materialwallet.utils.CurrencyUtils
 import com.danielml.materialwallet.utils.DialogBuilder
 import com.danielml.materialwallet.utils.WalletUtils
 import com.google.android.material.button.MaterialButton
@@ -47,7 +47,11 @@ class SendCoinsFragment : Fragment() {
 
     private var peerSyncListener: PeersSyncedListener? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         Global.allowBackPress = true
         Global.lastWalletBackStack = Global.SEND_COINS_BACKSTACK
         return inflater.inflate(R.layout.send_coins_fragment, container, false)
@@ -74,7 +78,11 @@ class SendCoinsFragment : Fragment() {
         }
 
         sendEverythingButton.setOnClickListener {
-            amountToSendText.setText(CurrencyUtils.toNumericString(walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED)))
+            amountToSendText.setText(
+                CurrencyUtils.toNumericString(
+                    walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED)
+                )
+            )
         }
 
         peerSyncListener = object : PeersSyncedListener() {
@@ -92,7 +100,12 @@ class SendCoinsFragment : Fragment() {
             val amount = Coin.ofBtc(amountDecimal)
 
             try {
-                val transaction = WalletUtils.createTransaction(walletKit.wallet(), targetAddress, amount, selectedFee)
+                val transaction = WalletUtils.createTransaction(
+                    walletKit.wallet(),
+                    targetAddress,
+                    amount,
+                    selectedFee
+                )
                 showTransactionPreview(walletKit, transaction, targetAddress)
             } catch (e: Exception) {
                 if (context != null) {
@@ -108,7 +121,9 @@ class SendCoinsFragment : Fragment() {
 
                         is InsufficientMoneyException -> {
                             val balance =
-                                CurrencyUtils.toString(walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED))
+                                CurrencyUtils.toString(
+                                    walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED)
+                                )
                             DialogBuilder(requireContext())
                                 .setTitle(R.string.insufficient_balance)
                                 .setMessage(resources.getString(R.string.current_balance, balance))
@@ -127,8 +142,8 @@ class SendCoinsFragment : Fragment() {
 
                         is Wallet.CouldNotAdjustDownwards -> {
                             DialogBuilder(requireContext())
-                                .setTitle(R.string.not_enough_balance)
-                                .setMessage(R.string.not_enough_balance_hint)
+                                .setTitle(R.string.insufficient_balance)
+                                .setMessage(R.string.insufficient_balance)
                                 .setOnPositiveButton(retractSlider)
                                 .setOnDismiss(retractSliderDismiss)
                                 .buildDialog().show()
@@ -169,7 +184,11 @@ class SendCoinsFragment : Fragment() {
         peerSyncListener?.unregister()
     }
 
-    private fun showTransactionPreview(walletKit: WalletAppKit, transaction: Transaction, targetAddress: String) {
+    private fun showTransactionPreview(
+        walletKit: WalletAppKit,
+        transaction: Transaction,
+        targetAddress: String
+    ) {
         if (context == null) {
             return
         }
@@ -196,18 +215,31 @@ class SendCoinsFragment : Fragment() {
         val currentBalance = walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED)
         val futureBalance = currentBalance - transactionFee - Coin.ofBtc(receiverOutput)
 
-        receiverText.text = String.format(requireContext().getString(R.string.transaction_receiver, targetAddress))
+        receiverText.text =
+            String.format(requireContext().getString(R.string.transaction_receiver, targetAddress))
         totalSentText.text =
-            String.format(requireContext().getString(R.string.total_sent, CurrencyUtils.toString(receiverOutput)))
+            String.format(
+                requireContext().getString(
+                    R.string.total_sent,
+                    CurrencyUtils.toString(receiverOutput)
+                )
+            )
         transactionFeeText.text =
-            String.format(requireContext().getString(R.string.transaction_fee), CurrencyUtils.toString(transactionFee))
+            String.format(
+                requireContext().getString(R.string.transaction_fee),
+                CurrencyUtils.toString(transactionFee)
+            )
         totalSpentText.text = String.format(
             requireContext().getString(R.string.total_spent),
             CurrencyUtils.toString(receiverOutput + transactionFee.toBtc())
         )
-        currentBalanceText.text = resources.getString(R.string.current_balance, CurrencyUtils.toString(currentBalance))
+        currentBalanceText.text =
+            resources.getString(R.string.current_balance, CurrencyUtils.toString(currentBalance))
         futureBalanceText.text =
-            String.format(requireContext().getString(R.string.future_balance), CurrencyUtils.toString(futureBalance))
+            String.format(
+                requireContext().getString(R.string.future_balance),
+                CurrencyUtils.toString(futureBalance)
+            )
 
         dialogBuilder.setView(transactionPreview)
 

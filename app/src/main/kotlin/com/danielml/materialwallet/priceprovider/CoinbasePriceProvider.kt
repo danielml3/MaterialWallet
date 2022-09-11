@@ -10,7 +10,8 @@ import java.net.URL
 class CoinbasePriceProvider : BasePriceProvider() {
     companion object {
         const val FIAT_CURRENCY = "USD"
-        private val API_URL = URL("https://api.coinbase.com/v2/prices/spot?currency=${FIAT_CURRENCY}")
+        private val API_URL =
+            URL("https://api.coinbase.com/v2/prices/spot?currency=${FIAT_CURRENCY}")
         private const val PRICE_CHECK_DELAY = 10000L
     }
 

@@ -16,7 +16,11 @@ class SecurityFragment : Fragment() {
 
     private var mnemonicTextView: TextView? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         Global.allowBackPress = false
         return inflater.inflate(R.layout.security_fragment, container, false)
     }
@@ -25,7 +29,8 @@ class SecurityFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val mnemonicString =
-            WalletDatabaseManager.getWalletInformation(requireContext()).getString(WalletDatabaseManager.mnemonicKey)
+            WalletDatabaseManager.getWalletInformation(requireContext())
+                .getString(WalletDatabaseManager.mnemonicKey)
         val hiddenMnemonic = mnemonicString.replace(Regex("[a-zA-Z0-9\\\\s]"), "#")
         var mnemonicHidden = true
 

@@ -17,7 +17,8 @@ class BarcodeScanActivityLauncher {
             fragment.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
                     val barcodes =
-                        result.data?.getStringArrayExtra(BarcodeScanActivity.EXTRA_BARCODES)?.toList()
+                        result.data?.getStringArrayExtra(BarcodeScanActivity.EXTRA_BARCODES)
+                            ?.toList()
                             ?: listOf()
                     onScanSuccess.accept(barcodes)
                 }

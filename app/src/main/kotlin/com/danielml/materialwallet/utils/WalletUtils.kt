@@ -32,7 +32,12 @@ class WalletUtils {
             return value
         }
 
-        fun createTransaction(wallet: Wallet, addressString: String, amount: Coin, feePerKb: Long): Transaction {
+        fun createTransaction(
+            wallet: Wallet,
+            addressString: String,
+            amount: Coin,
+            feePerKb: Long
+        ): Transaction {
             return createTransactionInternal(wallet, addressString, amount, feePerKb)
         }
 

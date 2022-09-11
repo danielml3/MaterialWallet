@@ -1,8 +1,6 @@
 package com.danielml.materialwallet
 
 import android.content.pm.ApplicationInfo
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.danielml.materialwallet.fragments.SecurityFragment
@@ -11,8 +9,6 @@ import com.danielml.materialwallet.fragments.SetupWalletFragment
 import com.danielml.materialwallet.managers.WalletDatabaseManager
 import com.danielml.materialwallet.managers.WalletManager
 import com.google.android.material.color.DynamicColors
-import com.google.android.material.color.DynamicColorsOptions
-import com.google.android.material.color.MaterialColors
 import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.navigation.NavigationBarView
 import org.bitcoinj.params.TestNet3Params

@@ -25,7 +25,11 @@ import org.bitcoinj.core.listeners.TransactionConfidenceEventListener
 import org.bitcoinj.wallet.Wallet
 
 @SuppressLint("ViewConstructor")
-class TransactionCard(context: Context, private val initialTransaction: Transaction, root: ViewGroup): TransactionConfidenceEventListener {
+class TransactionCard(
+    context: Context,
+    private val initialTransaction: Transaction,
+    root: ViewGroup
+) : TransactionConfidenceEventListener {
     private val expandedContainer: LinearLayout
     private val confirmationsTextView: TextView
     private val view: MaterialCardView
@@ -33,7 +37,11 @@ class TransactionCard(context: Context, private val initialTransaction: Transact
     private var isExpanded = false
 
     init {
-        view = (context as Activity).layoutInflater.inflate(R.layout.transaction_card, root, false) as MaterialCardView
+        view = (context as Activity).layoutInflater.inflate(
+            R.layout.transaction_card,
+            root,
+            false
+        ) as MaterialCardView
 
         val walletKit = Global.globalWalletKit!!
         val dateTextView = view.findViewById<TextView>(R.id.transaction_date)
@@ -45,7 +53,8 @@ class TransactionCard(context: Context, private val initialTransaction: Transact
         expandedContainer = view.findViewById(R.id.expanded_container)
         expandedContainer.visibility = View.GONE
 
-        val formattedDate = DateFormat.format("dd/MM/yyyy - HH:mm:ss", initialTransaction.updateTime).toString()
+        val formattedDate =
+            DateFormat.format("dd/MM/yyyy - HH:mm:ss", initialTransaction.updateTime).toString()
         var isIncoming = true
 
         for (input: TransactionInput in initialTransaction.inputs) {
@@ -72,7 +81,13 @@ class TransactionCard(context: Context, private val initialTransaction: Transact
         }
 
         valueTextView.text =
-            CurrencyUtils.toString(WalletUtils.calculateTransactionValue(walletKit, initialTransaction, isIncoming))
+            CurrencyUtils.toString(
+                WalletUtils.calculateTransactionValue(
+                    walletKit,
+                    initialTransaction,
+                    isIncoming
+                )
+            )
         dateTextView.text = formattedDate
         transactionIdTextView.text = initialTransaction.txId.toString()
 
@@ -89,7 +104,7 @@ class TransactionCard(context: Context, private val initialTransaction: Transact
         }
 
         val transactionCard = this
-        view.addOnAttachStateChangeListener(object: View.OnAttachStateChangeListener {
+        view.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
             override fun onViewAttachedToWindow(v: View) {
                 walletKit.wallet()?.addTransactionConfidenceEventListener(transactionCard)
             }
