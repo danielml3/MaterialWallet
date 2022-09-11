@@ -98,57 +98,40 @@ class SendCoinsFragment : Fragment() {
                 if (context != null) {
                     when (e) {
                         is Wallet.DustySendRequested -> {
-                            DialogBuilder.buildDialog(
-                                requireContext(),
-                                retractSlider,
-                                null,
-                                retractSliderDismiss,
-                                null,
-                                true,
-                                R.string.amount_too_small,
-                                0
-                            ).show()
+                            DialogBuilder(requireContext())
+                                .setTitle(R.string.amount_too_small)
+                                .setOnPositiveButton(retractSlider)
+                                .setOnDismiss(retractSliderDismiss)
+                                .setCancelable(true)
+                                .buildDialog().show()
                         }
 
                         is InsufficientMoneyException -> {
                             val balance =
                                 CurrencyUtils.toString(walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED))
-                            DialogBuilder.buildDialog(
-                                requireContext(),
-                                retractSlider,
-                                null,
-                                retractSliderDismiss,
-                                null,
-                                true,
-                                requireContext().getString(R.string.insufficient_balance),
-                                resources.getString(R.string.current_balance, balance)
-                            ).show()
+                            DialogBuilder(requireContext())
+                                .setTitle(R.string.insufficient_balance)
+                                .setMessage(resources.getString(R.string.current_balance, balance))
+                                .setOnPositiveButton(retractSlider)
+                                .setOnDismiss(retractSliderDismiss)
+                                .buildDialog().show()
                         }
 
                         is AddressFormatException -> {
-                            DialogBuilder.buildDialog(
-                                requireContext(),
-                                retractSlider,
-                                null,
-                                retractSliderDismiss,
-                                null,
-                                true,
-                                R.string.invalid_address,
-                                0
-                            ).show()
+                            DialogBuilder(requireContext())
+                                .setTitle(R.string.invalid_address)
+                                .setOnPositiveButton(retractSlider)
+                                .setOnDismiss(retractSliderDismiss)
+                                .buildDialog().show()
                         }
 
                         is Wallet.CouldNotAdjustDownwards -> {
-                            DialogBuilder.buildDialog(
-                                requireContext(),
-                                retractSlider,
-                                null,
-                                retractSliderDismiss,
-                                null,
-                                true,
-                                R.string.not_enough_balance,
-                                R.string.not_enough_balance_hint
-                            ).show()
+                            DialogBuilder(requireContext())
+                                .setTitle(R.string.not_enough_balance)
+                                .setMessage(R.string.not_enough_balance_hint)
+                                .setOnPositiveButton(retractSlider)
+                                .setOnDismiss(retractSliderDismiss)
+                                .buildDialog().show()
                         }
 
                         else -> {

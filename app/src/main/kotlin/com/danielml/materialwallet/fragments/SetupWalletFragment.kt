@@ -66,19 +66,20 @@ class SetupWalletFragment : Fragment() {
             datePickerDialog.show()
         }
 
-        return DialogBuilder.buildDialog(
-            requireContext(),
-            { _, _ ->
-                run {
-                    val mnemonicTextBox = importForm.findViewById<EditText>(R.id.mnemonic_text_box)
-                    val mnemonic = mnemonicTextBox.text.toString()
-                    val walletKit = WalletManager.setupWallet(requireContext(), "", mnemonic, syncTimestamp)
-                    if (walletKit != null) {
-                        detachSetupFragment(requireContext(), this)
-                    }
+        return DialogBuilder(requireContext())
+            .setTitle(R.string.import_wallet_title)
+            .setMessage(R.string.import_wallet_message)
+            .setOnPositiveButton { _, _ ->
+                val mnemonicTextBox = importForm.findViewById<EditText>(R.id.mnemonic_text_box)
+                val mnemonic = mnemonicTextBox.text.toString()
+                val walletKit = WalletManager.setupWallet(requireContext(), "", mnemonic, syncTimestamp)
+                if (walletKit != null) {
+                    detachSetupFragment(requireContext(), this)
                 }
-            }, { _, _ -> }, null, importForm, false, R.string.import_wallet_title, R.string.import_wallet_message
-        )
+            }
+            .setOnNegativeButton { _, _ -> }
+            .setContent(importForm)
+            .buildDialog()
     }
 
     companion object {

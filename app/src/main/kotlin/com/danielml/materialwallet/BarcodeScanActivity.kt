@@ -94,18 +94,12 @@ class BarcodeScanActivity : AppCompatActivity() {
             return
         }
 
-        DialogBuilder.buildDialog(
-            this,
-            { _, _ ->
+        DialogBuilder(this)
+            .setTitle(R.string.camera_permission_title)
+            .setMessage(R.string.camera_permission_message)
+            .setOnPositiveButton { _, _ ->
                 finish()
-            },
-            null,
-            null,
-            null,
-            false,
-            R.string.camera_permission_title,
-            R.string.camera_permission_message
-        ).show()
+            }.buildDialog().show()
     }
 
     fun showScanFailedDialog() {
@@ -113,18 +107,12 @@ class BarcodeScanActivity : AppCompatActivity() {
             return
         }
 
-        DialogBuilder.buildDialog(
-            this,
-            { _, _ ->
+        DialogBuilder(this)
+            .setTitle(R.string.failed_to_scan_title)
+            .setMessage(R.string.failed_to_scan_message)
+            .setOnPositiveButton { _, _ ->
                 finish()
-            },
-            null,
-            null,
-            null,
-            false,
-            R.string.failed_to_scan_title,
-            R.string.failed_to_scan_message
-        ).show()
+            }.buildDialog().show()
     }
 
     @ExperimentalGetImage

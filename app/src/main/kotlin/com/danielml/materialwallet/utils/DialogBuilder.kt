@@ -7,20 +7,65 @@ import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
-object DialogBuilder {
+class DialogBuilder(private val context: Context) {
+    private var title: String? = null
+    private var message: String? = null
+
+    private var cancelable = false
+
+    private var content: View? = null
+
+    private var onPositiveButton: DialogInterface.OnClickListener? = null
+    private var onNegativeButton: DialogInterface.OnClickListener? = null
+    private var onDismiss: DialogInterface.OnDismissListener = DialogInterface.OnDismissListener {}
+
+    fun setTitle(title: String): DialogBuilder {
+        this.title = title
+        return this
+    }
+
+    fun setTitle(titleResId: Int): DialogBuilder {
+        return setTitle(context.resources.getString(titleResId))
+    }
+
+    fun setMessage(message: String): DialogBuilder {
+        this.message = message
+        return this
+    }
+
+    fun setMessage(messageResId: Int): DialogBuilder {
+        return setMessage(context.resources.getString(messageResId))
+    }
+
+    fun setOnPositiveButton(onPositiveButton: DialogInterface.OnClickListener): DialogBuilder {
+        this.onPositiveButton = onPositiveButton
+        return this
+    }
+
+    fun setOnNegativeButton(onNegativeButton: DialogInterface.OnClickListener): DialogBuilder {
+        this.onNegativeButton = onNegativeButton
+        return this
+    }
+
+    fun setOnDismiss(onDismiss: DialogInterface.OnDismissListener): DialogBuilder {
+        this.onDismiss = onDismiss
+        return this
+    }
+
+    fun setContent(content: View): DialogBuilder {
+        this.content = content
+        return this
+    }
+
+    fun setCancelable(cancelable: Boolean): DialogBuilder {
+        this.cancelable = cancelable
+        return this
+    }
+
     /*
      * @returns an AlertDialog created with the given details
      */
-    fun buildDialog(
-        context: Context,
-        onPositiveButton: DialogInterface.OnClickListener?,
-        onNegativeButton: DialogInterface.OnClickListener?,
-        onDismiss: DialogInterface.OnDismissListener?,
-        content: View?,
-        cancelable: Boolean,
-        title: String?,
-        message: String?
-    ): AlertDialog {
+    fun buildDialog(): AlertDialog {
         val builder = MaterialAlertDialogBuilder(context)
 
         if (title != null) {
@@ -45,41 +90,9 @@ object DialogBuilder {
             builder.setNegativeButton(android.R.string.cancel, onNegativeButton)
         }
 
-        if (onDismiss != null) {
-            builder.setOnDismissListener(onDismiss)
-        }
+        builder.setOnDismissListener(onDismiss)
 
         return builder.create()
     }
 
-    /*
-     * @returns an AlertDialog created with the given details
-     */
-    fun buildDialog(
-        context: Context,
-        onPositiveButton: DialogInterface.OnClickListener?,
-        onNegativeButton: DialogInterface.OnClickListener?,
-        onDismiss: DialogInterface.OnDismissListener?,
-        content: View?,
-        cancelable: Boolean,
-        titleResId: Int,
-        messageResId: Int
-    ): AlertDialog {
-
-        var title: String? = null
-        var message: String? = null
-
-        if (titleResId != 0) {
-            title = context.getString(titleResId)
-        }
-
-        if (messageResId != 0) {
-            message = context.getString(messageResId)
-        }
-
-        return buildDialog(
-            context, onPositiveButton, onNegativeButton, onDismiss, content, cancelable,
-            title, message
-        )
-    }
 }
