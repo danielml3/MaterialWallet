@@ -13,8 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
-import com.danielml.materialwallet.layouts.DraggableLinearLayout
-import com.danielml.materialwallet.layouts.NumericPad
 import com.danielml.materialwallet.layouts.SlideToAction
 import com.danielml.materialwallet.listeners.PeersSyncedListener
 import com.danielml.materialwallet.utils.CurrencyUtils
@@ -59,13 +57,11 @@ class SendCoinsFragment : Fragment() {
 
         sendCoinsSlider = view.findViewById(R.id.send_coins_button)
         val targetAddressText = view.findViewById<EditText>(R.id.target_address)
-        val numericPad = view.findViewById<NumericPad>(R.id.amount_numeric_pad)
+        val amountToSendText = view.findViewById<EditText>(R.id.amount_to_send)
         val sendEverythingButton = view.findViewById<MaterialButton>(R.id.empty_wallet_button)
-        val draggableLayout = view.findViewById<DraggableLinearLayout>(R.id.draggable_layout)
-        draggableLayout.setTranslationInstant(DraggableLinearLayout.TRANSLATION_EXPANDED)
 
         sendEverythingButton.setOnClickListener {
-            numericPad.setValueString(CurrencyUtils.toNumericString(walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED)))
+            amountToSendText.setText(CurrencyUtils.toNumericString(walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED)))
         }
 
         peerSyncListener = object : PeersSyncedListener() {
@@ -77,7 +73,7 @@ class SendCoinsFragment : Fragment() {
 
         sendCoinsSlider?.setOnActionTriggeredListener {
             val targetAddress = targetAddressText.text.toString()
-            val amountString = numericPad.getValueString()
+            val amountString = amountToSendText.text.toString()
 
             val amountDecimal = BigDecimal(amountString)
             val amount = Coin.ofBtc(amountDecimal)
@@ -90,7 +86,7 @@ class SendCoinsFragment : Fragment() {
                     when (e) {
                         is Wallet.DustySendRequested -> {
                             DialogBuilder.buildDialog(
-                                context!!,
+                                requireContext(),
                                 retractSlider,
                                 null,
                                 retractSliderDismiss,
@@ -105,20 +101,20 @@ class SendCoinsFragment : Fragment() {
                             val balance =
                                 CurrencyUtils.toString(walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED))
                             DialogBuilder.buildDialog(
-                                context!!,
+                                requireContext(),
                                 retractSlider,
                                 null,
                                 retractSliderDismiss,
                                 null,
                                 true,
-                                context!!.getString(R.string.insufficient_balance),
+                                requireContext().getString(R.string.insufficient_balance),
                                 resources.getString(R.string.current_balance, balance)
                             ).show()
                         }
 
                         is AddressFormatException -> {
                             DialogBuilder.buildDialog(
-                                context!!,
+                                requireContext(),
                                 retractSlider,
                                 null,
                                 retractSliderDismiss,
@@ -131,7 +127,7 @@ class SendCoinsFragment : Fragment() {
 
                         is Wallet.CouldNotAdjustDownwards -> {
                             DialogBuilder.buildDialog(
-                                context!!,
+                                requireContext(),
                                 retractSlider,
                                 null,
                                 retractSliderDismiss,
@@ -182,7 +178,7 @@ class SendCoinsFragment : Fragment() {
             return
         }
 
-        val dialogBuilder = MaterialAlertDialogBuilder(context!!)
+        val dialogBuilder = MaterialAlertDialogBuilder(requireContext())
         dialogBuilder.setTitle(R.string.preview_transaction)
         dialogBuilder.setPositiveButton(R.string.send_coins) { _, _ ->
             walletKit.wallet().commitTx(transaction)
@@ -204,18 +200,18 @@ class SendCoinsFragment : Fragment() {
         val currentBalance = walletKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED)
         val futureBalance = currentBalance - transactionFee - Coin.ofBtc(receiverOutput)
 
-        receiverText.text = String.format(context!!.getString(R.string.transaction_receiver, targetAddress))
+        receiverText.text = String.format(requireContext().getString(R.string.transaction_receiver, targetAddress))
         totalSentText.text =
-            String.format(context!!.getString(R.string.total_sent, CurrencyUtils.toString(receiverOutput)))
+            String.format(requireContext().getString(R.string.total_sent, CurrencyUtils.toString(receiverOutput)))
         transactionFeeText.text =
-            String.format(context!!.getString(R.string.transaction_fee), CurrencyUtils.toString(transactionFee))
+            String.format(requireContext().getString(R.string.transaction_fee), CurrencyUtils.toString(transactionFee))
         totalSpentText.text = String.format(
-            context!!.getString(R.string.total_spent),
+            requireContext().getString(R.string.total_spent),
             CurrencyUtils.toString(receiverOutput + transactionFee.toBtc())
         )
         currentBalanceText.text = resources.getString(R.string.current_balance, CurrencyUtils.toString(currentBalance))
         futureBalanceText.text =
-            String.format(context!!.getString(R.string.future_balance), CurrencyUtils.toString(futureBalance))
+            String.format(requireContext().getString(R.string.future_balance), CurrencyUtils.toString(futureBalance))
 
         dialogBuilder.setView(transactionPreview)
 

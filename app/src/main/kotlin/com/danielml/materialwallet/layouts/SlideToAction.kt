@@ -15,6 +15,7 @@ import androidx.core.view.updateLayoutParams
 import com.danielml.materialwallet.R
 import com.danielml.materialwallet.utils.VibrationUtils
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.elevation.SurfaceColors
 
 @SuppressLint("ClickableViewAccessibility")
 class SlideToAction(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) :
@@ -29,7 +30,6 @@ class SlideToAction(context: Context, attrs: AttributeSet?, defStyleAttr: Int, d
     private val hintText: TextView
 
     private var keepHintHidden = false
-    private var sliderEnabled = true
 
     init {
         inflate(context, R.layout.slide_to_action, this)
@@ -49,7 +49,7 @@ class SlideToAction(context: Context, attrs: AttributeSet?, defStyleAttr: Int, d
                 }
 
                 MotionEvent.ACTION_MOVE -> {
-                    if (!sliderEnabled) {
+                    if (!slider.isEnabled) {
                         return@setOnTouchListener false
                     }
 
@@ -63,7 +63,7 @@ class SlideToAction(context: Context, attrs: AttributeSet?, defStyleAttr: Int, d
 
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     keepHintHidden = false
-                    if (slider.width >= triggerWidth && sliderEnabled) {
+                    if (slider.width >= triggerWidth && slider.isEnabled) {
                         listener?.run()
                         VibrationUtils.vibrateDefault(context)
                     } else {
@@ -84,6 +84,10 @@ class SlideToAction(context: Context, attrs: AttributeSet?, defStyleAttr: Int, d
 
     fun setOnActionTriggeredListener(listener: Runnable) {
         this.listener = listener
+    }
+
+    fun setSliderEnabled(enabled: Boolean) {
+        slider.isEnabled = enabled
     }
 
     fun retractSlider() {
@@ -110,16 +114,6 @@ class SlideToAction(context: Context, attrs: AttributeSet?, defStyleAttr: Int, d
 
     fun setHintText(hint: String) {
         hintText.text = hint
-    }
-
-    fun setSliderEnabled(isEnabled: Boolean) {
-        sliderEnabled = isEnabled
-
-        if (isEnabled) {
-            slider.setBackgroundColor(context.getColor(R.color.primaryColor))
-        } else {
-            slider.setBackgroundColor(Color.GRAY)
-        }
     }
 
     private fun showHint() {

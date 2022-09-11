@@ -25,7 +25,7 @@ class SecurityFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val mnemonicString =
-            WalletDatabaseManager.getWalletInformation(context!!).getString(WalletDatabaseManager.mnemonicKey)
+            WalletDatabaseManager.getWalletInformation(requireContext()).getString(WalletDatabaseManager.mnemonicKey)
         val hiddenMnemonic = mnemonicString.replace(Regex("[a-zA-Z0-9\\\\s]"), "#")
         var mnemonicHidden = true
 
@@ -33,7 +33,7 @@ class SecurityFragment : Fragment() {
         mnemonicTextView?.text = hiddenMnemonic
 
         val slider = view.findViewById<SlideToAction>(R.id.mnemonic_slider)
-        slider.setHintText(context!!.getString(R.string.slide_to_show_hide))
+        slider.setHintText(requireContext().getString(R.string.slide_to_show_hide))
         slider.setOnActionTriggeredListener {
             if (mnemonicHidden) {
                 mnemonicTextView?.text = mnemonicString

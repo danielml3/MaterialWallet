@@ -6,18 +6,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/window_background"
         tools:context=".MainActivity">
 
     <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
             android:clickable="true"
             android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            app:cardBackgroundColor="@color/primaryCardBackground"
-            app:cardCornerRadius="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             style="@style/Widget.Material3.CardView.Filled">
 
         <LinearLayout
@@ -40,24 +38,6 @@
                     android:textSize="18pt"
                     android:layout_marginBottom="10dp"/>
 
-            <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    app:cardBackgroundColor="@color/window_background"
-                    style="@style/Widget.Material3.CardView.Filled">
-
-                <TextView
-                        android:id="@+id/last_block_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="10dp"/>
-
-            </com.google.android.material.card.MaterialCardView>
-
             <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
@@ -72,7 +52,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="30dp"
-                    app:cardBackgroundColor="@color/window_background"
                     style="@style/Widget.Material3.CardView.Filled">
 
                 <LinearLayout
@@ -86,21 +65,20 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/send_coins"
-                            style="@style/TransactButton"/>
+                            style="@style/Widget.Material3.Button.OutlinedButton" />
 
                     <View
                             android:layout_width="1dp"
                             android:layout_height="match_parent"
                             android:background="@color/gray"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"/>
+                            android:layout_margin="10dp" />
 
                     <com.google.android.material.button.MaterialButton
                             android:id="@+id/receive_coins_button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/receive_coins"
-                            style="@style/TransactButton"/>
+                            style="@style/Widget.Material3.Button.OutlinedButton" />
 
                 </LinearLayout>
 
@@ -108,13 +86,32 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        style="@style/Widget.Material3.CardView.Outlined">
+
+        <TextView
+            android:id="@+id/last_block_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"/>
+
+    </com.google.android.material.card.MaterialCardView>
+
     <LinearLayout
             android:orientation="vertical"
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp">
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -154,7 +151,6 @@
                     android:id="@+id/transaction_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
                     android:orientation="vertical">
 
             </LinearLayout>

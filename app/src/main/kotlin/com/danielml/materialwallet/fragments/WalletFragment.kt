@@ -183,7 +183,6 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
     }
 
     override fun onBlocksDownloaded(peer: Peer?, block: Block?, filteredBlock: FilteredBlock?, blocksLeft: Int) {
-        val sendCoinsButton = view?.findViewById<Button>(R.id.send_coins_button)
         val newBlockFetchDate = Date().time
         if (newBlockFetchDate - lastBlockFetchDate > blockDateUpdateThresholdMs || blocksLeft <= 1) {
             handler.post {
@@ -259,7 +258,7 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
             return
         }
 
-        val cardView = TransactionCard(context!!, transaction, container).getView()
+        val cardView = TransactionCard(requireContext(), transaction, container).getView()
         transactionIdList.add(transaction.txId.toString())
 
         handler.post {

@@ -5,17 +5,19 @@ import org.bitcoinj.core.Coin
 import org.bitcoinj.params.TestNet3Params
 import java.math.BigDecimal
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 
 class CurrencyUtils {
     companion object {
         fun toString(coin: Coin): String {
-            val value = coin.toBtc()
-            val format = "0.######## " + if (Global.NETWORK_PARAMS == TestNet3Params.get()) {
+            val unit = if (Global.NETWORK_PARAMS == TestNet3Params.get()) {
                 "tBTC"
             } else {
                 "BTC"
             }
-            return DecimalFormat(format).format(value)
+
+            return toNumericString(coin) + " $unit"
         }
 
         fun toString(satoshis: Long): String {
@@ -29,7 +31,8 @@ class CurrencyUtils {
         fun toNumericString(coin: Coin): String {
             val value = coin.toBtc()
             val format = "0.########"
-            return DecimalFormat(format).format(value)
+
+            return DecimalFormat(format, getSymbols()).format(value)
         }
 
         fun toNumericString(satoshis: Long): String {
@@ -38,6 +41,14 @@ class CurrencyUtils {
 
         fun toNumericString(btc: BigDecimal): String {
             return toNumericString(Coin.ofBtc(btc))
+        }
+
+        private fun getSymbols(): DecimalFormatSymbols {
+            val symbols = DecimalFormatSymbols(Locale.getDefault())
+            symbols.decimalSeparator = '.'
+            symbols.groupingSeparator = ','
+
+            return symbols
         }
     }
 }

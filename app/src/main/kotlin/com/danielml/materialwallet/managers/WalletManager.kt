@@ -32,8 +32,6 @@ class WalletManager {
             mnemonic: String?,
             creationDate: Long = walletCreationDate
         ): WalletAppKit? {
-            val handler = Handler(Looper.getMainLooper())
-
             try {
                 val walletId: String = if (selectedWalletId.isEmpty() && mnemonic?.isNotEmpty() == true) {
                     Global.sha256(mnemonic)

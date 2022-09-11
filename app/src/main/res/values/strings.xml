@@ -23,10 +23,13 @@
     </string>
     <string name="invalid_address">Invalid address</string>
     <string name="amount_too_small">Amount too small</string>
+    <string name="transaction_details">Transaction details</string>
+    <string name="amount_to_send">Amount to send (BTC)</string>
     <string name="not_enough_balance">Not enough balance</string>
     <string name="not_enough_balance_hint">Try reducing the network fee</string>
 
     <string name="target_address_hint">Target address</string>
+    <string name="recipient_details">Recipient details</string>
     <string name="preview_transaction">Preview transaction</string>
     <string name="transaction_receiver">To: %1$s</string>
     <string name="total_sent">Sent: %1$s</string>

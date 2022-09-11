@@ -1,6 +1,8 @@
 package com.danielml.materialwallet
 
 import android.content.pm.ApplicationInfo
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.danielml.materialwallet.fragments.SecurityFragment
@@ -8,6 +10,10 @@ import com.danielml.materialwallet.fragments.SettingsFragment
 import com.danielml.materialwallet.fragments.SetupWalletFragment
 import com.danielml.materialwallet.managers.WalletDatabaseManager
 import com.danielml.materialwallet.managers.WalletManager
+import com.google.android.material.color.DynamicColors
+import com.google.android.material.color.DynamicColorsOptions
+import com.google.android.material.color.MaterialColors
+import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.navigation.NavigationBarView
 import org.bitcoinj.params.TestNet3Params
 
@@ -71,6 +77,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        setupColorScheme()
+
         loadWallet()
         Global.globalPriceProvider.start()
     }
@@ -96,6 +104,17 @@ class MainActivity : AppCompatActivity() {
                 .addToBackStack(Global.SETUP_BACKSTACK)
                 .commit()
         }
+    }
+
+    fun setupColorScheme() {
+        if (DynamicColors.isDynamicColorAvailable()) {
+            DynamicColors.applyIfAvailable(this)
+        } else {
+
+        }
+
+        window.statusBarColor = SurfaceColors.SURFACE_0.getColor(this)
+        window.navigationBarColor = SurfaceColors.SURFACE_2.getColor(this)
     }
 
     override fun onBackPressed() {

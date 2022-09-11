@@ -20,11 +20,16 @@ import org.bitcoinj.core.Address
 import java.util.*
 
 
-class AddressCard(context: Context, address: Address, root: ViewGroup) {
+class AddressCard(context: Context, address: Address, isCurrentAddress: Boolean, root: ViewGroup) {
     val view: MaterialCardView
 
     init {
-        view = (context as Activity).layoutInflater.inflate(R.layout.address_card, root, false) as MaterialCardView
+        val layout = if (isCurrentAddress) {
+            R.layout.current_address_card
+        } else {
+            R.layout.used_address_card
+        }
+        view = (context as Activity).layoutInflater.inflate(layout, root, false) as MaterialCardView
 
         val addressString = address.toString()
         val addressTextView = view.findViewById<TextView>(R.id.address_text)

@@ -41,7 +41,8 @@ class ReceiveCoinsFragment : Fragment() {
         usedAddressesTitle.visibility = View.GONE
         Thread {
             for (address: Address in walletKit.wallet().issuedReceiveAddresses.reversed()) {
-                val container = if (address.toString() == walletKit.wallet().currentReceiveAddress().toString()) {
+                val isCurrentAddress = (address.toString() == walletKit.wallet().currentReceiveAddress().toString())
+                val container = if (isCurrentAddress) {
                     currentAddressContainer
                 } else {
                     handler.postAtFrontOfQueue {
@@ -53,7 +54,7 @@ class ReceiveCoinsFragment : Fragment() {
                 if (context == null) {
                     break
                 }
-                val addressCard = AddressCard(context!!, address, container)
+                val addressCard = AddressCard(requireContext(), address, isCurrentAddress, container)
 
                 handler.post {
                     container.addView(addressCard.view)

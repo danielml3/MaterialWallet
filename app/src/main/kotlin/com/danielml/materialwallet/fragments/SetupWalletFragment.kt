@@ -34,9 +34,9 @@ class SetupWalletFragment : Fragment() {
 
         val createWalletButton = view.findViewById<MaterialButton>(R.id.create_wallet_button)
         createWalletButton.setOnClickListener {
-            val walletKit = WalletManager.setupWallet(context!!, Global.sha256(Date().time.toString()), null)
+            val walletKit = WalletManager.setupWallet(requireContext(), Global.sha256(Date().time.toString()), null)
             if (walletKit != null) {
-                detachSetupFragment(context!!, this)
+                detachSetupFragment(requireContext(), this)
             }
         }
     }
@@ -51,7 +51,7 @@ class SetupWalletFragment : Fragment() {
         var syncTimestamp = WalletManager.walletCreationDate
 
         dateEditText.setOnClickListener {
-            val datePickerDialog = DatePickerDialog(context!!, 0, null, 2015, 11, 21) // 2015-12-21
+            val datePickerDialog = DatePickerDialog(requireContext(), 0, null, 2015, 11, 21) // 2015-12-21
             datePickerDialog.datePicker.minDate = 1230940800000 // 2009-01-03 (first block date)
             datePickerDialog.datePicker.maxDate = Date().time
 
@@ -67,14 +67,14 @@ class SetupWalletFragment : Fragment() {
         }
 
         return DialogBuilder.buildDialog(
-            context!!,
+            requireContext(),
             { _, _ ->
                 run {
                     val mnemonicTextBox = importForm.findViewById<EditText>(R.id.mnemonic_text_box)
                     val mnemonic = mnemonicTextBox.text.toString()
-                    val walletKit = WalletManager.setupWallet(context!!, "", mnemonic, syncTimestamp)
+                    val walletKit = WalletManager.setupWallet(requireContext(), "", mnemonic, syncTimestamp)
                     if (walletKit != null) {
-                        detachSetupFragment(context!!, this)
+                        detachSetupFragment(requireContext(), this)
                     }
                 }
             }, { _, _ -> }, null, importForm, false, R.string.import_wallet_title, R.string.import_wallet_message
