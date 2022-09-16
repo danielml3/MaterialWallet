@@ -7,7 +7,10 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.*
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ExperimentalGetImage
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
@@ -89,7 +92,7 @@ class BarcodeScanActivity : AppCompatActivity() {
         }
     }
 
-    fun showCameraPermissionNeededDialog() {
+    private fun showCameraPermissionNeededDialog() {
         if (isFinishing) {
             return
         }
@@ -102,7 +105,7 @@ class BarcodeScanActivity : AppCompatActivity() {
             }.buildDialog().show()
     }
 
-    fun showScanFailedDialog() {
+    private fun showScanFailedDialog() {
         if (isFinishing) {
             return
         }
@@ -115,14 +118,33 @@ class BarcodeScanActivity : AppCompatActivity() {
             }.buildDialog().show()
     }
 
+    private fun handleException(exception: Exception) {
+        showScanFailedDialog()
+        Log.e(TAG, exception.message.toString())
+    }
+
     @ExperimentalGetImage
     private fun startScan() {
         val previewView = findViewById<PreviewView>(R.id.preview_view)
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         // Initialize the imageCapture and preview use cases
-        val imageCapture = ImageCapture.Builder()
-            .build()
+        val imageAnalyzer = BarcodeImageAnalyzer(
+            onScanSuccess = { barcodes ->
+                setResult(
+                    Activity.RESULT_OK,
+                    Intent().putExtra(EXTRA_BARCODES, barcodes.toTypedArray())
+                )
+                finish()
+            },
+            // If the scan failed due to an exception, let the user know
+            onScanFailed = { exception ->
+                handleException(exception)
+            },
+        )
+        val imageAnalysis = ImageAnalysis.Builder().build().apply {
+            setAnalyzer(ContextCompat.getMainExecutor(applicationContext), imageAnalyzer)
+        }
         val preview = Preview.Builder().build().apply {
             setSurfaceProvider(previewView.surfaceProvider)
         }
@@ -130,53 +152,7 @@ class BarcodeScanActivity : AppCompatActivity() {
         cameraProviderFuture.addListener({
             // Assign the camera to the use cases
             cameraProviderFuture.get()
-                .bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, preview, imageCapture)
-
-            // Attempt to take and scan the first picture
-            // If no barcode is found, the function will repeat itself until there is one
-            // (or an exception occurs)
-            takeAndScanPicture(imageCapture)
+                .bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, preview, imageAnalysis)
         }, ContextCompat.getMainExecutor(this))
-    }
-
-    @ExperimentalGetImage
-    fun takeAndScanPicture(imageCapture: ImageCapture) {
-        imageCapture.takePicture(
-            ContextCompat.getMainExecutor(this),
-            object : ImageCapture.OnImageCapturedCallback() {
-                // Informs the users that there was an exception
-                fun handleException(exception: Exception) {
-                    showScanFailedDialog()
-                    Log.e(TAG, exception.message.toString())
-                }
-
-                // Analyze the captured image
-                override fun onCaptureSuccess(image: ImageProxy) {
-                    BarcodeImageAnalyzer.analyze(image,
-                        // If the scan is successful, deliver the barcodes to the parent activity
-                        onScanSuccess = { barcodes ->
-                            setResult(
-                                Activity.RESULT_OK,
-                                Intent().putExtra(EXTRA_BARCODES, barcodes.toTypedArray())
-                            )
-                            finish()
-                        },
-                        // If the scan failed due to an exception, let the user know
-                        onScanFailed = { exception ->
-                            handleException(exception)
-                        },
-                        // If no barcodes were found, try a new scan
-                        onBarcodeNotFound = {
-                            takeAndScanPicture(imageCapture)
-                        })
-
-                    image.close()
-                }
-
-                override fun onError(exception: ImageCaptureException) {
-                    super.onError(exception)
-                    handleException(exception)
-                }
-            })
     }
 }
