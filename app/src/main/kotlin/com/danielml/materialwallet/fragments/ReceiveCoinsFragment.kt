@@ -53,11 +53,11 @@ class ReceiveCoinsFragment : Fragment() {
                 if (context == null) {
                     break
                 }
-                val addressCard =
-                    AddressCard(requireContext(), address, isCurrentAddress, container)
 
                 handler.post {
-                    container.addView(addressCard.view)
+                    val addressCard =
+                        AddressCard(requireContext(), address, isCurrentAddress, container)
+                    container.addView(addressCard.getView())
                 }
             }
         }.start()

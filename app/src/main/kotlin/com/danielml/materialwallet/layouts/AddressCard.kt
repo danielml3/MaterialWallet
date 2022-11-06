@@ -21,7 +21,12 @@ import java.util.*
 
 
 class AddressCard(context: Context, address: Address, isCurrentAddress: Boolean, root: ViewGroup) {
-    val view: MaterialCardView
+    private val view: MaterialCardView
+    private var addressQRShown = false
+    private val addressString = address.toString()
+    private val addressQRImageView: ImageView
+
+    private var addressQRBitmap: Bitmap? = null
 
     init {
         val layout = if (isCurrentAddress) {
@@ -31,11 +36,9 @@ class AddressCard(context: Context, address: Address, isCurrentAddress: Boolean,
         }
         view = (context as Activity).layoutInflater.inflate(layout, root, false) as MaterialCardView
 
-        val addressString = address.toString()
         val addressTextView = view.findViewById<TextView>(R.id.address_text)
         val copyAddressButton = view.findViewById<MaterialButton>(R.id.copy_address)
-        val addressQRImageView = view.findViewById<ImageView>(R.id.address_qr)
-        var addressQRShown = false
+        addressQRImageView = view.findViewById<ImageView>(R.id.address_qr)
 
         addressTextView.text = addressString
         copyAddressButton.setOnClickListener {
@@ -43,28 +46,44 @@ class AddressCard(context: Context, address: Address, isCurrentAddress: Boolean,
         }
 
         view.setOnClickListener {
-            addressQRImageView.visibility = if (addressQRShown) {
-                addressQRImageView.setImageBitmap(null)
-                addressQRShown = false
-                View.GONE
-            } else {
-                addressQRImageView.setImageBitmap(getAddressQrBitmap(addressString))
-                addressQRShown = true
-                View.VISIBLE
-            }
-
-            TransitionManager.beginDelayedTransition(view)
+            alternateQRVisibility()
         }
     }
 
-    private fun getAddressQrBitmap(address: String): Bitmap {
+    fun getView(): MaterialCardView {
+        return view
+    }
+
+    private fun alternateQRVisibility() {
+        addressQRImageView.visibility = if (addressQRShown) {
+            addressQRImageView.setImageBitmap(null)
+            addressQRShown = false
+            View.GONE
+        } else {
+            addressQRImageView.setImageBitmap(getAddressQRBitmap())
+            addressQRShown = true
+            View.VISIBLE
+        }
+
+        TransitionManager.beginDelayedTransition(view)
+    }
+
+    private fun getAddressQRBitmap(): Bitmap {
+        if (addressQRBitmap == null) {
+            generateAddressQRBitmap()
+        }
+
+        return addressQRBitmap!!
+    }
+
+    private fun generateAddressQRBitmap() {
         val size = 512
         val hints: MutableMap<EncodeHintType, Any> = EnumMap(EncodeHintType::class.java)
         hints[EncodeHintType.CHARACTER_SET] = "UTF-8"
         hints[EncodeHintType.MARGIN] = 0
 
-        val bits = QRCodeWriter().encode(address, BarcodeFormat.QR_CODE, size, size, hints)
-        return Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565).also {
+        val bits = QRCodeWriter().encode(addressString, BarcodeFormat.QR_CODE, size, size, hints)
+        addressQRBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565).also {
             for (x in 0 until size) {
                 for (y in 0 until size) {
                     it.setPixel(x, y, if (bits[x, y]) Color.BLACK else Color.WHITE)
