@@ -60,7 +60,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
                         android:layout_marginEnd="10dp"
-                        app:srcCompat="@drawable/qr_code_scanner"/>
+                        app:srcCompat="@drawable/qr_code_scanner_icon"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -112,7 +112,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
                         android:layout_marginEnd="10dp"
-                        app:srcCompat="@drawable/wallet_balance"/>
+                        app:srcCompat="@drawable/wallet_balance_icon"/>
 
                 </LinearLayout>
 
@@ -143,6 +143,6 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="20dp"
         android:text="@string/preview_transaction"
-        app:icon="@drawable/receipt"
-        app:srcCompat="@drawable/wallet_balance"/>
+        app:icon="@drawable/receipt_icon"
+        app:srcCompat="@drawable/wallet_balance_icon"/>
 </FrameLayout>

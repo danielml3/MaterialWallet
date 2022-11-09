@@ -1,7 +1,6 @@
 package com.danielml.materialwallet.layouts
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
@@ -65,9 +64,9 @@ class TransactionCard(
         val isIncoming = isIncoming()
 
         if (isIncoming) {
-            transactionIcon.setImageResource(R.drawable.south_west_arrow)
+            transactionIcon.setImageResource(R.drawable.south_west_arrow_icon)
         } else {
-            transactionIcon.setImageResource(R.drawable.north_east_arrow)
+            transactionIcon.setImageResource(R.drawable.north_east_arrow_icon)
         }
 
         valueTextView.text =

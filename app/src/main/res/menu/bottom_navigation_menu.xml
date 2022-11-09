@@ -9,13 +9,13 @@
     <item
         android:id="@+id/security_page"
         android:enabled="true"
-        android:icon="@drawable/shield"
+        android:icon="@drawable/shield_icon"
         android:title="@string/security" />
 
     <item
         android:id="@+id/settings_page"
         android:enabled="true"
-        android:icon="@drawable/settings"
+        android:icon="@drawable/settings_icon"
         android:title="@string/settings"
         android:visible="false" />
 </menu>
