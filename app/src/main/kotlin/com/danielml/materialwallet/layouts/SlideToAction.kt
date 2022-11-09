@@ -38,12 +38,22 @@ class SlideToAction(context: Context, attrs: AttributeSet?, defStyleAttr: Int, d
     init {
         inflate(context, R.layout.slide_to_action, this)
 
-        val root = this
         hintText = findViewById(R.id.hint_text)
         slider = findViewById(R.id.slider)
 
+        setupTouchListener()
+
+        slider.doOnLayout {
+            if (minSliderWidth == -1) {
+                minSliderWidth = slider.width
+            }
+        }
+    }
+
+    private fun setupTouchListener() {
+        val rootView = this
         slider.setOnTouchListener { _, event ->
-            val maximumWidth = root.width - slider.marginLeft - slider.marginRight
+            val maximumWidth = rootView.width - slider.marginLeft - slider.marginRight
             val triggerWidth = maximumWidth - 20
 
             when (event.action) {
@@ -77,12 +87,6 @@ class SlideToAction(context: Context, attrs: AttributeSet?, defStyleAttr: Int, d
             }
 
             false
-        }
-
-        slider.doOnLayout {
-            if (minSliderWidth == -1) {
-                minSliderWidth = slider.width
-            }
         }
     }
 

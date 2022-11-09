@@ -11,7 +11,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
-import com.danielml.materialwallet.layouts.AddressCard
+import com.danielml.materialwallet.layouts.addresscards.CurrentAddressCard
+import com.danielml.materialwallet.layouts.addresscards.UsedAddressCard
 import org.bitcoinj.core.Address
 
 class ReceiveCoinsFragment : Fragment() {
@@ -55,9 +56,13 @@ class ReceiveCoinsFragment : Fragment() {
                 }
 
                 handler.post {
-                    val addressCard =
-                        AddressCard(requireContext(), address, isCurrentAddress, container)
-                    container.addView(addressCard.getView())
+                    val addressCard = if (isCurrentAddress) {
+                        CurrentAddressCard(requireContext(), address)
+                    } else {
+                        UsedAddressCard(requireContext(), address)
+                    }
+
+                    container.addView(addressCard)
                 }
             }
         }.start()

@@ -288,7 +288,7 @@ class WalletFragment : Fragment(), WalletCoinsReceivedEventListener, WalletCoins
             return
         }
 
-        val cardView = TransactionCard(requireContext(), transaction, container).getView()
+        val cardView = TransactionCard(requireContext(), transaction)
         transactionIdList.add(transaction.txId.toString())
 
         handler.post {

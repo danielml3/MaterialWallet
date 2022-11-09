@@ -12,6 +12,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updateMargins
 import androidx.transition.TransitionManager
 import com.danielml.materialwallet.Global
 import com.danielml.materialwallet.R
@@ -27,57 +29,45 @@ import org.bitcoinj.wallet.Wallet
 @SuppressLint("ViewConstructor")
 class TransactionCard(
     context: Context,
-    private val initialTransaction: Transaction,
-    root: ViewGroup
-) : TransactionConfidenceEventListener {
-    private val expandedContainer: LinearLayout
-    private val confirmationsTextView: TextView
-    private val view: MaterialCardView
+    private val initialTransaction: Transaction
+) : MaterialCardView(context, null, R.attr.materialCardViewFilledStyle), TransactionConfidenceEventListener {
+    private val walletKit = Global.globalWalletKit!!
+    private var expandedContainer: LinearLayout? = null
+    private var confirmationsTextView: TextView? = null
 
     private var isExpanded = false
 
-    init {
-        view = (context as Activity).layoutInflater.inflate(
-            R.layout.transaction_card,
-            root,
-            false
-        ) as MaterialCardView
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
 
-        val walletKit = Global.globalWalletKit!!
-        val dateTextView = view.findViewById<TextView>(R.id.transaction_date)
-        val valueTextView = view.findViewById<TextView>(R.id.transaction_value)
-        val feeTextView = view.findViewById<TextView>(R.id.transaction_fee)
-        val transactionIdTextView = view.findViewById<TextView>(R.id.transaction_id)
-        val transactionIcon = view.findViewById<ImageView>(R.id.transaction_icon)
-        confirmationsTextView = view.findViewById(R.id.transaction_confirmations)
-        expandedContainer = view.findViewById(R.id.expanded_container)
-        expandedContainer.visibility = View.GONE
+        updateLayoutParams<LinearLayout.LayoutParams> {
+            updateMargins(20, 20, 20, 20)
+        }
+        
+        inflate(context, R.layout.transaction_card_content, this)
 
+        confirmationsTextView = findViewById(R.id.transaction_confirmations)
+        expandedContainer = findViewById(R.id.expanded_container)
+
+        setupBasicViews()
+        setupExpandedViews()
+        updateConfirmations(initialTransaction)
+        setupClickListeners()
+        setupConfidenceListeners()
+    }
+
+    private fun setupBasicViews() {
+        val dateTextView = findViewById<TextView>(R.id.transaction_date)
+        val valueTextView = findViewById<TextView>(R.id.transaction_value)
+        val transactionIcon = findViewById<ImageView>(R.id.transaction_icon)
         val formattedDate =
             DateFormat.format("dd/MM/yyyy - HH:mm:ss", initialTransaction.updateTime).toString()
-        var isIncoming = true
-
-        for (input: TransactionInput in initialTransaction.inputs) {
-            val address = input.connectedOutput?.scriptPubKey?.getToAddress(Global.NETWORK_PARAMS)
-            if (address != null && walletKit.wallet().isAddressMine(address)) {
-                isIncoming = false
-            }
-        }
+        val isIncoming = isIncoming()
 
         if (isIncoming) {
             transactionIcon.setImageResource(R.drawable.south_west_arrow)
         } else {
             transactionIcon.setImageResource(R.drawable.north_east_arrow)
-        }
-
-        if (initialTransaction.fee != null) {
-            feeTextView.text =
-                String.format(
-                    context.getString(R.string.transaction_fee),
-                    CurrencyUtils.toString(initialTransaction.fee)
-                )
-        } else {
-            feeTextView.visibility = View.GONE
         }
 
         valueTextView.text =
@@ -89,22 +79,29 @@ class TransactionCard(
                 )
             )
         dateTextView.text = formattedDate
+    }
+
+    private fun setupExpandedViews() {
+        val feeTextView = findViewById<TextView>(R.id.transaction_fee)
+        val transactionIdTextView = findViewById<TextView>(R.id.transaction_id)
+        expandedContainer?.visibility = GONE
+
+        if (initialTransaction.fee != null) {
+            feeTextView.text =
+                String.format(
+                    context.getString(R.string.transaction_fee),
+                    CurrencyUtils.toString(initialTransaction.fee)
+                )
+        } else {
+            feeTextView.visibility = GONE
+        }
+
         transactionIdTextView.text = initialTransaction.txId.toString()
+    }
 
-        updateConfirmations(initialTransaction)
-
-        view.setOnClickListener {
-            setExpanded(!isExpanded)
-        }
-
-        view.setOnLongClickListener {
-            ClipboardUtils.copyToClipboard(context, initialTransaction.txId.toString())
-            Toast.makeText(context, R.string.copied_tx_id, Toast.LENGTH_SHORT).show()
-            true
-        }
-
+    private fun setupConfidenceListeners() {
         val transactionCard = this
-        view.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+        addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
             override fun onViewAttachedToWindow(v: View) {
                 walletKit.wallet()?.addTransactionConfidenceEventListener(transactionCard)
             }
@@ -115,19 +112,40 @@ class TransactionCard(
         })
     }
 
-    fun getView(): MaterialCardView {
-        return view
+    private fun setupClickListeners() {
+        setOnClickListener {
+            setExpanded(!isExpanded)
+        }
+
+        setOnLongClickListener {
+            ClipboardUtils.copyToClipboard(context, initialTransaction.txId.toString())
+            Toast.makeText(context, R.string.copied_tx_id, Toast.LENGTH_SHORT).show()
+            true
+        }
+    }
+
+    private fun isIncoming(): Boolean {
+        var incoming = true
+
+        for (input: TransactionInput in initialTransaction.inputs) {
+            val address = input.connectedOutput?.scriptPubKey?.getToAddress(Global.NETWORK_PARAMS)
+            if (address != null && walletKit.wallet().isAddressMine(address)) {
+                incoming = false
+            }
+        }
+
+        return incoming
     }
 
     private fun setExpanded(expanded: Boolean) {
-        expandedContainer.visibility = if (expanded) {
-            View.VISIBLE
+        expandedContainer?.visibility = if (expanded) {
+            VISIBLE
         } else {
-            View.GONE
+            GONE
         }
-        TransitionManager.beginDelayedTransition(view)
 
         isExpanded = expanded
+        TransitionManager.beginDelayedTransition(rootView as ViewGroup)
     }
 
     private fun updateConfirmations(transaction: Transaction) {
@@ -139,7 +157,7 @@ class TransactionCard(
             confirmationsNumber.toString()
         }
 
-        confirmationsTextView.text = confirmationsText
+        confirmationsTextView?.text = confirmationsText
     }
 
     override fun onTransactionConfidenceChanged(wallet: Wallet?, tx: Transaction?) {

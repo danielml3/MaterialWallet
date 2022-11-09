@@ -9,4 +9,20 @@
     <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.Material3.Light.NoActionBar">
         <item name="android:windowFullscreen">true</item>
     </style>
+
+    <style name="Theme.MaterialWallet.CurrentAddressCard" parent="@style/Widget.Material3.CardView.Filled">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:elevation">5dp</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="Theme.MaterialWallet.UsedAddressCard" parent="@style/Widget.Material3.CardView.Filled">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:elevation">5dp</item>
+        <item name="android:focusable">true</item>
+    </style>
 </resources>

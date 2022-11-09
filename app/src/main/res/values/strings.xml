@@ -53,6 +53,7 @@
     <string name="current_receive_address">Current address</string>
     <string name="used_addresses">Used addresses</string>
     <string name="copy_address">Copy address</string>
+    <string name="address_copied">Address copied</string>
 
     <!-- Security fragment -->
     <string name="mnemonic_card_title">Hold to show the recovery phrase</string>
