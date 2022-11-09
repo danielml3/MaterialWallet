@@ -29,7 +29,6 @@
     <string name="amount_to_send">Amount to send (BTC)</string>
     <string name="insufficient_balance">Insufficient balance</string>
     <string name="insufficient_balance_hint">Try reducing the network fee</string>
-    <string name="empty_wallet">Empty wallet</string>
     <string name="invalid_address">Invalid address</string>
     <string name="target_address_hint">Target address</string>
     <string name="recipient_details">Recipient details</string>

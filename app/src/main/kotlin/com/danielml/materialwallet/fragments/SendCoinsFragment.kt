@@ -2,6 +2,8 @@ package com.danielml.materialwallet.fragments
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +23,7 @@ import com.danielml.materialwallet.utils.DialogBuilder
 import com.danielml.materialwallet.utils.WalletUtils
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.bitcoinj.core.AddressFormatException
 import org.bitcoinj.core.Coin
@@ -33,18 +36,8 @@ import java.math.BigDecimal
 
 class SendCoinsFragment : Fragment() {
 
-    private var sendCoinsSlider: SlideToAction? = null
-
+    private var sendCoinsButton: ExtendedFloatingActionButton? = null
     private var selectedFee = Global.SAT_PER_KB_DEF
-
-    private val retractSlider = DialogInterface.OnClickListener { _, _ ->
-        sendCoinsSlider?.retractSlider()
-    }
-
-    private val retractSliderDismiss = DialogInterface.OnDismissListener {
-        sendCoinsSlider?.retractSlider()
-    }
-
     private var peerSyncListener: PeersSyncedListener? = null
 
     override fun onCreateView(
@@ -61,10 +54,10 @@ class SendCoinsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val walletKit = Global.globalWalletKit!!
 
-        sendCoinsSlider = view.findViewById(R.id.send_coins_button)
+        sendCoinsButton = view.findViewById(R.id.send_coins_button)
         val targetAddressText = view.findViewById<EditText>(R.id.target_address)
         val amountToSendText = view.findViewById<EditText>(R.id.amount_to_send)
-        val sendEverythingButton = view.findViewById<MaterialButton>(R.id.empty_wallet_button)
+        val sendEverythingButton = view.findViewById<FloatingActionButton>(R.id.empty_wallet_button)
         val scanAddressButton = view.findViewById<FloatingActionButton>(R.id.scan_address)
 
         val barcodeScanLauncher = BarcodeScanActivityLauncher()
@@ -87,12 +80,14 @@ class SendCoinsFragment : Fragment() {
 
         peerSyncListener = object : PeersSyncedListener() {
             override fun onPeersSyncStatusChanged(synced: Boolean) {
-                sendCoinsSlider?.setSliderEnabled(synced)
+                Handler(Looper.getMainLooper()).post {
+                    sendCoinsButton?.isEnabled = synced
+                }
             }
         }
         peerSyncListener?.register(walletKit)
 
-        sendCoinsSlider?.setOnActionTriggeredListener {
+        sendCoinsButton?.setOnClickListener {
             val targetAddress = targetAddressText.text.toString()
             val amountString = amountToSendText.text.toString()
 
@@ -113,8 +108,7 @@ class SendCoinsFragment : Fragment() {
                         is Wallet.DustySendRequested -> {
                             DialogBuilder(requireContext())
                                 .setTitle(R.string.amount_too_small)
-                                .setOnPositiveButton(retractSlider)
-                                .setOnDismiss(retractSliderDismiss)
+                                .setOnPositiveButton { _, _ -> }
                                 .setCancelable(true)
                                 .buildDialog().show()
                         }
@@ -127,16 +121,14 @@ class SendCoinsFragment : Fragment() {
                             DialogBuilder(requireContext())
                                 .setTitle(R.string.insufficient_balance)
                                 .setMessage(resources.getString(R.string.current_balance, balance))
-                                .setOnPositiveButton(retractSlider)
-                                .setOnDismiss(retractSliderDismiss)
+                                .setOnPositiveButton { _, _ -> }
                                 .buildDialog().show()
                         }
 
                         is AddressFormatException -> {
                             DialogBuilder(requireContext())
                                 .setTitle(R.string.invalid_address)
-                                .setOnPositiveButton(retractSlider)
-                                .setOnDismiss(retractSliderDismiss)
+                                .setOnPositiveButton { _, _ -> }
                                 .buildDialog().show()
                         }
 
@@ -144,8 +136,7 @@ class SendCoinsFragment : Fragment() {
                             DialogBuilder(requireContext())
                                 .setTitle(R.string.insufficient_balance)
                                 .setMessage(R.string.insufficient_balance)
-                                .setOnPositiveButton(retractSlider)
-                                .setOnDismiss(retractSliderDismiss)
+                                .setOnPositiveButton { _, _ -> }
                                 .buildDialog().show()
                         }
 
@@ -180,7 +171,6 @@ class SendCoinsFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-
         peerSyncListener?.unregister()
     }
 
@@ -200,7 +190,7 @@ class SendCoinsFragment : Fragment() {
             walletKit.peerGroup().broadcastTransaction(transaction)
             (context as FragmentActivity).supportFragmentManager.popBackStackImmediate()
         }
-        dialogBuilder.setNegativeButton(android.R.string.cancel, retractSlider)
+        dialogBuilder.setNegativeButton(android.R.string.cancel) { _, _ -> }
 
         val transactionPreview = layoutInflater.inflate(R.layout.transaction_preview, null, true)
         val receiverText = transactionPreview.findViewById<TextView>(R.id.transaction_receiver)
