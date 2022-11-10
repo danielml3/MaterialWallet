@@ -31,6 +31,7 @@ import org.bitcoinj.core.InsufficientMoneyException
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.kits.WalletAppKit
 import org.bitcoinj.wallet.Wallet
+import java.lang.ArithmeticException
 import java.math.BigDecimal
 
 
@@ -91,10 +92,9 @@ class SendCoinsFragment : Fragment() {
             val targetAddress = targetAddressText.text.toString()
             val amountString = amountToSendText.text.toString()
 
-            val amountDecimal = BigDecimal(amountString)
-            val amount = Coin.ofBtc(amountDecimal)
-
             try {
+                val amountDecimal = BigDecimal(amountString)
+                val amount = Coin.ofBtc(amountDecimal)
                 val transaction = WalletUtils.createTransaction(
                     walletKit.wallet(),
                     targetAddress,
@@ -108,6 +108,15 @@ class SendCoinsFragment : Fragment() {
                         is Wallet.DustySendRequested -> {
                             DialogBuilder(requireContext())
                                 .setTitle(R.string.amount_too_small)
+                                .setOnPositiveButton { _, _ -> }
+                                .setCancelable(true)
+                                .buildDialog().show()
+                        }
+
+                        is ArithmeticException -> {
+                            DialogBuilder(requireContext())
+                                .setTitle(R.string.too_many_decimals)
+                                .setMessage(R.string.too_many_decimals_hint)
                                 .setOnPositiveButton { _, _ -> }
                                 .setCancelable(true)
                                 .buildDialog().show()
@@ -187,7 +196,7 @@ class SendCoinsFragment : Fragment() {
         dialogBuilder.setTitle(R.string.preview_transaction)
         dialogBuilder.setPositiveButton(R.string.send_coins) { _, _ ->
             walletKit.wallet().commitTx(transaction)
-            walletKit.peerGroup().broadcastTransaction(transaction)
+            walletKit.peerGroup().broadcastTransaction(transaction, 1, true)
             (context as FragmentActivity).supportFragmentManager.popBackStackImmediate()
         }
         dialogBuilder.setNegativeButton(android.R.string.cancel) { _, _ -> }

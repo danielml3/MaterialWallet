@@ -30,6 +30,8 @@
     <string name="insufficient_balance">Insufficient balance</string>
     <string name="insufficient_balance_hint">Try reducing the network fee</string>
     <string name="invalid_address">Invalid address</string>
+    <string name="too_many_decimals">Too many decimals</string>
+    <string name="too_many_decimals_hint">Try reducing the decimals of the amount to send</string>
     <string name="target_address_hint">Target address</string>
     <string name="recipient_details">Recipient details</string>
     <string name="preview_transaction">Preview transaction</string>
